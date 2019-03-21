@@ -35,9 +35,7 @@ public class PersonalProfileState : SingleTickerProviderStateMixin<PersonalProfi
     }
     public override Widget build(BuildContext context)
     {
-        return new SafeArea(
-                child: _BuildBaseElemtns()
-            );
+        return _BuildBaseElemtns();
     }
 
 
