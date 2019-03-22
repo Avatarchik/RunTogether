@@ -54,7 +54,7 @@ namespace GoMap
 		public bool addGoFeatureComponents = false;
 		public bool useSatelliteBackground = false;
 		public bool satellite4X = false;
-        public GONavMeshSettings navmeshSettings;
+        //public GONavMeshSettings navmeshSettings;
 
 		[HideInInspector]
 		public bool dynamicLoad = true;
@@ -263,7 +263,7 @@ namespace GoMap
 
 		GOTile createSmartTileObject (Vector2 tileCoords, int Zoom) {
         
-            GOTileObj goTile = new GOTileObj (tileCoords,zoomLevel, mapType,useElevation, elevationMultiplier, new Vector2 (terrainResolution,terrainResolution), useCache, addGoFeatureComponents,locationManager.worldScale,useSatelliteBackground,satellite4X,combineFeatures,navmeshSettings);
+            GOTileObj goTile = new GOTileObj (tileCoords,zoomLevel, mapType,useElevation, elevationMultiplier, new Vector2 (terrainResolution,terrainResolution), useCache, addGoFeatureComponents,locationManager.worldScale,useSatelliteBackground,satellite4X,combineFeatures);
 			GameObject tileObj = new GameObject(goTile.name);
 
 			tileObj.transform.parent = gameObject.transform;

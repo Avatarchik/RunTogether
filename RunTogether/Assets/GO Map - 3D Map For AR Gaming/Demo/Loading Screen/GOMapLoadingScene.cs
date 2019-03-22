@@ -45,7 +45,7 @@ namespace GoMap
         public bool useElevation = false;
         public bool useSatelliteBackground = false;
         public bool satellite4X = false;
-        public GONavMeshSettings navmeshSettings;
+        //public GONavMeshSettings navmeshSettings;
 
         #region Start
 
@@ -107,7 +107,7 @@ namespace GoMap
         GOTile createSmartTileObject(Vector2 tileCoords, int Zoom)
         {
 
-            GOTileObj goTile = new GOTileObj(tileCoords, locationManager.zoomLevel, (GoMap.GOMap.GOMapType)mapType, useElevation, 1, new Vector2(50, 50), useCache, false, locationManager.worldScale, useSatelliteBackground, satellite4X, false, navmeshSettings);
+            GOTileObj goTile = new GOTileObj(tileCoords, locationManager.zoomLevel, (GoMap.GOMap.GOMapType)mapType, useElevation, 1, new Vector2(50, 50), useCache, false, locationManager.worldScale, useSatelliteBackground, satellite4X, false);
             GameObject tileObj = new GameObject(goTile.name);
 
             tileObj.transform.parent = gameObject.transform;

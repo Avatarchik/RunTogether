@@ -193,8 +193,8 @@ namespace GoMap
                 }
             }
 
-            if (goTile.navmeshSettings.buildNavmeshSurfaces)
-                 AddNavmesh();
+            //if (goTile.navmeshSettings.buildNavmeshSurfaces)
+                 //AddNavmesh();
 
             GOTileData vectorData = new GOTileData(vectorUrl(), goTile, GOTileData.GODataType.VectorPBF);
             goTile.tileData.Add(vectorData);
@@ -254,8 +254,8 @@ namespace GoMap
 
         public void OnTileLoaded () {
 
-            if (goTile.navmeshSettings.buildNavmeshSurfaces)
-                BuildNavmesh();
+            //if (goTile.navmeshSettings.buildNavmeshSurfaces)
+                //BuildNavmesh();
         }
 
         #endregion
@@ -291,20 +291,20 @@ namespace GoMap
 
         public void AddNavmesh () {
 
-            NavMeshSurface navmeshSurface = gameObject.AddComponent<NavMeshSurface>();
-            navmeshSurface.agentTypeID = goTile.navmeshSettings.AgentTypeIndex;
-            navmeshSurface.collectObjects = goTile.navmeshSettings.CollectObjects;
-            navmeshSurface.layerMask = goTile.navmeshSettings.IncludeLayers;
-            navmeshSurface.useGeometry = goTile.navmeshSettings.m_UseGeometry;
+            //NavMeshSurface navmeshSurface = gameObject.AddComponent<NavMeshSurface>();
+            //navmeshSurface.agentTypeID = goTile.navmeshSettings.AgentTypeIndex;
+            //navmeshSurface.collectObjects = goTile.navmeshSettings.CollectObjects;
+            //navmeshSurface.layerMask = goTile.navmeshSettings.IncludeLayers;
+            //navmeshSurface.useGeometry = goTile.navmeshSettings.m_UseGeometry;
 
-            if (goTile.navmeshSettings.useNavmeshLinks)
-                gameObject.AddComponent<NavMeshLink>();
+            //if (goTile.navmeshSettings.useNavmeshLinks)
+                //gameObject.AddComponent<NavMeshLink>();
         }
 
         public void BuildNavmesh () {
             
-            NavMeshSurface navmeshSurface = gameObject.GetComponent<NavMeshSurface>();
-            navmeshSurface.BuildNavMesh();
+            //NavMeshSurface navmeshSurface = gameObject.GetComponent<NavMeshSurface>();
+            //navmeshSurface.BuildNavMesh();
         }
 
         #endregion

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.29991987, g: 0.42151675, b: 0.49617007, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
@@ -498,7 +498,7 @@ PrefabInstance:
     - target: {fileID: 114547028180385974, guid: 7cc8dfd0538b549878c58850a02810cf,
         type: 3}
       propertyPath: mapbox_accessToken
-      value: 
+      value: pk.eyJ1IjoibnN3ZWxsIiwiYSI6ImNqajZxaHo2YjI1eTgzcHMyMnV2dHRyMDUifQ.JZvMvp-VNJlIUeLRabegVg
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7cc8dfd0538b549878c58850a02810cf, type: 3}
@@ -604,17 +604,17 @@ MonoBehaviour:
   onOriginSet:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: GoShared.GOLocationEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    m_TypeName: GoShared.GOLocationEvent, RunTogether.map, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   onLocationChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: GoShared.GOLocationEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    m_TypeName: GoShared.GOLocationEvent, RunTogether.map, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   OnMotionStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: GoShared.GOMotionStateEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    m_TypeName: GoShared.GOMotionStateEvent, RunTogether.map, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   lastLocations: []
   currentMotionState: 0
@@ -767,7 +767,7 @@ MonoBehaviour:
   OnAnimationStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: GOAvatarAnimationStateEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    m_TypeName: GOAvatarAnimationStateEvent, RunTogether.map, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
 --- !u!1 &1460940599
 GameObject:

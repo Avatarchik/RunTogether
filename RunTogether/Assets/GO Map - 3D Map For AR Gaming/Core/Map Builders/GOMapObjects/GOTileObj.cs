@@ -45,7 +45,7 @@ namespace GoMap {
 		[HideInInspector] public bool useStreetnames;
 		[HideInInspector] public bool satellite4X;
 		[HideInInspector] public bool combineFeatures;
-        [HideInInspector] public GONavMeshSettings navmeshSettings;
+        //[HideInInspector] public GONavMeshSettings navmeshSettings;
 		 public float elevationMultiplier = 1.5f;
 		[HideInInspector] public Vector2 resolution = new Vector2 (50, 50);
         
@@ -65,7 +65,7 @@ namespace GoMap {
 		#region Constructors
 
 		public GOTileObj (Vector2 tileCoordinates, int zoomLevel, GoMap.GOMap.GOMapType mapType, bool useElevation, float elevationMultiplier, Vector2 resolution,
-                          bool useCache, bool addGofeatureComponents, float worldScale, bool useSatelliteBackground, bool satellite4X, bool combineFeatures, GONavMeshSettings navmeshSettings) {
+                          bool useCache, bool addGofeatureComponents, float worldScale, bool useSatelliteBackground, bool satellite4X, bool combineFeatures) {
 
 			this.tileCoordinates = tileCoordinates;
 			this.zoomLevel = zoomLevel;
@@ -80,7 +80,7 @@ namespace GoMap {
 			this.useSatelliteBackground = useSatelliteBackground;
 			this.satellite4X = satellite4X;
 			this.combineFeatures = combineFeatures;
-            this.navmeshSettings = navmeshSettings;
+            //this.navmeshSettings = navmeshSettings;
 
 			tileCenter = new Coordinates (tileCoordinates, zoomLevel);
 			tileOrigin = tileCenter.tileOrigin (zoomLevel).convertCoordinateToVector ();

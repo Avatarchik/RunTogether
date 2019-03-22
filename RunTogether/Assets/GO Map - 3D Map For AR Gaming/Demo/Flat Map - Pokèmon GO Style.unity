@@ -1209,7 +1209,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11458246, guid: 2eb893fe48df34d2f8555a95c4675ac6, type: 3}
       propertyPath: mapbox_accessToken
-      value: 
+      value: pk.eyJ1IjoibnN3ZWxsIiwiYSI6ImNqajZxaHo2YjI1eTgzcHMyMnV2dHRyMDUifQ.JZvMvp-VNJlIUeLRabegVg
       objectReference: {fileID: 0}
     - target: {fileID: 11458246, guid: 2eb893fe48df34d2f8555a95c4675ac6, type: 3}
       propertyPath: layers.Array.data[3].defaultRendering.lineWidth
@@ -1496,17 +1496,17 @@ MonoBehaviour:
   onOriginSet:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: GoShared.GOLocationEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    m_TypeName: GoShared.GOLocationEvent, RunTogether.map, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   onLocationChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: GoShared.GOLocationEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    m_TypeName: GoShared.GOLocationEvent, RunTogether.map, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   OnMotionStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: GoShared.GOMotionStateEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    m_TypeName: GoShared.GOMotionStateEvent, RunTogether.map, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   lastLocations: []
   currentMotionState: 0
@@ -1715,7 +1715,7 @@ MonoBehaviour:
   OnAnimationStateChanged:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: GOAvatarAnimationStateEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    m_TypeName: GOAvatarAnimationStateEvent, RunTogether.map, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
 --- !u!1 &1456769790
 GameObject:

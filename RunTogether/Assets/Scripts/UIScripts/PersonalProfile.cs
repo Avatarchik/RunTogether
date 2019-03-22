@@ -54,12 +54,12 @@ public class PersonalProfileState : SingleTickerProviderStateMixin<PersonalProfi
                     }
                ),
            bottomNavigationBar: new Material(
-                color: Colors.blue,
+                color: Colors.black,
                 child: new TabBar(
                   controller: tabController,
                   tabs: new List<Widget>
                   {
-                       new Tab(text:"跑步",icon: new Icon(Icons.directions_run)),
+                       new Tab(text:"测试",icon: new Icon(Icons.directions_run)),
                        new Tab(text:"社区",icon: new Icon(Icons.camera)),
                        new Tab(text:"我的",icon: new Icon(Icons.person_outline)),
                   },
