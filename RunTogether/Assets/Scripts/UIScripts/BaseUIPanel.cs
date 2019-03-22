@@ -10,7 +10,7 @@ public class BaseUIPanel : UIWidgetsPanel
     {
         return new MaterialApp(
                 showPerformanceOverlay: false,
-                home: new PersonalProfile()
+                home: new BaseAppView()
             );
     }
     protected override void OnEnable()
