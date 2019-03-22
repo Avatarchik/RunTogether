@@ -46,8 +46,8 @@ public class PersonalProfileState : State<PersonalProfile>
         avatarShadows.Add(new BoxShadow(color: Colors.black12, offset: new Offset(0, -2), blurRadius: 5));
         avatarShadows.Add(new BoxShadow(color: Colors.black12, offset: new Offset(0, 2), blurRadius: 5));
 
-        return new Container(
-                color: new Color(0xfff0f2f4),
+        return new Container(                
+                decoration: new BoxDecoration(color: new Color(0xfff0f2f4)),
                 child:
                 new Flex(
                     children: new List<Widget>
@@ -91,7 +91,7 @@ public class PersonalProfileState : State<PersonalProfile>
                                     )
                         ),
                         new Container(padding:EdgeInsets.only(top:20)),
-                        new Container(                            
+                        new Container(
                             decoration:new BoxDecoration(color:Color.white,boxShadow:avatarShadows),
                             child:new Column(
                                     children:new List<Widget>
