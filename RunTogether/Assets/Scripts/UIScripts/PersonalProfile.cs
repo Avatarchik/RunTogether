@@ -40,12 +40,6 @@ public class PersonalProfileState : State<PersonalProfile>
 
     private Widget _BuildBaseElemtns()
     {
-        List<BoxShadow> avatarShadows = new List<BoxShadow>();
-        avatarShadows.Add(new BoxShadow(color: Colors.black12, offset: new Offset(2, 0), blurRadius: 5));
-        avatarShadows.Add(new BoxShadow(color: Colors.black12, offset: new Offset(-2, 0), blurRadius: 5));
-        avatarShadows.Add(new BoxShadow(color: Colors.black12, offset: new Offset(0, -2), blurRadius: 5));
-        avatarShadows.Add(new BoxShadow(color: Colors.black12, offset: new Offset(0, 2), blurRadius: 5));
-
         return new Container(                
                 decoration: new BoxDecoration(color: new Color(0xfff0f2f4)),
                 child:
@@ -56,7 +50,7 @@ public class PersonalProfileState : State<PersonalProfile>
                             padding:EdgeInsets.only(top:50,left:20,right:20),
                             child:new Container(
                                 padding:EdgeInsets.only(left:20,top:10,bottom:10),
-                                decoration:new BoxDecoration(color:Color.white,shape:BoxShape.rectangle,boxShadow:avatarShadows,borderRadius:BorderRadius.all(5)),
+                                decoration:new BoxDecoration(color:Color.white,shape:BoxShape.rectangle,borderRadius:BorderRadius.all(5)),
                                 child:
                                 new Row(
                                         mainAxisAlignment:Unity.UIWidgets.rendering.MainAxisAlignment.start,
@@ -67,8 +61,7 @@ public class PersonalProfileState : State<PersonalProfile>
                                                 decoration:new BoxDecoration(
                                                     color:Color.white,
                                                     shape:BoxShape.circle,
-                                                    boxShadow:avatarShadows,
-                                                    image:new DecorationImage(new NetworkImage("http://img.52z.com/upload/news/image/20180108/20180108080908_15279.jpg"),fit:BoxFit.cover)
+                                                    image:new DecorationImage(new NetworkImage("https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2150992516,3202248268&fm=26&gp=0.jpg"),fit:BoxFit.cover)
                                                 )
                                             ),
                                             new Container(padding:EdgeInsets.only(left:20)),
@@ -92,7 +85,7 @@ public class PersonalProfileState : State<PersonalProfile>
                         ),
                         new Container(padding:EdgeInsets.only(top:20)),
                         new Container(
-                            decoration:new BoxDecoration(color:Color.white,boxShadow:avatarShadows),
+                            decoration:new BoxDecoration(color:Color.white),
                             child:new Column(
                                     children:new List<Widget>
                                     {
