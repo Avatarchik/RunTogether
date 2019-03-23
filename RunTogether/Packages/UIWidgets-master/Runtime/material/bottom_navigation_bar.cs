@@ -156,11 +156,12 @@ namespace Unity.UIWidgets.material {
                             fontSize: BottomNavigationBarUtils._kActiveFontSize,
                             color: this.colorTween.evaluate(this.animation)
                         ),
-                        child: new Transform(
-                            transform: Matrix3.makeAll(t, 0, 0, 0, t, 0, 0, 0, t),
-                            alignment: Alignment.bottomCenter,
-                            child: this.item.title
-                        )
+                         //child: new Transform(
+                         //    transform: Matrix3.makeAll(t, 0, 0, 0, t, 0, 0, 0, t),
+                         //    alignment: Alignment.bottomCenter,
+                         //    child: this.item.title
+                         //)
+                         child: this.item.title
                     )
                 )
             );

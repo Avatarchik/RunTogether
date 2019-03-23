@@ -17,5 +17,6 @@ public class BaseUIPanel : UIWidgetsPanel
     {
         base.OnEnable();
         FontManager.instance.addFont(Resources.Load<Font>(path: "MaterialIcons-Regular"));
+        FontManager.instance.addFont(Resources.Load<Font>(path: "MaterialIcons_Expand"));
     }
 }
