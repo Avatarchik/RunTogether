@@ -4,6 +4,7 @@ using GoMap;
 
 using GoShared;
 using System;
+using System.Collections.Generic;
 using UnityEngine.Events;
 
 
@@ -14,6 +15,8 @@ public class MoveAvatar : MonoBehaviour {
 
 	public AvatarAnimationState animationState = AvatarAnimationState.Idle;
 	[HideInInspector] public float dist;
+	
+	private List<Vector3> GPSPoints = new List<Vector3>();
 	public enum AvatarAnimationState{
 		Idle, 
 		Walk,
@@ -138,6 +141,14 @@ public class MoveAvatar : MonoBehaviour {
 		}
 	}
 
+	#endregion
+	
+	#region Add position
+
+	void AddNewPosition()
+	{
+		GPSPoints.Add(this.avatarFigure.transform.position);
+	}
 	#endregion
 }
 

@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Ground new
+  m_Name: grass new
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 1
@@ -29,7 +29,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 0, y: 1}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailMask:
         m_Texture: {fileID: 0}
@@ -41,12 +41,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0.93, y: 0}
+        m_Scale: {x: 1, y: 5}
+        m_Offset: {x: 10, y: 10}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 0de65ceedc37c4c4199d6c6674d574a4, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0.93, y: 0}
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 5}
+        m_Offset: {x: 10, y: 10}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -173,13 +173,13 @@ Material:
     - _Ambientpower: 0.3757262
     - _BumpScale: 1
     - _Cutoff: 0.5
-    - _DetailNormalMapScale: 0
+    - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _EmissionScaleUI: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.192
     - _GlossyReflections: 1
-    - _Metallic: 1
+    - _Metallic: 0.368
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.0126
@@ -214,8 +214,8 @@ Material:
     - _specularpower: 0
     - _tiling: 0.86
     m_Colors:
-    - _Color: {r: 0.24881282, g: 0.5294118, b: 0.22577855, a: 1}
-    - _EmissionColor: {r: 0.59850776, g: 0.99264705, b: 0.73169965, a: 1}
+    - _Color: {r: 0.019665016, g: 0.066176474, b: 0.018003896, a: 1}
+    - _EmissionColor: {r: 0.78431374, g: 0.9019608, b: 0.7019608, a: 1}
     - _EmissionColorUI: {r: 1, g: 1, b: 1, a: 1}
     - _grasscolor1: {r: 0.58823526, g: 0.29411763, b: 0.29411763, a: 1}
     - _grasscolor2: {r: 0.8117647, g: 0.6143945, b: 0.6143945, a: 1}
