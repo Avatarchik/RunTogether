@@ -10,7 +10,7 @@ TrueTypeFontImporter:
   includeFontData: 1
   fontName: Material Icons
   fontNames:
-  - Material Icons
+  - Material Icons expand
   fallbackFontReferences:
   - {fileID: 12800000, guid: 454d829e3d72f41ad97833e7fc449127, type: 3}
   customCharacters: 

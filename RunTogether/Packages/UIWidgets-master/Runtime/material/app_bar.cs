@@ -214,7 +214,7 @@ namespace Unity.UIWidgets.material {
             if (this.widget.actions != null && this.widget.actions.isNotEmpty()) {
                 actions = new Row(
                     mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: this.widget.actions);
             }
             else if (hasEndDrawer) {

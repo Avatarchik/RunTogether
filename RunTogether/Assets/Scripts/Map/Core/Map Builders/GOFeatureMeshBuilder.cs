@@ -64,16 +64,16 @@ namespace GoMap
 			if (renderingOptions.outlineMaterial != null) {
 				GameObject outline = CreateRoadOutline (line,renderingOptions.outlineMaterial, renderingOptions.lineWidth + layer.defaultRendering.outlineWidth);
 				if (layer.useColliders) {
-					MeshCollider mc = outline.GetComponent<MeshCollider> ();
-					mc.enabled = true;
-					mc.sharedMesh = outline.GetComponent<MeshFilter> ().sharedMesh;
+//					MeshCollider mc = outline.GetComponent<MeshCollider> ();
+//					mc.enabled = true;
+//					mc.sharedMesh = outline.GetComponent<MeshFilter> ().sharedMesh;
 				}
 
 				outline.layer = line.layer;
 				outline.tag = line.tag;
 				
 			} else if (layer.useColliders) {
-				line.GetComponent<MeshCollider> ().enabled = true;
+//				line.GetComponent<MeshCollider> ().enabled = true;
 			}
 
 			return line;
@@ -103,7 +103,7 @@ namespace GoMap
 			Profiler.EndSample ();
 
 			MeshFilter filter = polygon.AddComponent<MeshFilter>();
-			meshRenderer = polygon.AddComponent<MeshRenderer>();
+//			meshRenderer = polygon.AddComponent<MeshRenderer>();
 
 			Profiler.BeginSample("[GoMap] Create polygon mesh");
 			try {
@@ -141,8 +141,8 @@ namespace GoMap
 
 			filter.sharedMesh = mesh;
 
-			if (layer.useColliders && mesh != null && feature.convertedGeometry.Count() > 2)
-				polygon.AddComponent<MeshCollider>().sharedMesh = mesh;
+//			if (layer.useColliders && mesh != null && feature.convertedGeometry.Count() > 2)
+//				polygon.AddComponent<MeshCollider>().sharedMesh = mesh;
 
 
 			return polygon;
@@ -446,9 +446,9 @@ namespace GoMap
 
 			if (feature.layer.useColliders && mesh != null && feature.convertedGeometry.Count () > 2) {
 
-				MeshCollider collider = polygon.GetComponent<MeshCollider> ();
-				collider.enabled = true;
-				collider.sharedMesh = mesh;
+//				MeshCollider collider = polygon.GetComponent<MeshCollider> ();
+//				collider.enabled = true;
+//				collider.sharedMesh = mesh;
 
                 if (feature.height < feature.layer.colliderHeight)
                 {
@@ -460,7 +460,7 @@ namespace GoMap
                     //collider2.sharedMesh = feature.preloadedMeshData.secondaryMesh.ToMesh();
                     //MeshCollider.Destroy(collider);
 
-                    collider.sharedMesh = feature.preloadedMeshData.secondaryMesh.ToMesh();
+//                    collider.sharedMesh = feature.preloadedMeshData.secondaryMesh.ToMesh();
                 }
 			}
 				

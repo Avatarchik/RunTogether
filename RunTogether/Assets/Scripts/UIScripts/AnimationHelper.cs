@@ -5,7 +5,7 @@ using Unity.UIWidgets.widgets;
 
 namespace UIScripts
 {
-    class FadeAndMovePageTransition : StatelessWidget {
+    class PageTransition : StatelessWidget {
                 
         private  readonly Animatable<float> FastOutSlowInTween = new CurveTween(curve: Curves.fastOutSlowIn);
 //        private  readonly Animatable<float> EaseInTween = new CurveTween(curve: Curves.fastOutSlowIn);
@@ -14,7 +14,7 @@ namespace UIScripts
 //        private readonly Animation<float> OpacityAnimation;
         private readonly Widget Child;
         
-        internal FadeAndMovePageTransition(
+        internal PageTransition(
             Key key = null,
             Animation<float> routeAnimation = null, // The route's linear 0.0 - 1.0 animation.
             Offset beginDirection=null,

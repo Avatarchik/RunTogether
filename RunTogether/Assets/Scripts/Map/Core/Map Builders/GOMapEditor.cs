@@ -84,16 +84,16 @@ namespace GoMap {
 				}
 			}
 
-			GOEnvironment env = GameObject.FindObjectOfType<GOEnvironment>();
-			if (env == null) {
-				return;
-			}
-
-			while (env.transform.childCount > 0) {
-				foreach (Transform child in env.transform) {
-					GameObject.DestroyImmediate (child.gameObject);
-				}
-			}
+//			GOEnvironment env = GameObject.FindObjectOfType<GOEnvironment>();
+//			if (env == null) {
+//				return;
+//			}
+//
+//			while (env.transform.childCount > 0) {
+//				foreach (Transform child in env.transform) {
+//					GameObject.DestroyImmediate (child.gameObject);
+//				}
+//			}
 
 		
 		}

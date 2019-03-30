@@ -18,7 +18,7 @@ using TextStyle = Unity.UIWidgets.painting.TextStyle;
 using Transform = Unity.UIWidgets.widgets.Transform;
 
 namespace Unity.UIWidgets.material {
-    class BottomNavigationBarUtils {
+   public class BottomNavigationBarUtils {
         public const float _kActiveFontSize = 14.0f;
         public const float _kInactiveFontSize = 12.0f;
         public const float _kTopMargin = 6.0f;
@@ -156,12 +156,11 @@ namespace Unity.UIWidgets.material {
                             fontSize: BottomNavigationBarUtils._kActiveFontSize,
                             color: this.colorTween.evaluate(this.animation)
                         ),
-                         //child: new Transform(
-                         //    transform: Matrix3.makeAll(t, 0, 0, 0, t, 0, 0, 0, t),
-                         //    alignment: Alignment.bottomCenter,
-                         //    child: this.item.title
-                         //)
-                         child: this.item.title
+                        child: new Transform(
+                            transform: Matrix3.makeAll(t, 0, 0, 0, t, 0, 0, 0, t),
+                            alignment: Alignment.bottomCenter,
+                            child: this.item.title
+                        )
                     )
                 )
             );

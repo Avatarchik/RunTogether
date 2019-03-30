@@ -72,8 +72,8 @@ namespace GoMap
 					MeshFilter filter = GetComponent<MeshFilter> ();
 					filter.sharedMesh = procedure.goTile.goMesh.ToMesh (recalculateNormals_: false);
 
-					MeshCollider collider = GetComponent<MeshCollider> ();
-					collider.sharedMesh = filter.sharedMesh;
+//					MeshCollider collider = GetComponent<MeshCollider> ();
+//					collider.sharedMesh = filter.sharedMesh;
 				}
 					
 				foreach (GOParsedLayer p in procedure.list) {

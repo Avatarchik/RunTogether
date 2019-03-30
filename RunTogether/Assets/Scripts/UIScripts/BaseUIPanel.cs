@@ -24,8 +24,8 @@ namespace UIScripts
         protected override void OnEnable()
         {
             base.OnEnable();
-            FontManager.instance.addFont(Resources.Load<Font>(path: "MaterialIcons-Regular"));
-            FontManager.instance.addFont(Resources.Load<Font>(path: "MaterialIcons_Expand"));
+            FontManager.instance.addFont(Resources.Load<Font>(path: "MaterialIcons-Regular"),familyName:"Material Icons");
+            FontManager.instance.addFont(Resources.Load<Font>(path: "MaterialIcons-Expand"),familyName:"Material Icons expand");
         }
     }
 }

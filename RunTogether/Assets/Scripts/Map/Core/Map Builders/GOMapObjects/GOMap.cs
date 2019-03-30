@@ -365,7 +365,7 @@ namespace GoMap
             filter.sharedMesh = goMesh.ToMesh();
 			renderer.material = material;
 
-			line.AddComponent<MeshCollider> ();
+//			line.AddComponent<MeshCollider> ();
 
 			return line;
 		}
@@ -415,7 +415,7 @@ namespace GoMap
 			filter.sharedMesh = mesh;
 			renderer.material = material;
 
-			polygon.AddComponent<MeshCollider> ();
+//			polygon.AddComponent<MeshCollider> ();
 
 			return polygon;
 
@@ -493,16 +493,16 @@ namespace GoMap
 				}
 			}
 
-			GOEnvironment env = GameObject.FindObjectOfType<GOEnvironment>();
-			if (env == null) {
-				return;
-			}
-
-			while (env.transform.childCount > 0) {
-				foreach (Transform child in env.transform) {
-					GameObject.DestroyImmediate (child.gameObject);
-				}
-			}
+//			GOEnvironment env = GameObject.FindObjectOfType<GOEnvironment>();
+//			if (env == null) {
+//				return;
+//			}
+//
+//			while (env.transform.childCount > 0) {
+//				foreach (Transform child in env.transform) {
+//					GameObject.DestroyImmediate (child.gameObject);
+//				}
+//			}
 		}
 
 
@@ -523,7 +523,7 @@ namespace GoMap
 			filter.sharedMesh = GOGridMaker.CreateGrid(size,10).ToMesh();
 			renderer.material = tileBackground;
 
-			tempTileBackgorund.AddComponent<MeshCollider> ();
+//			tempTileBackgorund.AddComponent<MeshCollider> ();
 
 		} 
 

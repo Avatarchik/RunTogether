@@ -38,7 +38,7 @@ namespace GoMap
             MeshRenderer renderer = gameObject.AddComponent<MeshRenderer>();
 
             filter.sharedMesh = goTile.groundMesh();
-            gameObject.AddComponent<MeshCollider>();
+            //gameObject.AddComponent<MeshCollider>();
             renderer.material = map.tileBackground;
 
         }
@@ -272,7 +272,7 @@ namespace GoMap
             prefab.AddComponent<MeshRenderer>();
             //			mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
-            prefab.AddComponent<MeshCollider>().enabled = false;
+            //prefab.AddComponent<MeshCollider>().enabled = false;
 
             goTile.featurePrototype = prefab;
 
