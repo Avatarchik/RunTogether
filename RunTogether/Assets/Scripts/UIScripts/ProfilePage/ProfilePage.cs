@@ -43,7 +43,7 @@ namespace UIScripts.ProfilePage
                         new Container(
                             padding:EdgeInsets.only(left:20,top:80,bottom:10),
                             decoration:new BoxDecoration(color:Color.white,shape:BoxShape.rectangle,borderRadius:BorderRadius.all(5)),
-                            child:new ListTile(leading:HelperWidgets._buildAvatar(HelperWidgets._createImageProvider(AvatarImageType.NetWork,DataManager.Instance.GetUserData.AvatarUrl)),
+                            child:new ListTile(leading:HelperWidgets._buildAvatar(HelperWidgets._createImageProvider(AvatarImageType.NetWork,AppManager.Instance.GetUserData.AvatarUrl)),
                                 title:_buildNickName(),subtitle:_buildMotto(),trailing:_buildTrailing())
                         ),
                         new Container(padding:EdgeInsets.only(top:20)),
@@ -83,7 +83,7 @@ namespace UIScripts.ProfilePage
         private Widget _buildNickName()
         {
             return new Container(
-                child: new Text(DataManager.Instance.GetUserData.NickName, style: new Unity.UIWidgets.painting.TextStyle(fontSize: 18, fontWeight: FontWeight.w700), textAlign: TextAlign.left)
+                child: new Text(AppManager.Instance.GetUserData.NickName, style: new Unity.UIWidgets.painting.TextStyle(fontSize: 18, fontWeight: FontWeight.w700), textAlign: TextAlign.left)
             );
         }
 
@@ -92,7 +92,7 @@ namespace UIScripts.ProfilePage
         {
             return new Container(
                 padding: EdgeInsets.only(top: 5),
-                child: new Text(DataManager.Instance.GetUserData.Mottor, style: new Unity.UIWidgets.painting.TextStyle(fontSize: 10), textAlign: TextAlign.left)
+                child: new Text(AppManager.Instance.GetUserData.Mottor, style: new Unity.UIWidgets.painting.TextStyle(fontSize: 10), textAlign: TextAlign.left)
             );
         }
 

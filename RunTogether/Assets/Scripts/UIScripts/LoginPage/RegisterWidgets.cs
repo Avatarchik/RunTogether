@@ -106,7 +106,7 @@ namespace UIScripts.LoginPage
                                     onPressed: () =>
                                     {
                                         //TODO:Register
-                                        DataManager.Instance.InitUserData(new UserDatas(AvatarPath,"",NameEdit.text));
+                                        AppManager.Instance.InitUserData(new UserDatas(AvatarPath,"",NameEdit.text));
                                     }
                                 )
                             )

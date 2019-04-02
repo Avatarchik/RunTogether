@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using Unity.UIWidgets.foundation;
-using Unity.UIWidgets.material;
-using Unity.UIWidgets.ui;
 using Unity.UIWidgets.widgets;
+using Datas;
 
 namespace UIScripts
 {
     public class BaseAppViewState : State<BaseAppView>
     {
         public static int CurrentSelected = 0;
-        private readonly  List<Widget> Views = new List<Widget>();
-        
+        private readonly List<Widget> Views = new List<Widget>();
+
         public override void initState()
         {
             base.initState();
@@ -20,7 +19,7 @@ namespace UIScripts
 
         public override Widget build(BuildContext buildContext)
         {
-            return Views[CurrentSelected];
+            return AppManager.Instance.WasLogined ? Views[1] : Views[0];
         }
 
     }

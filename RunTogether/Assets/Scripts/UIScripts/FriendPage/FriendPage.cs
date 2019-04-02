@@ -57,7 +57,7 @@ namespace UIScripts.FriendPage
                 height: height,
                 decoration: new BoxDecoration(
                     shape: BoxShape.circle,
-                    image: new DecorationImage(new NetworkImage(Datas.DataManager.Instance.GetUserData.AvatarUrl),
+                    image: new DecorationImage(new NetworkImage(Datas.AppManager.Instance.GetUserData.AvatarUrl),
                         fit: BoxFit.cover)
                 )
             );

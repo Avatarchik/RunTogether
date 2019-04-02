@@ -60,7 +60,7 @@ namespace UIScripts.ProfilePage
                 child:new Container(
                     width:256,
                     height:256,
-                    child:Image.network(Datas.DataManager.Instance.GetUserData.AvatarUrl)
+                    child:Image.network(Datas.AppManager.Instance.GetUserData.AvatarUrl)
                 )
             );
         }

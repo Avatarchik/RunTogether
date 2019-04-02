@@ -37,8 +37,8 @@ namespace UIScripts.ProfilePage
                                 children:new List<Widget>
                                 {
                                     _buildAvatar(80,80),
-                                    new Text(Datas.DataManager.Instance.GetUserData.NickName),
-                                    new Text(Datas.DataManager.Instance.GetUserData.Mottor),
+                                    new Text(Datas.AppManager.Instance.GetUserData.NickName),
+                                    new Text(Datas.AppManager.Instance.GetUserData.Mottor),
                                 }
                             )
                         )
@@ -77,7 +77,7 @@ namespace UIScripts.ProfilePage
                 height: height,
                 decoration: new BoxDecoration(
                     shape: BoxShape.circle,
-                    image: new DecorationImage(new NetworkImage(Datas.DataManager.Instance.GetUserData.AvatarUrl), fit: BoxFit.cover)
+                    image: new DecorationImage(new NetworkImage(Datas.AppManager.Instance.GetUserData.AvatarUrl), fit: BoxFit.cover)
                 )
             );
         }

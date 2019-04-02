@@ -51,7 +51,7 @@ namespace UIScripts.MomentPage
                         child:new Column(
                             children:new List<Widget>
                             {
-                                new ListTile(leading:_buildAvatar(Datas.DataManager.Instance.GetUserData.AvatarUrl,40,40),title:new Text("NSWell")),
+                                new ListTile(leading:_buildAvatar(Datas.AppManager.Instance.GetUserData.AvatarUrl,40,40),title:new Text("NSWell")),
                                 new Container(
                                     alignment:Alignment.centerLeft,
                                     margin:EdgeInsets.only(left:70),
@@ -105,7 +105,7 @@ namespace UIScripts.MomentPage
                 height: _height,
                 decoration: new BoxDecoration(
                     shape: BoxShape.circle,
-                    image: new DecorationImage(new NetworkImage(Datas.DataManager.Instance.GetUserData.AvatarUrl),
+                    image: new DecorationImage(new NetworkImage(Datas.AppManager.Instance.GetUserData.AvatarUrl),
                         fit: BoxFit.cover)
                 )
             );

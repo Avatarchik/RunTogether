@@ -1,3 +1,4 @@
+using Datas;
 using System.Collections.Generic;
 using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
@@ -8,7 +9,7 @@ namespace UIScripts.LoginPage
 {
     public class LoginWidgets : StatelessWidget
     {
-        
+
         public override Widget build(BuildContext context)
         {
             return new Scaffold(
@@ -46,11 +47,19 @@ namespace UIScripts.LoginPage
                                     child: new Text("登录", style: CustomTheme.CustomTheme.DefaultTextThemen.display2),
                                     onPressed: () =>
                                     {
+                                         Route tmpEditProfileRoute = new PageRouteBuilder(
+                                            pageBuilder:(context, animation, secondaryAnimation) =>  new MainView(),
+                                            transitionsBuilder:(context, animation, secondaryAnimation, child) =>
+                                            new PageTransition(routeAnimation:animation,child:child,beginDirection:new Offset(1f,0f),endDirection:Offset.zero)
+                                        ); 
+                
                                         //TODO:Login
-                                        BaseAppViewState.CurrentSelected = 1;
+                                        AppManager.Instance.SetLoginState(true);
                                         Navigator.pop(buildContext);
+                                        Navigator.pop(buildContext);
+                                        Navigator.push(buildContext,tmpEditProfileRoute);
                                     }
-                                )    
+                                )
                             )
                         )
                     }

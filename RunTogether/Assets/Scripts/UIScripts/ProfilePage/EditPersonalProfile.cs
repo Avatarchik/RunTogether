@@ -50,9 +50,9 @@ namespace UIScripts.ProfilePage
                     children: new List<Widget> {
                         _itemList(new ListTile(title:new Text("Avatar"),trailing:_buildAvatar(),onTap:GoToAvatarEdit)),
                         _itemList(new ListTile(title:new Text("NickName"),trailing:_buildNickName(),
-                            onTap:()=>GoToStringEditor(Datas.DataManager.Instance.GetUserData.NickName,"Edit Name",(result => Datas.DataManager.Instance.GetUserData.NickName=result)))),
+                            onTap:()=>GoToStringEditor(Datas.AppManager.Instance.GetUserData.NickName,"Edit Name",(result => Datas.AppManager.Instance.GetUserData.NickName=result)))),
                         _itemList(new ListTile(title:new Text("Mottor"),trailing:_buildMottor(),
-                            onTap:()=>GoToStringEditor(Datas.DataManager.Instance.GetUserData.Mottor,title:"Edit Mottor",(result => Datas.DataManager.Instance.GetUserData.Mottor=result))),dividerHeight:0),
+                            onTap:()=>GoToStringEditor(Datas.AppManager.Instance.GetUserData.Mottor,title:"Edit Mottor",(result => Datas.AppManager.Instance.GetUserData.Mottor=result))),dividerHeight:0),
 
                     }
                 )
@@ -82,7 +82,7 @@ namespace UIScripts.ProfilePage
                     height: 32,
                     decoration: new BoxDecoration(
                         shape: BoxShape.circle,
-                        image: new DecorationImage(new NetworkImage(Datas.DataManager.Instance.GetUserData.AvatarUrl), fit: BoxFit.cover)
+                        image: new DecorationImage(new NetworkImage(Datas.AppManager.Instance.GetUserData.AvatarUrl), fit: BoxFit.cover)
                     )
                 ),
                 trailingSecondWidget:  new Icon(icon: Icons.arrow_forward_ios)
@@ -92,7 +92,7 @@ namespace UIScripts.ProfilePage
         private Widget _buildNickName()
         {
             return _ListTitleTrailingExpand(
-                trailingFirstWidget:new Text(Datas.DataManager.Instance.GetUserData.NickName),
+                trailingFirstWidget:new Text(Datas.AppManager.Instance.GetUserData.NickName),
                 trailingSecondWidget: new Icon(icon: Icons.arrow_forward_ios)
             );
         }
@@ -100,7 +100,7 @@ namespace UIScripts.ProfilePage
         private Widget _buildMottor()
         {
             return _ListTitleTrailingExpand(
-                trailingFirstWidget:new Text(Datas.DataManager.Instance.GetUserData.Mottor),
+                trailingFirstWidget:new Text(Datas.AppManager.Instance.GetUserData.Mottor),
                 trailingSecondWidget: new Icon(icon: Icons.arrow_forward_ios)
             );
         }
