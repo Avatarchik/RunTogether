@@ -50,7 +50,7 @@ namespace UIScripts.LoginPage
                                          Route tmpEditProfileRoute = new PageRouteBuilder(
                                             pageBuilder:(context, animation, secondaryAnimation) =>  new MainView(),
                                             transitionsBuilder:(context, animation, secondaryAnimation, child) =>
-                                            new PageTransition(routeAnimation:animation,child:child,beginDirection:new Offset(1f,0f),endDirection:Offset.zero)
+                                            new PageTransition(routeAnimation:animation,child:child,beginDirection:new Offset(0f,1f),endDirection:Offset.zero)
                                         ); 
                 
                                         //TODO:Login
