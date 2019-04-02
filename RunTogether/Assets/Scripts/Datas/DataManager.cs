@@ -21,7 +21,7 @@ namespace Datas
         }
 
 
-        public UserDatas GetUserData { get; private set; }
+        public UserDatas GetUserData;// { get; private set; }
 
         public void InitUserData(UserDatas _userdata)
         {

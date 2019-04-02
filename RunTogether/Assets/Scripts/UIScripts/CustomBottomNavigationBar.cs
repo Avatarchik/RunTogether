@@ -22,6 +22,12 @@ using Material = Unity.UIWidgets.material.Material;
 
 namespace UIScripts
 {
+    class BottomNavigationBarUtils {
+        public const float _kActiveFontSize = 14.0f;
+        public const float _kInactiveFontSize = 12.0f;
+        public const float _kTopMargin = 6.0f;
+        public const float _kBottomMargin = 8.0f;
+    }
     public class CustomBottomNavigationBar : StatefulWidget
     {
         public CustomBottomNavigationBar(

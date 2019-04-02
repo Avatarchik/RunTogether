@@ -2,7 +2,8 @@
     "name": "Together.UIScripts",
     "references": [
         "Unity.UIWidgets",
-        "RunTogether.Datas"
+        "RunTogether.Datas",
+        "RunTorgether.NativeAPI"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

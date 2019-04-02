@@ -1,4 +1,6 @@
-﻿using Unity.UIWidgets.engine;
+﻿using System.Collections.Generic;
+using Datas;
+using Unity.UIWidgets.engine;
 using Unity.UIWidgets.material;
 using Unity.UIWidgets.ui;
 using Unity.UIWidgets.widgets;
@@ -8,11 +10,7 @@ namespace UIScripts
 {
     public class BaseUIPanel : UIWidgetsPanel
     {
-        protected override void Awake()
-        {
-            base.Awake();
-            Application.targetFrameRate = 60; 
-        }
+        public static MultiLanguage language;
 
         protected override Widget createWidget()
         {
@@ -22,10 +20,12 @@ namespace UIScripts
             );
         }
         protected override void OnEnable()
-        {
+        {           
+            Application.targetFrameRate = 60; 
             base.OnEnable();
             FontManager.instance.addFont(Resources.Load<Font>(path: "MaterialIcons-Regular"),familyName:"Material Icons");
             FontManager.instance.addFont(Resources.Load<Font>(path: "MaterialIcons-Expand"),familyName:"Material Icons expand");
+            language = Resources.Load<MultiLanguage>("MultiLanguage");
         }
     }
 }

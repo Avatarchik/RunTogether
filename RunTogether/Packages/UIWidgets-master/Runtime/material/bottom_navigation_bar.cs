@@ -18,7 +18,7 @@ using TextStyle = Unity.UIWidgets.painting.TextStyle;
 using Transform = Unity.UIWidgets.widgets.Transform;
 
 namespace Unity.UIWidgets.material {
-   public class BottomNavigationBarUtils {
+    class BottomNavigationBarUtils {
         public const float _kActiveFontSize = 14.0f;
         public const float _kInactiveFontSize = 12.0f;
         public const float _kTopMargin = 6.0f;

@@ -1,5 +1,6 @@
 ﻿namespace Datas
 {
+    [System.Serializable]
     public class UserDatas
     {
         public  string AvatarUrl;
@@ -12,5 +13,6 @@
             Mottor = _mottor;
             NickName = _name;
         }
+        public UserDatas(){}
     }
 }

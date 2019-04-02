@@ -220,8 +220,8 @@ Camera:
   m_GameObject: {fileID: 997782486}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 3
+  m_BackGroundColor: {r: 0.92941177, g: 0.92941177, b: 0.92941177, a: 0}
   m_projectionMatrixMode: 1
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
@@ -335,8 +335,8 @@ Canvas:
   m_GameObject: {fileID: 1367149785}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 997782488}
   m_PlaneDistance: 5
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -379,6 +379,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd9c1c6f7ca094be996a1d43c0829c5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GetUserData:
+    AvatarUrl: 
+    Mottor: 
+    NickName: 
 --- !u!1 &1539332716
 GameObject:
   m_ObjectHideFlags: 0

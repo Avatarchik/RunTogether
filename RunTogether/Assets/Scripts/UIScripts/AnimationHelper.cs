@@ -8,10 +8,10 @@ namespace UIScripts
     class PageTransition : StatelessWidget {
                 
         private  readonly Animatable<float> FastOutSlowInTween = new CurveTween(curve: Curves.fastOutSlowIn);
-//        private  readonly Animatable<float> EaseInTween = new CurveTween(curve: Curves.fastOutSlowIn);
+        private  readonly Animatable<float> EaseInTween = new CurveTween(curve: Curves.fastOutSlowIn);
 
         private readonly Animation<Offset> PositionAnimation;
-//        private readonly Animation<float> OpacityAnimation;
+        private readonly Animation<float> OpacityAnimation;
         private readonly Widget Child;
         
         internal PageTransition(
@@ -23,18 +23,17 @@ namespace UIScripts
         
         ) : base(key: key) {
             this.PositionAnimation = new OffsetTween(begin: beginDirection,end: endDirection).chain(FastOutSlowInTween).animate(routeAnimation);
-//            this.OpacityAnimation = EaseInTween.animate(routeAnimation);
+            this.OpacityAnimation = EaseInTween.animate(routeAnimation);
             this.Child = child;
         }
 
         public override Widget build(BuildContext context) {
             return new SlideTransition(
                 position: this.PositionAnimation,
-//                child: new FadeTransition(
-//                    opacity: this.OpacityAnimation,
-//                    child: this.Child
-//                )
-                child:this.Child
+                child: new FadeTransition(
+                    opacity: this.OpacityAnimation,
+                    child: this.Child
+                )
             );
         }
     }
