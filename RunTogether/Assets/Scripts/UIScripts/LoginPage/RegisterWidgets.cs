@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Timers;
 using Datas;
 using UIScripts.Externs;
+using Unity.UIWidgets.animation;
 using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
 using Unity.UIWidgets.ui;
@@ -18,7 +21,7 @@ namespace UIScripts.LoginPage
     }
 
 
-    public class RegisterState : State<RegisterWidgets>
+    public class RegisterState : SingleTickerProviderStateMixin<RegisterWidgets>
     {
         private string AvatarPath;
         private TextEditingController NameEdit = new TextEditingController("");
@@ -26,10 +29,26 @@ namespace UIScripts.LoginPage
         private TextEditingController PhoneEdit = new TextEditingController("");
         private TextEditingController VerfyCodeEdit = new TextEditingController("");
         private BuildContext buildContext;
+        private bool SendVerfyCode;
+   
+        private Animation<int> CountDown;
+        private AnimationController CountDownController;
         public override void initState()
         {
             base.initState();
             AvatarPath = Application.streamingAssetsPath + "/avatar.png";
+            CountDownController = new AnimationController(vsync: this, duration: new TimeSpan(0, 1, 0));
+            CountDownController.addListener(()=>setState());
+            CountDownController.addStatusListener((status) => 
+            {
+                if(status == AnimationStatus.completed)
+                {
+                    SendVerfyCode = false;
+                    CountDownController.reset();
+                    setState();
+                }
+            });
+            CountDown = new IntTween(60, 0).animate(CountDownController);
         }
 
         public override Widget build(BuildContext context)
@@ -88,10 +107,30 @@ namespace UIScripts.LoginPage
                             obscureText: true, editingController: PasswordEdit, maxLength: 16,
                             regexCondition: @"^[A-Za-z0-9]+$"),
 
-                        new ListTile(
-                            title: new TextFieldExtern("请填写验证码", padding: EdgeInsets.only(top: 20),
-                                editingController: VerfyCodeEdit),
-                            trailing: new IconButton(icon: new Icon(icon: Icons.send))),
+                        new Stack(
+                            children:new List<Widget>
+                            {
+                                new TextFieldExtern("请填写验证码", padding: EdgeInsets.only(left: 20, right: 20, top: 20),maxLength:6,editingController: VerfyCodeEdit),
+                                SendVerfyCode?new Container(
+                                    alignment:Alignment.centerRight,
+                                    padding:EdgeInsets.only(right:25,bottom:5),
+                                    child: new Text(CountDown.value+"s",style:new TextStyle(fontSize:18))
+                                ):
+                                new Container(
+                                    alignment:Alignment.centerRight,
+                                    padding:EdgeInsets.only(right:25,bottom:5),
+                                    child:new GestureDetector(child: new Icon(icon: Icons.send,size:20),onTap:()=>
+                                    {
+                                        SendVerfyCode=true;
+                                        //CountDown();
+                                        CountDownController.forward();
+                                        setState();
+                                    })
+                                ),
+                            }
+                        ),
+
+
                         new SizedBox(
                             width: 340,
                             height: 60,
@@ -103,7 +142,7 @@ namespace UIScripts.LoginPage
                                     onPressed: () =>
                                     {
                                         //TODO:Register
-                                        
+
                                         //防止用户漏空提交
                                         if (string.IsNullOrEmpty(NameEdit.text)
                                             || string.IsNullOrEmpty(PhoneEdit.text)
@@ -122,5 +161,35 @@ namespace UIScripts.LoginPage
                 )
             );
         }
+        Timer tmp_Timer = null;
+        public override void dispose()
+        {
+            base.dispose();
+            if (tmp_Timer != null)
+                tmp_Timer.Dispose();
+        }
+
+        //private void CountDown()
+        //{
+        //    tmp_Timer = new Timer(60000);
+        //    tmp_Timer.Elapsed += new ElapsedEventHandler(OnCountDownElapsed);
+        //    tmp_Timer.Interval = 1000;
+        //    tmp_Timer.Start();
+        //}
+
+        //private void OnCountDownElapsed(object sender, ElapsedEventArgs e)
+        //{
+        //    using (WindowProvider.of(context).getScope())
+        //    {
+        //        CurrentCoundown -= 1;
+        //        if (CurrentCoundown <= 0)
+        //        {
+        //            SendVerfyCode = false;
+        //            CurrentCoundown = 60;
+        //            tmp_Timer.Stop();
+        //        }
+        //        setState();
+        //    }
+        //}
     }
 }
