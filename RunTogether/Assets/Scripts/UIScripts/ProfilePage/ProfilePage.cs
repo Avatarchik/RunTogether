@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Datas;
+using UIScripts.Externs;
 using Unity.UIWidgets.foundation;
 using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
@@ -43,7 +44,7 @@ namespace UIScripts.ProfilePage
                         new Container(
                             padding:EdgeInsets.only(left:20,top:80,bottom:10),
                             decoration:new BoxDecoration(color:Color.white,shape:BoxShape.rectangle,borderRadius:BorderRadius.all(5)),
-                            child:new ListTile(leading:HelperWidgets._buildAvatar(HelperWidgets._createImageProvider(AvatarImageType.NetWork,AppManager.Instance.GetUserData.AvatarUrl)),
+                            child:new ListTile(leading:new AvatarWidget(HelperWidgets._createImageProvider(AvatarImageType.NetWork,AppManager.Instance.GetUserData.AvatarUrl)),
                                 title:_buildNickName(),subtitle:_buildMotto(),trailing:_buildTrailing())
                         ),
                         new Container(padding:EdgeInsets.only(top:20)),

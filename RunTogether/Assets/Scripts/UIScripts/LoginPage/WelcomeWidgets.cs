@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Datas;
 using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
 using Unity.UIWidgets.rendering;
@@ -41,8 +40,7 @@ namespace UIScripts.LoginPage
                                         );
                                         Navigator.push(context: context, route: tmpRoute);
                                     }),
-                                new FlatButton(color: Colors.green,
-                                    child: new Text("注册",
+                                new FlatButton(color: Colors.green,                                    child: new Text("注册",
                                         style: CustomTheme.CustomTheme.DefaultTextThemen.display2),
                                     onPressed: () =>
                                     {

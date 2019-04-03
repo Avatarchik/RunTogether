@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Datas;
+using UIScripts.Externs;
 using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
 using Unity.UIWidgets.ui;
@@ -24,7 +25,7 @@ namespace UIScripts.LoginPage
         private TextEditingController PasswordEdit = new TextEditingController("");
         private TextEditingController PhoneEdit = new TextEditingController("");
         private TextEditingController VerfyCodeEdit = new TextEditingController("");
-
+        private BuildContext buildContext;
         public override void initState()
         {
             base.initState();
@@ -33,6 +34,7 @@ namespace UIScripts.LoginPage
 
         public override Widget build(BuildContext context)
         {
+            buildContext = context;
             return new Scaffold(
                 appBar: HelperWidgets._buildCloseAppBar(isCenterTitle: true, title: new Text(""),
                     () => { Navigator.pop(context); }),
@@ -56,14 +58,10 @@ namespace UIScripts.LoginPage
                         ),
 
                         new GestureDetector(
-                            child: HelperWidgets._buildAvatar(
-                                HelperWidgets._createImageProvider(AvatarImageType.Memory, AvatarPath)),
+                            child: new AvatarWidget(HelperWidgets._createImageProvider(AvatarImageType.Memory, AvatarPath)),
                             onTap: () =>
                             {
-#if UNITY_EDITOR
-                                AvatarPath = Application.dataPath + "/Artwork/Textures/splashscreen_white 10.40.31.jpg";
-                                setState();
-#elif !UNITY_EDITOR && UNITY_IOS
+#if !UNITY_EDITOR && UNITY_IOS
                                 NativeGallery.GetImageFromGallery((path) =>
                                 {
                                     if(string.IsNullOrEmpty(path))return;
@@ -80,21 +78,20 @@ namespace UIScripts.LoginPage
 
                         new Padding(padding: EdgeInsets.only(top: 5)),
 
-                        new TextFieldHelper("请设置昵称，如一起跑", padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                        new TextFieldExtern("请设置昵称，如一起跑", padding: EdgeInsets.only(left: 20, right: 20, top: 20),
                             editingController: NameEdit),
-                        
-                        new TextFieldHelper("请填写手机号码", padding: EdgeInsets.only(left: 20, right: 20, top: 20),
-                            editingController: PhoneEdit),
-                        
+
+                        new TextFieldExtern("请填写手机号码", padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                            editingController: PhoneEdit, maxLength: 11, regexCondition: @"^[0-9]*$"),
+
+                        new TextFieldExtern("请填写密码(英文字符、数字)", padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                            obscureText: true, editingController: PasswordEdit, maxLength: 16,
+                            regexCondition: @"^[A-Za-z0-9]+$"),
+
                         new ListTile(
-                            title: new TextFieldHelper("请填写验证码", padding: EdgeInsets.only(top: 20),
+                            title: new TextFieldExtern("请填写验证码", padding: EdgeInsets.only(top: 20),
                                 editingController: VerfyCodeEdit),
                             trailing: new IconButton(icon: new Icon(icon: Icons.send))),
-                        
-                        new TextFieldHelper("请设置密码", padding: EdgeInsets.only(left: 20, right: 20, top: 20),
-                            obscureText: true,
-                            editingController: PasswordEdit),
-
                         new SizedBox(
                             width: 340,
                             height: 60,
@@ -106,7 +103,17 @@ namespace UIScripts.LoginPage
                                     onPressed: () =>
                                     {
                                         //TODO:Register
-                                        AppManager.Instance.InitUserData(new UserDatas(AvatarPath,"",NameEdit.text));
+                                        
+                                        //防止用户漏空提交
+                                        if (string.IsNullOrEmpty(NameEdit.text)
+                                            || string.IsNullOrEmpty(PhoneEdit.text)
+                                            || string.IsNullOrEmpty(PasswordEdit.text)
+                                            || string.IsNullOrEmpty(VerfyCodeEdit.text))
+                                        {
+                                            return;
+                                        }
+                                        AppManager.Instance.InitUserData(new UserDatas(AvatarPath, "", NameEdit.text));
+                                        Navigator.pop(buildContext);
                                     }
                                 )
                             )

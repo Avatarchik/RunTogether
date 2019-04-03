@@ -13,7 +13,7 @@ namespace UIScripts
         public override void initState()
         {
             base.initState();
-            Views.Add(new LoginPage.LoginPage());
+            Views.Add(new LoginPage.WelcomeWidgets());
             Views.Add(new MainView());
         }
 
