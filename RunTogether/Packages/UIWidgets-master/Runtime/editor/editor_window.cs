@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace Unity.UIWidgets.editor {
 #if UNITY_EDITOR
-    public abstract class UIWidgetsEditorWindow : EditorWindow {
+    public abstract class UIWidgetsEditorWindow : EditorWindow, WindowHost {
         WindowAdapter _windowAdapter;
 
         public UIWidgetsEditorWindow() {
@@ -62,6 +62,10 @@ namespace Unity.UIWidgets.editor {
         }
 
         protected abstract Widget createWidget();
+
+        public Window window {
+            get { return this._windowAdapter; }
+        }
     }
 
     public class EditorWindowAdapter : WindowAdapter {
@@ -111,6 +115,10 @@ namespace Unity.UIWidgets.editor {
 
 #endif
 
+    public interface WindowHost {
+        Window window { get; }
+    }
+    
     public abstract class WindowAdapter : Window {
         static readonly List<WindowAdapter> _windowAdapters = new List<WindowAdapter>();
 
@@ -128,6 +136,8 @@ namespace Unity.UIWidgets.editor {
         internal WidgetsBinding _binding;
         float _lastWindowWidth;
         float _lastWindowHeight;
+
+        bool _viewMetricsChanged;
 
         readonly MicrotaskQueue _microtaskQueue = new MicrotaskQueue();
         readonly TimerProvider _timerProvider = new TimerProvider();
@@ -152,6 +162,10 @@ namespace Unity.UIWidgets.editor {
         }
 
         protected virtual void updateSafeArea() {
+        }
+
+        public void onViewMetricsChanged() {
+            this._viewMetricsChanged = true;
         }
 
         protected abstract bool hasFocus();
@@ -251,6 +265,10 @@ namespace Unity.UIWidgets.editor {
                 return true;
             }
 
+            if (this._viewMetricsChanged) {
+                return true;
+            }
+
             return false;
         }
 
@@ -267,6 +285,7 @@ namespace Unity.UIWidgets.editor {
                         this._lastWindowHeight * this._devicePixelRatio);
 
                     this.updateSafeArea();
+                    this._viewMetricsChanged = false;
                     if (this.onMetricsChanged != null) {
                         this.onMetricsChanged();
                     }
