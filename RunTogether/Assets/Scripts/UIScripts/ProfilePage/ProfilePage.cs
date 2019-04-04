@@ -96,7 +96,7 @@ namespace UIScripts.ProfilePage
         private void GoToEditProfile()
         {
             Route tmpEditProfileRoute = new PageRouteBuilder(
-                pageBuilder: ((buildContext, animation, secondaryAnimation) => new EditPersonalProfile()),
+                pageBuilder: ((buildContext, animation, secondaryAnimation) => new EditProfilePage()),
                 transitionsBuilder: ((buildContext, animation, secondaryAnimation, child) =>
                     new PageTransition(routeAnimation: animation, child: child, beginDirection: new Offset(1f, 0f),
                         endDirection: Offset.zero))
@@ -109,7 +109,7 @@ namespace UIScripts.ProfilePage
         private void GoToLeaderBord()
         {
             Route tmpRoute = new PageRouteBuilder(
-                pageBuilder: ((buildContext, animation, secondaryAnimation) => new LeaderBord()),
+                pageBuilder: ((buildContext, animation, secondaryAnimation) => new LeaderBordPage()),
                 transitionsBuilder: ((buildContext, animation, secondaryAnimation, child) =>
                     new PageTransition(routeAnimation: animation, child: child, beginDirection: new Offset(2f, 0f),
                         endDirection: Offset.zero))
@@ -120,7 +120,7 @@ namespace UIScripts.ProfilePage
         private void GoToSettingPanel()
         {
             Route tmpRoute = new PageRouteBuilder(
-                pageBuilder: ((buildContext, animation, secondaryAnimation) => new SettingWidgets()),
+                pageBuilder: ((buildContext, animation, secondaryAnimation) => new SettingPage()),
                 transitionsBuilder: ((buildContext, animation, secondaryAnimation, child) =>
                     new PageTransition(routeAnimation: animation, child: child, beginDirection: new Offset(2f, 0f),
                         endDirection: Offset.zero))

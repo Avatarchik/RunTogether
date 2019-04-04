@@ -8,9 +8,9 @@ using Unity.UIWidgets.widgets;
 
 namespace UIScripts.ProfilePage
 {
-    public class EditPersonalProfile : StatefulWidget
+    public class EditProfilePage : StatefulWidget
     {
-        public EditPersonalProfile(Key key = null) : base(key)
+        public EditProfilePage(Key key = null) : base(key)
         {
         }
         public override State createState()
@@ -20,7 +20,7 @@ namespace UIScripts.ProfilePage
     }
 
 
-    public class EditPersonalState : State<EditPersonalProfile>
+    public class EditPersonalState : State<EditProfilePage>
     {
         public override Widget build(BuildContext buildContext)
         {
@@ -129,7 +129,7 @@ namespace UIScripts.ProfilePage
         private void GoToAvatarEdit()
         {
             Route tmpEditNickNameRoute = new PageRouteBuilder(
-                pageBuilder:((buildContext, animation, secondaryAnimation) => new EditAvatar()),
+                pageBuilder:((buildContext, animation, secondaryAnimation) => new EditAvatarPage()),
                 transitionsBuilder:((buildContext, animation, secondaryAnimation, child) => 
                     new PageTransition(
                         routeAnimation:animation,
@@ -142,7 +142,7 @@ namespace UIScripts.ProfilePage
         private void GoToStringEditor(string data,string title,Action<string> editResultCallback)
         {
             Route tmpStringEditorRoute = new PageRouteBuilder(
-                pageBuilder:((buildContext, animation, secondaryAnimation) => new EditStringWidget(data,title,editResultCallback)),
+                pageBuilder:((buildContext, animation, secondaryAnimation) => new EditStringPage(data,title,editResultCallback)),
                 transitionsBuilder:((buildContext, animation, secondaryAnimation, child) => 
                     new PageTransition(
                         routeAnimation:animation,

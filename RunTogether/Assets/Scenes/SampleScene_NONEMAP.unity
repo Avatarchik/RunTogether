@@ -380,9 +380,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GetUserData:
-    AvatarUrl: 
-    Mottor: 
-    NickName: 
+    AvatarUrl: https://avatar.gitee.com/uploads/62/1370162_Advancer68.png!avatar60?1495855142
+    Mottor: tes
+    NickName: NSWell
 --- !u!1 &1539332716
 GameObject:
   m_ObjectHideFlags: 0

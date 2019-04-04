@@ -9,7 +9,7 @@ namespace UIScripts
 {
     public class BaseUIPanel : UIWidgetsPanel
     {
-        public static MultiLanguage language;
+        public static MultiLanguage Language;
 
         protected override Widget createWidget()
         {
@@ -24,7 +24,7 @@ namespace UIScripts
             base.OnEnable();
             FontManager.instance.addFont(Resources.Load<Font>(path: "MaterialIcons-Regular"),familyName:"Material Icons");
             FontManager.instance.addFont(Resources.Load<Font>(path: "MaterialIcons-Expand"),familyName:"Material Icons expand");
-            language = Resources.Load<MultiLanguage>("MultiLanguage");
+            Language = Resources.Load<MultiLanguage>("MultiLanguage");
         }
     }
 }

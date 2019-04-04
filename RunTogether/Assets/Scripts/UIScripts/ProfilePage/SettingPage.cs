@@ -7,7 +7,7 @@ using Color = Unity.UIWidgets.ui.Color;
 
 namespace UIScripts.ProfilePage
 {
-    public class SettingWidgets:StatelessWidget
+    public class SettingPage:StatelessWidget
     {
         
         public override Widget build(BuildContext context)
