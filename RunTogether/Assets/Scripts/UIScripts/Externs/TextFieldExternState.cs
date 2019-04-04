@@ -69,8 +69,7 @@ namespace UIScripts
                     controller: widget.EditingController,
                     autofocus: false,
                     maxLines: 1,
-                    obscureText: widget.ObscureText,
-                    focusNode: new FocusNode(),
+                    obscureText: widget.ObscureText,                  
                     decoration: new InputDecoration(
                         labelText: widget.HintText,
                         contentPadding: EdgeInsets.all(5.0f),

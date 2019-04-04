@@ -2,12 +2,13 @@
 using Unity.UIWidgets.foundation;
 using Unity.UIWidgets.widgets;
 using Datas;
+using UIScripts.LoginPage;
+using Unity.UIWidgets;
 
 namespace UIScripts
 {
     public class BaseAppViewState : State<BaseAppView>
-    {
-        public static int CurrentSelected = 0;
+    {        
         private readonly List<Widget> Views = new List<Widget>();
 
         public override void initState()
@@ -15,13 +16,13 @@ namespace UIScripts
             base.initState();
             Views.Add(new LoginPage.WelcomeWidgets());
             Views.Add(new MainView());
+            AppManager.Instance.SetLoginState(true);
         }
 
         public override Widget build(BuildContext buildContext)
         {
             return AppManager.Instance.WasLogined ? Views[1] : Views[0];
         }
-
     }
 
     public class BaseAppView : StatefulWidget

@@ -184,7 +184,7 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
-  devicePixelRatioOverride: 0
+  devicePixelRatioOverride: 2
 --- !u!1 &997782486
 GameObject:
   m_ObjectHideFlags: 0
@@ -220,7 +220,7 @@ Camera:
   m_GameObject: {fileID: 997782486}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 3
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0.92941177, g: 0.92941177, b: 0.92941177, a: 0}
   m_projectionMatrixMode: 1
   m_SensorSize: {x: 36, y: 24}

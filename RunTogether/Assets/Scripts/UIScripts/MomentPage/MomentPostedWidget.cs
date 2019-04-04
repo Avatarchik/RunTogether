@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using UIScripts.Externs;
 using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
 using Unity.UIWidgets.rendering;
 using Unity.UIWidgets.ui;
 using Unity.UIWidgets.widgets;
 
-namespace UIScripts.Externs
+namespace UIScripts.MomentPage
 {
     public class MomentPostedWidget:StatelessWidget
     {
@@ -13,12 +14,14 @@ namespace UIScripts.Externs
         private readonly string Name;
         private readonly string PostedImageUrl;
         private readonly string LikeCount;
-        public MomentPostedWidget(string avatarUrl,string name,string postedImageUrl,string likeCount)
+        private readonly string PostedContent;
+        public MomentPostedWidget(string avatarUrl,string name,string postedImageUrl,string postedContent,string likeCount)
         {
             AvatarURL = avatarUrl;
             Name = name;
             PostedImageUrl = postedImageUrl;
             LikeCount = likeCount;
+            PostedContent = postedContent;
         }
          public override Widget build(BuildContext context)
          {
@@ -36,13 +39,7 @@ namespace UIScripts.Externs
                                     alignment:Alignment.centerLeft,
                                     margin:EdgeInsets.only(left:70),
                                     padding:EdgeInsets.only(bottom:10,top:10),
-                                    child: new Text(textAlign:TextAlign.left,data:"Come with us,Change the world!" +
-                                                                                  "Come with us,Change the world!" +
-                                                                                  "Come with us,Change the world!" +
-                                                                                  "Come with us,Change the world!"+
-                                                                                  "Come with us,Change the world!"+
-                                                                                  "Come with us,Change the world!"+
-                                                                                  "Come with us,Change the world!")
+                                    child: new Text(textAlign:TextAlign.left,data:PostedContent)
                                 ),
                                 Unity.UIWidgets.widgets.Image.network(src:PostedImageUrl,fit:BoxFit.cover,width:200,height:200),
                                 new Row(

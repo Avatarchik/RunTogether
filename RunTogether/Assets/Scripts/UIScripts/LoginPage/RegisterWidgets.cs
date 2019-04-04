@@ -30,26 +30,20 @@ namespace UIScripts.LoginPage
         private TextEditingController VerfyCodeEdit = new TextEditingController("");
         private BuildContext buildContext;
         private bool SendVerfyCode;
-   
+
         private Animation<int> CountDown;
         private AnimationController CountDownController;
+
         public override void initState()
         {
             base.initState();
             AvatarPath = Application.streamingAssetsPath + "/avatar.png";
             CountDownController = new AnimationController(vsync: this, duration: new TimeSpan(0, 1, 0));
-            CountDownController.addListener(()=>setState());
-            CountDownController.addStatusListener((status) => 
-            {
-                if(status == AnimationStatus.completed)
-                {
-                    SendVerfyCode = false;
-                    CountDownController.reset();
-                    setState();
-                }
-            });
+            CountDownController.addListener(Refresh);
+            CountDownController.addStatusListener(Reset);
             CountDown = new IntTween(60, 0).animate(CountDownController);
         }
+
 
         public override Widget build(BuildContext context)
         {
@@ -77,7 +71,8 @@ namespace UIScripts.LoginPage
                         ),
 
                         new GestureDetector(
-                            child: new AvatarWidget(HelperWidgets._createImageProvider(AvatarImageType.Memory, AvatarPath)),
+                            child: new AvatarWidget(
+                                HelperWidgets._createImageProvider(AvatarImageType.Memory, AvatarPath)),
                             onTap: () =>
                             {
 #if !UNITY_EDITOR && UNITY_IOS
@@ -108,25 +103,28 @@ namespace UIScripts.LoginPage
                             regexCondition: @"^[A-Za-z0-9]+$"),
 
                         new Stack(
-                            children:new List<Widget>
+                            children: new List<Widget>
                             {
-                                new TextFieldExtern("请填写验证码", padding: EdgeInsets.only(left: 20, right: 20, top: 20),maxLength:6,editingController: VerfyCodeEdit),
-                                SendVerfyCode?new Container(
-                                    alignment:Alignment.centerRight,
-                                    padding:EdgeInsets.only(right:25,bottom:5),
-                                    child: new Text(CountDown.value+"s",style:new TextStyle(fontSize:18))
-                                ):
-                                new Container(
-                                    alignment:Alignment.centerRight,
-                                    padding:EdgeInsets.only(right:25,bottom:5),
-                                    child:new GestureDetector(child: new Icon(icon: Icons.send,size:20),onTap:()=>
-                                    {
-                                        SendVerfyCode=true;
-                                        //CountDown();
-                                        CountDownController.forward();
-                                        setState();
-                                    })
-                                ),
+                                new TextFieldExtern("请填写验证码", padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                                    maxLength: 6, editingController: VerfyCodeEdit),
+                                SendVerfyCode
+                                    ? new Container(
+                                        alignment: Alignment.centerRight,
+                                        padding: EdgeInsets.only(right: 25, bottom: 5),
+                                        child: new Text(CountDown.value + "s", style: new TextStyle(fontSize: 18))
+                                    )
+                                    : new Container(
+                                        alignment: Alignment.centerRight,
+                                        padding: EdgeInsets.only(right: 25, bottom: 5),
+                                        child: new GestureDetector(child: new Icon(icon: Icons.send, size: 20),
+                                            onTap: () =>
+                                            {
+                                                SendVerfyCode = true;
+                                                //CountDown();
+                                                CountDownController.forward();
+                                                setState();
+                                            })
+                                    ),
                             }
                         ),
 
@@ -151,6 +149,7 @@ namespace UIScripts.LoginPage
                                         {
                                             return;
                                         }
+
                                         AppManager.Instance.InitUserData(new UserDatas(AvatarPath, "", NameEdit.text));
                                         Navigator.pop(buildContext);
                                     }
@@ -161,12 +160,27 @@ namespace UIScripts.LoginPage
                 )
             );
         }
-        Timer tmp_Timer = null;
+
         public override void dispose()
         {
-            base.dispose();
-            if (tmp_Timer != null)
-                tmp_Timer.Dispose();
+            CountDownController.removeListener(Refresh);
+            CountDownController.removeStatusListener(Reset);
+            CountDownController.stop();
+            CountDownController.dispose();
+            base.dispose();         
+        }
+
+        private void Reset(AnimationStatus status)
+        {
+            if (status != AnimationStatus.completed) return;
+            SendVerfyCode = false;
+            CountDownController.reset();
+            setState();
+        }
+
+        private void Refresh()
+        {
+            setState();
         }
 
         //private void CountDown()

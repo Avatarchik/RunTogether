@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using UIScripts.Externs;
 using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
 using Unity.UIWidgets.widgets;
 
-namespace UIScripts.Externs
+namespace UIScripts.FriendPage
 {
     public class FriendWidget : StatelessWidget
     {

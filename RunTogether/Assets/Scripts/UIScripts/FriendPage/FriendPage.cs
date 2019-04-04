@@ -14,12 +14,12 @@ namespace UIScripts.FriendPage
                 backgroundColor: new Color(0xffededed),
                 appBar: new AppBar(
                     backgroundColor: new Color(0xffededed),
-                    title: new Text("Contact", style: new Unity.UIWidgets.painting.TextStyle(color: Colors.black),
+                    title: new Text("好友", style: new Unity.UIWidgets.painting.TextStyle(color: Colors.black),
                         textAlign: TextAlign.center),
                     centerTitle: true
                 ),
                 body: new Container(
-                    color: new Color(0xffffffff),
+                    color: new Color(0xffededed),
                     child: new ListView(
                         children: new List<Widget>
                         {

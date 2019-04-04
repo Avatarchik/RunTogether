@@ -28,7 +28,7 @@ namespace Datas
 
 
         public bool WasLogined { get; private set; }
-        public void SetLoginState(bool loginState)
+        public void SetLoginState(bool loginState=false)
         {
             WasLogined = loginState;
         }
