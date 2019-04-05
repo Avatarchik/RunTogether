@@ -23,11 +23,10 @@ namespace UIScripts.RunPage
 
     public class MatchWidgetState : SingleTickerProviderStateMixin<MatchWidget>
     {
-        private TabController MatchTabController;
+        private readonly TabController MatchTabController;
 
-        public override void initState()
+        public MatchWidgetState()
         {
-            base.initState();
             MatchTabController = new TabController(vsync: this, length: 3);
         }
 
@@ -64,9 +63,9 @@ namespace UIScripts.RunPage
                     controller: MatchTabController,
                     children: new List<Widget>
                     {
-                        new MatchConditionWidget("填写您要跑的距离（如5公里）", () => { }, null),
-                        new MatchConditionWidget("填写您想要的城市（如厦门市）", () => { }, null),
-                        new MatchConditionWidget("填写您要跑的时长（如30分钟）", () => { }, null),
+                        new MatchConditionWidget("填写您要跑的距离（如5公里）", () => { }, @"^[0-9]*$"),
+                        new MatchConditionWidget("填写您要跑的时长（如30分钟）", () => { }, @"^[0-9]*$"),
+                        new MatchConditionWidget("填写您想要的城市（如厦门市）", () => { }, "^[\u4e00-\u9fa5]*$"),
                     }
                 )
             );

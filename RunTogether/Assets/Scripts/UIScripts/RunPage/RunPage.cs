@@ -14,7 +14,7 @@ namespace UIScripts.RunPage
         }
     }
 
-    public class RunPageState : TickerProviderStateMixin<RunPage>
+    public class RunPageState : SingleTickerProviderStateMixin<RunPage>
     {
         internal int PagesIndex;
         internal readonly AnimationController PositionController;

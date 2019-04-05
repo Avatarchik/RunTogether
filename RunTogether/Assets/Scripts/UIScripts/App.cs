@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace UIScripts
 {
-    public class BaseUIPanel : UIWidgetsPanel
+    public class App : UIWidgetsPanel
     {
         public static MultiLanguage Language;
 
@@ -15,7 +15,7 @@ namespace UIScripts
         {
             return new MaterialApp(
                 showPerformanceOverlay: false,
-                home: new BaseAppView()
+                home: new Home()
             );
         }
         protected override void OnEnable()
