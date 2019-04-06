@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Unity.UIWidgets.foundation;
 using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
 using Unity.UIWidgets.widgets;
@@ -12,16 +13,19 @@ namespace UIScripts
         {
             return System.Text.RegularExpressions.Regex.IsMatch(str_handset, @"^[1]+[3,4,5,8]+\d{9}");
         }
+
         public static bool IsTelephone(string str_telephone)
         {
             return System.Text.RegularExpressions.Regex.IsMatch(str_telephone, @"^(\d{3,4}-)?\d{6,8}$");
         }
 
-        public static AppBar _buildCloseAppBar(bool isCenterTitle = true, Widget title = null,
+        public static AppBar _buildCloseAppBar(bool isCenterTitle = true, Widget lealding = null, Widget title = null,
             Action closeAction = null)
         {
+            D.assert(lealding == null || closeAction == null);
             return new AppBar(
-                leading: new IconButton(icon: new Icon(icon: Icons.close), onPressed: () => { closeAction?.Invoke(); }),
+                leading: lealding ?? new IconButton(icon: new Icon(icon: Icons.close),
+                             onPressed: () => { closeAction?.Invoke(); }),
                 title: title,
                 centerTitle: isCenterTitle,
                 backgroundColor: CustomTheme.CustomTheme.EDColor,

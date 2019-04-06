@@ -6,22 +6,23 @@ using UIScripts.Externs;
 using Unity.UIWidgets.animation;
 using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
+using Unity.UIWidgets.Redux;
 using Unity.UIWidgets.ui;
 using Unity.UIWidgets.widgets;
 using UnityEngine;
 
 namespace UIScripts.LoginPage
 {
-    public class RegisterWidgets : StatefulWidget
+    public class RegisterPage : StatefulWidget
     {
         public override State createState()
         {
-            return new RegisterState();
+            return new RegisterTcikerProviderState();
         }
     }
 
 
-    public class RegisterState : SingleTickerProviderStateMixin<RegisterWidgets>
+    public class RegisterTcikerProviderState : SingleTickerProviderStateMixin<RegisterPage>
     {
         private string AvatarPath;
         private TextEditingController NameEdit = new TextEditingController("");
@@ -50,7 +51,20 @@ namespace UIScripts.LoginPage
             buildContext = context;
             return new Scaffold(
                 appBar: HelperWidgets._buildCloseAppBar(isCenterTitle: true, title: new Text(""),
-                    () => { Navigator.pop(context); }),
+                    lealding: new StoreConnector<AppState, object>(
+                        converter: state => null,
+                        builder: ((BuildContext, model, dispatcher) => new IconButton(
+                            icon: new Icon(icon: Icons.close),
+                            onPressed: () =>
+                            {
+                                dispatcher.dispatch(new RegisterState()
+                                {
+                                    ClickedRegister = false,
+                                    Context = context
+                                });
+                            })),
+                        pure: true
+                    )),
                 backgroundColor: CustomTheme.CustomTheme.EDColor,
                 body: _buildBody()
             );
@@ -107,24 +121,40 @@ namespace UIScripts.LoginPage
                             {
                                 new TextFieldExtern("请填写验证码", padding: EdgeInsets.only(left: 20, right: 20, top: 20),
                                     maxLength: 6, editingController: VerfyCodeEdit),
-                                SendVerfyCode
-                                    ? new Container(
-                                        alignment: Alignment.centerRight,
-                                        padding: EdgeInsets.only(right: 25, bottom: 5),
-                                        child: new Text(CountDown.value + "s", style: new TextStyle(fontSize: 18))
+
+                                new StoreConnector<AppState, object>(
+                                    converter: state => null,
+                                    builder: ((context1, model, dispatcher) =>
+                                        SendVerfyCode
+                                            ? new Container(
+                                                alignment: Alignment.centerRight,
+                                                padding: EdgeInsets.only(right: 25, bottom: 5),
+                                                child: new CountdownWidget(
+                                                    timeSpan: new TimeSpan(0, 1, 0)
+                                                )
+                                            )
+                                            : new Container(
+                                                alignment: Alignment.centerRight,
+                                                padding: EdgeInsets.only(right: 25, bottom: 5),
+                                                child: new StoreConnector<AppState, object>(
+                                                    converter: state => null,
+                                                    builder: ((context2, model2, dispatcher2) =>
+                                                        new GestureDetector(child: new Icon(icon: Icons.send, size: 20),
+                                                            onTap: () =>
+                                                            {
+                                                                SendVerfyCode = true;
+                                                                dispatcher2.dispatch(new SendVerfyCodeState()
+                                                                    {
+                                                                        SendVerfyCode = true
+                                                                    }
+                                                                );
+                                                            }
+                                                        )
+                                                    )
+                                                )
+                                            )
                                     )
-                                    : new Container(
-                                        alignment: Alignment.centerRight,
-                                        padding: EdgeInsets.only(right: 25, bottom: 5),
-                                        child: new GestureDetector(child: new Icon(icon: Icons.send, size: 20),
-                                            onTap: () =>
-                                            {
-                                                SendVerfyCode = true;
-                                                //CountDown();
-                                                CountDownController.forward();
-                                                setState();
-                                            })
-                                    ),
+                                )
                             }
                         ),
 
@@ -167,7 +197,7 @@ namespace UIScripts.LoginPage
             CountDownController.removeStatusListener(Reset);
             CountDownController.stop();
             CountDownController.dispose();
-            base.dispose();         
+            base.dispose();
         }
 
         private void Reset(AnimationStatus status)
