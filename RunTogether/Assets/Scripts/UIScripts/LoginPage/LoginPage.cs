@@ -27,7 +27,7 @@ namespace UIScripts.LoginPage
                             {
                                 dispatcher.dispatch(new LoginState()
                                 {
-                                    ClickedLogin = false,
+                                    ClickedNextButton = false,
                                     Context = context
                                 });
                             })),
@@ -65,21 +65,26 @@ namespace UIScripts.LoginPage
                             height: 60,
                             child: new Padding(
                                 padding: EdgeInsets.only(top: 20),
-                                child: new FlatButton(color: Colors.green,
-                                    child: new Text("登录",
-                                        style: CustomTheme.CustomTheme.DefaultTextThemen.display2),
-                                    onPressed: () =>
-                                    {
-                                        //防止用户漏空提交
-                                        if (string.IsNullOrEmpty(PasswordEdit.text) ||
-                                            string.IsNullOrEmpty(PhoneEdit.text))
-                                        {
-                                            return;
-                                        }
+                                child: new StoreConnector<AppState, object>(
+                                    converter: (state) => null,
+                                    builder: ((context, model, dispatcher) =>
+                                        new FlatButton(color: Colors.green,
+                                            child: new Text("登录",
+                                                style: CustomTheme.CustomTheme.DefaultTextThemen.display2),
+                                            onPressed: () =>
+                                            {
+                                                //防止用户漏空提交
+                                                if (string.IsNullOrEmpty(PasswordEdit.text) ||
+                                                    string.IsNullOrEmpty(PhoneEdit.text))
+                                                {
+                                                    return;
+                                                }
 
-                                        OnLoginedCallback(buildContext);
-//                                                dispatcher.dispatch(new LoginReducer() {IsLogin = true});
-                                    }
+//                                                OnLoginedCallback(buildContext);
+                                                dispatcher.dispatch(new LoginState() {Successed = true});
+                                            }
+                                        )
+                                    )
                                 )
                             )
                         ),
@@ -110,7 +115,7 @@ namespace UIScripts.LoginPage
         private void OnLoginedCallback(BuildContext buildContext)
         {
             Route tmpEditProfileRoute = new PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) => new MainView(),
+                pageBuilder: (context, animation, secondaryAnimation) => new MainPage(),
                 transitionsBuilder: (context, animation, secondaryAnimation, child) =>
                     new PageTransition(routeAnimation: animation, child: child, beginDirection: new Offset(0f, 1f),
                         endDirection: Offset.zero)

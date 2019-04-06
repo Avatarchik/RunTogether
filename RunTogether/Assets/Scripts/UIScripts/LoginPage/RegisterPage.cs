@@ -59,7 +59,7 @@ namespace UIScripts.LoginPage
                             {
                                 dispatcher.dispatch(new RegisterState()
                                 {
-                                    ClickedRegister = false,
+                                    ClickedNextButton = false,
                                     Context = context
                                 });
                             })),
@@ -122,35 +122,33 @@ namespace UIScripts.LoginPage
                                 new TextFieldExtern("请填写验证码", padding: EdgeInsets.only(left: 20, right: 20, top: 20),
                                     maxLength: 6, editingController: VerfyCodeEdit),
 
-                                new StoreConnector<AppState, object>(
-                                    converter: state => null,
+                                new StoreConnector<AppState, AppState>(
+                                    converter: (state) => state,
                                     builder: ((context1, model, dispatcher) =>
-                                        SendVerfyCode
+                                        model.SendVerfyCode
                                             ? new Container(
                                                 alignment: Alignment.centerRight,
                                                 padding: EdgeInsets.only(right: 25, bottom: 5),
                                                 child: new CountdownWidget(
-                                                    timeSpan: new TimeSpan(0, 1, 0)
+                                                    timeSpan: new TimeSpan(0, 0, 60),
+                                                    () =>
+                                                    {
+                                                        dispatcher.dispatch(new SendVerfyCodeState()
+                                                            {SendVerfyCode = false});
+                                                    },
+                                                    Counter: model.CountdownTime
                                                 )
                                             )
                                             : new Container(
                                                 alignment: Alignment.centerRight,
                                                 padding: EdgeInsets.only(right: 25, bottom: 5),
-                                                child: new StoreConnector<AppState, object>(
-                                                    converter: state => null,
-                                                    builder: ((context2, model2, dispatcher2) =>
-                                                        new GestureDetector(child: new Icon(icon: Icons.send, size: 20),
-                                                            onTap: () =>
-                                                            {
-                                                                SendVerfyCode = true;
-                                                                dispatcher2.dispatch(new SendVerfyCodeState()
-                                                                    {
-                                                                        SendVerfyCode = true
-                                                                    }
-                                                                );
-                                                            }
-                                                        )
-                                                    )
+                                                child: new GestureDetector(child: new Icon(icon: Icons.send, size: 20),
+                                                    onTap: () =>
+                                                    {
+                                                        dispatcher.dispatch(new CountdownState() {CountdownTime = 60});
+                                                        dispatcher.dispatch(new SendVerfyCodeState()
+                                                            {SendVerfyCode = true});
+                                                    }
                                                 )
                                             )
                                     )

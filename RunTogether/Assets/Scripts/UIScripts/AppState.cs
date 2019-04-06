@@ -27,7 +27,7 @@ namespace UIScripts
 
 
 
-        public int CountdownString;
+        public int CountdownTime;
         public bool SendVerfyCode;
     }
 }

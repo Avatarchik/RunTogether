@@ -16,7 +16,7 @@ namespace UIScripts
         public Home()
         {
             Views.Add(new WelcomePage());
-            Views.Add(new MainView());
+            Views.Add(new MainPage());
 //            AppManager.Instance.SetLoginState(true);
         }
 

@@ -4,21 +4,25 @@ using Unity.UIWidgets.widgets;
 
 namespace UIScripts
 {
-    public class LoginState
+    public class LoginRegisterBaseState
     {
-        public bool ClickedLogin;
+        public bool ClickedNextButton;
+        public bool Successed;
+        public bool Falied;
         public BuildContext Context;
     }
 
-    public class RegisterState
+    public class LoginState : LoginRegisterBaseState
     {
-        public bool ClickedRegister;
-        public BuildContext Context;
+    }
+
+    public class RegisterState : LoginRegisterBaseState
+    {
     }
 
     public class CountdownState
     {
-        public int Countdown;
+        public int CountdownTime;
     }
 
     public struct SendVerfyCodeState

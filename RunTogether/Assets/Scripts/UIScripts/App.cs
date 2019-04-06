@@ -36,23 +36,30 @@ namespace UIScripts
         private AppState Reducer(AppState state, object action)
         {
             var type = action.GetType().Name;
+            Debug.Log(type);
             switch (type)
             {
                 case "LoginState":
                     LoginState tmpLoginState = ((LoginState) action);
-                    if (tmpLoginState.ClickedLogin)
+                    if (tmpLoginState.ClickedNextButton)
                     {
                         state.PushNewRoute(tmpLoginState.Context, new LoginPage.LoginPage());
                     }
-                    else
+                    else if (!tmpLoginState.ClickedNextButton)
                     {
+                        state.PopRoute(tmpLoginState.Context);
+                    }
+                    else if (tmpLoginState.Successed)
+                    {
+                        state.PushNewRoute(tmpLoginState.Context, new MainPage());
+                        state.PopRoute(tmpLoginState.Context);
                         state.PopRoute(tmpLoginState.Context);
                     }
 
                     break;
                 case "RegisterState":
                     RegisterState tmpRegisterState = ((RegisterState) action);
-                    if (tmpRegisterState.ClickedRegister)
+                    if (tmpRegisterState.ClickedNextButton)
                     {
                         state.PushNewRoute(tmpRegisterState.Context, new RegisterPage());
                     }
@@ -64,7 +71,7 @@ namespace UIScripts
                     break;
                 case "CountdownState":
                     CountdownState tmpCountdownState = ((CountdownState) action);
-                    state.CountdownString = tmpCountdownState.Countdown;
+                    state.CountdownTime = tmpCountdownState.CountdownTime;
                     break;
                 case "SendVerfyCodeState":
                     SendVerfyCodeState tmpSendVerfyCodeState = ((SendVerfyCodeState) action);

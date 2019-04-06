@@ -37,7 +37,7 @@ namespace UIScripts.LoginPage
                                             {
                                                 dispatcher.dispatch(new LoginState()
                                                 {
-                                                    ClickedLogin = true,
+                                                    ClickedNextButton = true,
                                                     Context = context
                                                 });
                                             })
@@ -53,7 +53,7 @@ namespace UIScripts.LoginPage
                                             {
                                                 dispatcher.dispatch(new RegisterState()
                                                 {
-                                                    ClickedRegister = true,
+                                                    ClickedNextButton = true,
                                                     Context = context
                                                 });
                                             })
