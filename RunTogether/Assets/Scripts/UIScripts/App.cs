@@ -45,12 +45,13 @@ namespace UIScripts
                     {
                         state.PushNewRoute(tmpLoginState.Context, new LoginPage.LoginPage());
                     }
-                    else if (!tmpLoginState.ClickedNextButton)
+                    else if (!tmpLoginState.ClickedNextButton && !tmpLoginState.Successed)
                     {
                         state.PopRoute(tmpLoginState.Context);
                     }
                     else if (tmpLoginState.Successed)
                     {
+                        state.WasLogined = tmpLoginState.Successed;
                         state.PushNewRoute(tmpLoginState.Context, new MainPage());
                         state.PopRoute(tmpLoginState.Context);
                         state.PopRoute(tmpLoginState.Context);
@@ -76,6 +77,15 @@ namespace UIScripts
                 case "SendVerfyCodeState":
                     SendVerfyCodeState tmpSendVerfyCodeState = ((SendVerfyCodeState) action);
                     state.SendVerfyCode = tmpSendVerfyCodeState.SendVerfyCode;
+                    break;
+
+                case "AccountState":
+                    AccountState tmpAccountState = ((AccountState) action);
+                    state.Account = tmpAccountState.InputResult;
+                    break;
+                case "PasswordState":
+                    PasswordState tmpPasswordState = ((PasswordState) action);
+                    state.Password = tmpPasswordState.InputResult;
                     break;
             }
 

@@ -29,5 +29,9 @@ namespace UIScripts
 
         public int CountdownTime;
         public bool SendVerfyCode;
+        public bool WasLogined;
+        
+        public string Password;
+        public string Account;
     }
 }

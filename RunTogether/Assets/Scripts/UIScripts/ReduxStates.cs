@@ -20,7 +20,7 @@ namespace UIScripts
     {
     }
 
-    public class CountdownState
+    public struct CountdownState
     {
         public int CountdownTime;
     }
@@ -28,5 +28,14 @@ namespace UIScripts
     public struct SendVerfyCodeState
     {
         public bool SendVerfyCode;
+    }
+
+    public class PasswordState
+    {
+        public string InputResult;
+    }
+    public class AccountState
+    {
+        public string InputResult;
     }
 }

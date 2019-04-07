@@ -52,41 +52,73 @@ namespace UIScripts.LoginPage
                         ),
 
                         new Padding(padding: EdgeInsets.only(top: 20)),
+//
+//                        new TextFieldExtern("请填写手机号码", padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+//                            editingController: PhoneEdit, onEditingComplete: OnEditCompletedIsPhoneNumbers,
+//                            maxLength: 11, regexCondition: @"^[0-9]*$"),
+                        new StoreConnector<AppState, string>(
+                            converter: (state) => state.Password,
+                            builder: ((context, model, dispatcher) =>
+                                new TextFieldExtern("请填写手机号码",
+                                    padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                                    obscureText: false, editingController: PhoneEdit, maxLength: 11,
+                                    regexCondition: @"^[A-Za-z0-9]+$",
+                                    onEditingComplete: () =>
+                                    {
+                                        dispatcher.dispatch(new AccountState() {InputResult = PhoneEdit.text});
+                                    }))
+                        ),
+                        
+                        
+                        
+                        new StoreConnector<AppState, string>(
+                            converter: (state) => state.Password,
+                            builder: ((context, model, dispatcher) =>
+                                new TextFieldExtern("请填写密码(英文字符、数字)",
+                                    padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                                    obscureText: true, editingController: PasswordEdit, maxLength: 16,
+                                    regexCondition: @"^[A-Za-z0-9]+$",
+                                    onEditingComplete: () =>
+                                    {
+                                        dispatcher.dispatch(new PasswordState() {InputResult = PasswordEdit.text});
+                                    }))
+                        ),
 
-                        new TextFieldExtern("请填写手机号码", padding: EdgeInsets.only(left: 20, right: 20, top: 20),
-                            editingController: PhoneEdit, onEditingComplete: OnEditCompletedIsPhoneNumbers,
-                            maxLength: 11, regexCondition: @"^[0-9]*$"),
 
-                        new TextFieldExtern("请填写密码(英文字符、数字)", padding: EdgeInsets.only(left: 20, right: 20, top: 20),
-                            obscureText: true, editingController: PasswordEdit, maxLength: 16,
-                            regexCondition: @"^[A-Za-z0-9]+$"),
-                        new SizedBox(
-                            width: 340,
-                            height: 60,
-                            child: new Padding(
-                                padding: EdgeInsets.only(top: 20),
-                                child: new StoreConnector<AppState, object>(
-                                    converter: (state) => null,
-                                    builder: ((context, model, dispatcher) =>
-                                        new FlatButton(color: Colors.green,
+                        new StoreConnector<AppState, AppState>(
+                            converter: (state) => state,
+                            builder: ((context, model, dispatcher) =>
+                                new SizedBox(
+                                    width: 340,
+                                    height: 60,
+                                    child: new Padding(
+                                        padding: EdgeInsets.only(top: 20),
+                                        child: new FlatButton(color: Colors.green,
                                             child: new Text("登录",
                                                 style: CustomTheme.CustomTheme.DefaultTextThemen.display2),
                                             onPressed: () =>
                                             {
                                                 //防止用户漏空提交
-                                                if (string.IsNullOrEmpty(PasswordEdit.text) ||
-                                                    string.IsNullOrEmpty(PhoneEdit.text))
+                                                if (string.IsNullOrEmpty(model.Account) ||
+                                                    string.IsNullOrEmpty(model.Password))
                                                 {
                                                     return;
                                                 }
 
-//                                                OnLoginedCallback(buildContext);
-                                                dispatcher.dispatch(new LoginState() {Successed = true});
+                                                Debug.Log(model.Account + "--" + model.Password);
+                                                dispatcher.dispatch(new LoginState()
+                                                {
+                                                    Successed = true,
+                                                    Context = context,
+                                                    Falied = false,
+                                                    ClickedNextButton = false
+                                                });
                                             }
                                         )
                                     )
                                 )
-                            )
+                            ),
+                            pure: true
                         ),
 
 
