@@ -37,23 +37,24 @@ namespace UIScripts.LoginPage
                                             {
                                                 dispatcher.dispatch(new LoginState()
                                                 {
-                                                    ClickedNextButton = true,
+                                                    SigInOrSignUpOpCode = SigInOrSignUpOpCodeEnum.GoToLoginPage,
                                                     Context = context
                                                 });
                                             })
                                     ),
                                     pure: true
                                 ),
-                                new StoreConnector<AppState, object>(
-                                    converter: state => null,
-                                    builder: ((ctx, _, dispatcher) =>
+                                new StoreConnector<AppState, AppState>(
+                                    converter: state => state,
+                                    builder: ((ctx, model, dispatcher) =>
                                         new FlatButton(color: Colors.green, child: new Text("注册",
                                                 style: CustomTheme.CustomTheme.DefaultTextThemen.display2),
                                             onPressed: () =>
                                             {
                                                 dispatcher.dispatch(new RegisterState()
                                                 {
-                                                    ClickedNextButton = true,
+                                                    SigInOrSignUpOpCode = SigInOrSignUpOpCodeEnum.GoToRegisterPage,
+                                                    RequestOpCode = model.RequestOpCode,
                                                     Context = context
                                                 });
                                             })

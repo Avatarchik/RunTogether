@@ -1,3 +1,4 @@
+using System;
 using UIScripts.LoginPage;
 using Unity.UIWidgets.ui;
 using Unity.UIWidgets.widgets;
@@ -6,10 +7,15 @@ namespace UIScripts
 {
     public class LoginRegisterBaseState
     {
-        public bool ClickedNextButton;
-        public bool Successed;
-        public bool Falied;
         public BuildContext Context;
+        public SigInOrSignUpOpCodeEnum SigInOrSignUpOpCode;
+        public RequestOpCodeEnum RequestOpCode;
+    }
+
+
+    public class SingleStringResult
+    {
+        public string InputResult;
     }
 
     public class LoginState : LoginRegisterBaseState
@@ -25,17 +31,22 @@ namespace UIScripts
         public int CountdownTime;
     }
 
-    public struct SendVerfyCodeState
-    {
-        public bool SendVerfyCode;
+    public class PasswordState:SingleStringResult
+    {       
     }
 
-    public class PasswordState
-    {
-        public string InputResult;
+    public class AccountState:SingleStringResult
+    {        
     }
-    public class AccountState
+
+    public class SetNickNameState:SingleStringResult
+    {        
+    }
+    public class SetVerfyCodeState:SingleStringResult
+    {        
+    }
+    public class SetRegisterAvatarState
     {
-        public string InputResult;
+        public string RegisterAvatar;
     }
 }

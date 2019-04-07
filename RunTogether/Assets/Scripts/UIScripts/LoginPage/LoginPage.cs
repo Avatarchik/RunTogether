@@ -27,7 +27,7 @@ namespace UIScripts.LoginPage
                             {
                                 dispatcher.dispatch(new LoginState()
                                 {
-                                    ClickedNextButton = false,
+                                    SigInOrSignUpOpCode = SigInOrSignUpOpCodeEnum.Close,
                                     Context = context
                                 });
                             })),
@@ -68,9 +68,8 @@ namespace UIScripts.LoginPage
                                         dispatcher.dispatch(new AccountState() {InputResult = PhoneEdit.text});
                                     }))
                         ),
-                        
-                        
-                        
+
+
                         new StoreConnector<AppState, string>(
                             converter: (state) => state.Password,
                             builder: ((context, model, dispatcher) =>
@@ -88,33 +87,28 @@ namespace UIScripts.LoginPage
                         new StoreConnector<AppState, AppState>(
                             converter: (state) => state,
                             builder: ((context, model, dispatcher) =>
-                                new SizedBox(
-                                    width: 340,
-                                    height: 60,
-                                    child: new Padding(
-                                        padding: EdgeInsets.only(top: 20),
-                                        child: new FlatButton(color: Colors.green,
-                                            child: new Text("登录",
-                                                style: CustomTheme.CustomTheme.DefaultTextThemen.display2),
-                                            onPressed: () =>
+                                new Container(
+                                    margin: EdgeInsets.all(20f),
+                                    width: MediaQuery.of(context).size.width,
+                                    child: new FlatButton(color: Colors.green,
+                                        child: new Text("登录",
+                                            style: CustomTheme.CustomTheme.DefaultTextThemen.display2),
+                                        onPressed: () =>
+                                        {
+                                            //防止用户漏空提交
+                                            if (string.IsNullOrEmpty(model.Account) ||
+                                                string.IsNullOrEmpty(model.Password))
                                             {
-                                                //防止用户漏空提交
-                                                if (string.IsNullOrEmpty(model.Account) ||
-                                                    string.IsNullOrEmpty(model.Password))
-                                                {
-                                                    return;
-                                                }
-
-                                                Debug.Log(model.Account + "--" + model.Password);
-                                                dispatcher.dispatch(new LoginState()
-                                                {
-                                                    Successed = true,
-                                                    Context = context,
-                                                    Falied = false,
-                                                    ClickedNextButton = false
-                                                });
+                                                return;
                                             }
-                                        )
+
+                                            dispatcher.dispatch(new LoginState()
+                                            {
+                                                Context = context,
+                                                SigInOrSignUpOpCode = SigInOrSignUpOpCodeEnum.None,
+                                                RequestOpCode = RequestOpCodeEnum.RequestLogin
+                                            });
+                                        }
                                     )
                                 )
                             ),

@@ -1,4 +1,5 @@
-﻿using Datas;
+﻿using System;
+using Datas;
 using UIScripts.LoginPage;
 using Unity.UIWidgets;
 using Unity.UIWidgets.engine;
@@ -14,7 +15,7 @@ namespace UIScripts
     {
         protected override Widget createWidget()
         {
-            var tmpStore = new Store<AppState>(Reducer, new AppState(), ReduxLogging.create<AppState>());
+            var tmpStore = new Store<AppState>(Reducer, new AppState());
             return new StoreProvider<AppState>(tmpStore, child: new MaterialApp(
                     showPerformanceOverlay: false,
                     home: new Home()
@@ -36,49 +37,18 @@ namespace UIScripts
         private AppState Reducer(AppState state, object action)
         {
             var type = action.GetType().Name;
-            Debug.Log(type);
             switch (type)
             {
                 case "LoginState":
-                    LoginState tmpLoginState = ((LoginState) action);
-                    if (tmpLoginState.ClickedNextButton)
-                    {
-                        state.PushNewRoute(tmpLoginState.Context, new LoginPage.LoginPage());
-                    }
-                    else if (!tmpLoginState.ClickedNextButton && !tmpLoginState.Successed)
-                    {
-                        state.PopRoute(tmpLoginState.Context);
-                    }
-                    else if (tmpLoginState.Successed)
-                    {
-                        state.WasLogined = tmpLoginState.Successed;
-                        state.PushNewRoute(tmpLoginState.Context, new MainPage());
-                        state.PopRoute(tmpLoginState.Context);
-                        state.PopRoute(tmpLoginState.Context);
-                    }
-
+                    RegisterLoginAction(state, ((LoginState) action));
                     break;
                 case "RegisterState":
-                    RegisterState tmpRegisterState = ((RegisterState) action);
-                    if (tmpRegisterState.ClickedNextButton)
-                    {
-                        state.PushNewRoute(tmpRegisterState.Context, new RegisterPage());
-                    }
-                    else
-                    {
-                        state.PopRoute(tmpRegisterState.Context);
-                    }
-
+                    RegisterLoginAction(state, ((RegisterState) action));
                     break;
                 case "CountdownState":
                     CountdownState tmpCountdownState = ((CountdownState) action);
                     state.CountdownTime = tmpCountdownState.CountdownTime;
                     break;
-                case "SendVerfyCodeState":
-                    SendVerfyCodeState tmpSendVerfyCodeState = ((SendVerfyCodeState) action);
-                    state.SendVerfyCode = tmpSendVerfyCodeState.SendVerfyCode;
-                    break;
-
                 case "AccountState":
                     AccountState tmpAccountState = ((AccountState) action);
                     state.Account = tmpAccountState.InputResult;
@@ -87,10 +57,63 @@ namespace UIScripts
                     PasswordState tmpPasswordState = ((PasswordState) action);
                     state.Password = tmpPasswordState.InputResult;
                     break;
+                case "SetAvatarState":
+                    SetRegisterAvatarState tmpSetRegisterAvatarState = ((SetRegisterAvatarState) action);
+                    state.RegisterAvatar = tmpSetRegisterAvatarState.RegisterAvatar;
+                    break;
+                case "SetNickNameState":
+                    SetNickNameState tmpSetNickNameState = ((SetNickNameState) action);
+                    state.NickName = tmpSetNickNameState.InputResult;
+                    break;
+                case "SetVerfyCodeState":
+                    SetVerfyCodeState tmpSetVerfyCodeState = ((SetVerfyCodeState) action);
+                    state.VerfyCode = tmpSetVerfyCodeState.InputResult;
+                    break;
             }
 
 
             return state;
+        }
+
+
+        private void RegisterLoginAction(AppState state, LoginRegisterBaseState registerLoginState)
+        {
+            state.SigInOrSignUpOpCode = registerLoginState.SigInOrSignUpOpCode;
+            state.RequestOpCode = registerLoginState.RequestOpCode;
+
+            switch (registerLoginState.SigInOrSignUpOpCode)
+            {
+                case SigInOrSignUpOpCodeEnum.None: break;
+                case SigInOrSignUpOpCodeEnum.Close:
+                    HelperWidgets.PopRoute(registerLoginState.Context);
+                    break;
+                case SigInOrSignUpOpCodeEnum.GoToLoginPage:
+                    HelperWidgets.PushNewRoute(registerLoginState.Context, new LoginPage.LoginPage());
+                    break;
+                case SigInOrSignUpOpCodeEnum.GoToRegisterPage:
+                    HelperWidgets.PushNewRoute(registerLoginState.Context, new RegisterPage());
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            switch (registerLoginState.RequestOpCode)
+            {
+                case RequestOpCodeEnum.None:
+                    break;
+                case RequestOpCodeEnum.RequestLogin:
+                    //TODO:登陆请求
+                    break;
+                case RequestOpCodeEnum.RequestRegister:
+                    //TODO:注册请求
+                    break;
+                case RequestOpCodeEnum.RequestVerfyCode:
+                    //TODO:发送验证码请求
+                    Debug.Log("Sent! " + state.RequestOpCode);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ using System.IO;
 using Unity.UIWidgets.foundation;
 using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
+using Unity.UIWidgets.ui;
 using Unity.UIWidgets.widgets;
 
 namespace UIScripts
@@ -18,6 +19,26 @@ namespace UIScripts
         {
             return System.Text.RegularExpressions.Regex.IsMatch(str_telephone, @"^(\d{3,4}-)?\d{6,8}$");
         }
+
+
+        public static void PushNewRoute(BuildContext context, Widget widget)
+        {
+            Route tmpRoute = new PageRouteBuilder(
+                pageBuilder: ((pageContext, animation, secondaryAnimation) => widget),
+                transitionsBuilder: ((transContext, animation, secondaryAnimation,
+                        child) =>
+                    new PageTransition(routeAnimation: animation, child: child,
+                        beginDirection: new Offset(2f, 0f),
+                        endDirection: Offset.zero))
+            );
+            Navigator.push(context: context, route: tmpRoute);
+        }
+
+        public static void PopRoute(BuildContext context)
+        {
+            Navigator.pop(context: context);
+        }
+
 
         public static AppBar _buildCloseAppBar(bool isCenterTitle = true, Widget lealding = null, Widget title = null,
             Action closeAction = null)

@@ -71,8 +71,7 @@ namespace UIScripts.LoginPage
         }
 
         public override void dispose()
-        {
-            Debug.Log(CountValue.value);
+        {           
             Controller.stop();
             Controller.dispose();
             base.dispose();
