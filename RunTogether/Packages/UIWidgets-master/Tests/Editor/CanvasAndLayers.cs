@@ -49,6 +49,8 @@ namespace UIWidgets.Tests {
 
         static Texture2D texture6;
 
+        int _antiAliasing = Window.defaultAntiAliasing;
+
         CanvasAndLayers() {
             this._options = new Action[] {
                 this.drawPloygon4,
@@ -141,8 +143,8 @@ namespace UIWidgets.Tests {
                     autoGenerateMips = false,
                 };
 
-                if (QualitySettings.antiAliasing != 0) {
-                    desc.msaaSamples = QualitySettings.antiAliasing;
+                if (this._antiAliasing != 0) {
+                    desc.msaaSamples = this._antiAliasing;
                 }
 
                 this._renderTexture = RenderTexture.GetTemporary(desc);
@@ -265,7 +267,7 @@ namespace UIWidgets.Tests {
             TextBlobBuilder builder = new TextBlobBuilder();
             string text = "This is a text blob";
             builder.allocRunPos(new TextStyle(), text, 0, text.Length);
-            builder.setBounds(Unity.UIWidgets.ui.Rect.fromLTWH(0, 0, 200, 50));
+            builder.setBounds(Unity.UIWidgets.ui.Rect.fromLTWH(-10, -20, 200, 50));
             builder.positions = new Vector2d[] {
                 new Vector2d(10, 0),
                 new Vector2d(20, 0),
@@ -288,7 +290,12 @@ namespace UIWidgets.Tests {
                 new Vector2d(190, 0),
             };
 
-            canvas.drawTextBlob(builder.make(), new Offset(100, 100), paint);
+            var textBlob = builder.make();
+            canvas.drawTextBlob(textBlob, new Offset(100, 100), new Paint {
+                color = Colors.black,
+                maskFilter = MaskFilter.blur(BlurStyle.normal, 5),
+            });
+            canvas.drawTextBlob(textBlob, new Offset(100, 100), paint);
 
             canvas.drawLine(
                 new Offset(10, 30),

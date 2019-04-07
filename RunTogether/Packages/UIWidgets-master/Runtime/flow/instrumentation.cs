@@ -20,9 +20,8 @@ namespace Unity.UIWidgets.flow {
 
     public class Stopwatch {
         float _start;
-        float[] _laps;
+        readonly float[] _laps;
         int _currentSample;
-        bool _cacheDirty;
 
         public Stopwatch() {
             this._start = InstrumentationUtils.now();
@@ -33,8 +32,6 @@ namespace Unity.UIWidgets.flow {
             for (int i = 0; i < this._laps.Length; i++) {
                 this._laps[i] = delta;
             }
-
-            this._cacheDirty = true;
         }
 
         public void start() {
@@ -95,11 +92,13 @@ namespace Unity.UIWidgets.flow {
             }
 
             canvas.drawPath(barPath, paint);
-            if (curFrame >= 0 && curFrame < costFrames.Length && costFrames[curFrame] != 0) {
-                float curHeight = Mathf.Min(perHeight * costFrames[curFrame] * 1000, rect.height);
-                Rect barRect = Rect.fromLTWH(rect.left + barWidth * curFrame, rect.top + rect.height - curHeight,
-                    barWidth, curHeight);
-                canvas.drawRect(barRect, paint2);
+            if (curFrame >= 0 && curFrame < costFrames.Length) {
+                if (costFrames[curFrame] != 0) {
+                    float curHeight = Mathf.Min(perHeight * costFrames[curFrame] * 1000, rect.height);
+                    Rect barRect = Rect.fromLTWH(rect.left + barWidth * curFrame, rect.top + rect.height - curHeight,
+                        barWidth, curHeight);
+                    canvas.drawRect(barRect, paint2);
+                }
 
                 var pb = new ParagraphBuilder(new ParagraphStyle { });
                 pb.addText("Current Frame Cost: " + costFrames[curFrame] * 1000 + "ms" + " ; Max(in last 120 frames): " + this.maxDelta() * 1000 + "ms");

@@ -348,6 +348,7 @@ namespace Unity.UIWidgets.ui {
                 height = textureHeight,
                 layerBounds = maskBounds,
                 filterMode = FilterMode.Bilinear,
+                noMSAA = true,
             };
 
             parentLayer.addLayer(maskLayer);
@@ -387,6 +388,7 @@ namespace Unity.UIWidgets.ui {
                 height = textureHeight,
                 layerBounds = maskLayer.layerBounds,
                 filterMode = FilterMode.Bilinear,
+                noMSAA = true,
             };
 
             parentLayer.addLayer(blurXLayer);
@@ -397,6 +399,7 @@ namespace Unity.UIWidgets.ui {
                 height = textureHeight,
                 layerBounds = maskLayer.layerBounds,
                 filterMode = FilterMode.Bilinear,
+                noMSAA = true,
             };
 
             parentLayer.addLayer(blurYLayer);
@@ -710,8 +713,10 @@ namespace Unity.UIWidgets.ui {
             var scale = state.scale * this._devicePixelRatio;
             
             var matrix = new Matrix3(state.matrix);
-            matrix.preTranslate(offset.dx, offset.dy);            
+            matrix.preTranslate(offset.dx, offset.dy);
+            
             var mesh = new TextBlobMesh(textBlob, scale, matrix);
+            var textBlobBounds = matrix.mapRect(textBlob.boundsInText);
             
             // request font texture so text mesh could be generated correctly
             var style = textBlob.style;
@@ -723,7 +728,7 @@ namespace Unity.UIWidgets.ui {
             var tex = font.material.mainTexture;
 
             Action<Paint> drawMesh = (Paint p) => {
-                if (!this._applyClip(matrix.mapRect(textBlob.bounds))) {
+                if (!this._applyClip(textBlobBounds)) {
                     return;
                 }
 
@@ -732,7 +737,7 @@ namespace Unity.UIWidgets.ui {
             };
 
             if (paint.maskFilter != null && paint.maskFilter.sigma != 0) {
-                this._drawWithMaskFilter(textBlob.bounds, drawMesh, paint, paint.maskFilter);
+                this._drawWithMaskFilter(textBlobBounds, drawMesh, paint, paint.maskFilter);
                 return;
             }
 
@@ -741,9 +746,9 @@ namespace Unity.UIWidgets.ui {
 
         public void flush(Picture picture) {
             this._reset();
-            
+
             this._drawPicture(picture, false);
-            
+
             D.assert(this._layers.Count == 1);
             D.assert(this._layers[0].states.Count == 1);
 
@@ -755,24 +760,44 @@ namespace Unity.UIWidgets.ui {
 
             using (var cmdBuf = new CommandBuffer()) {
                 cmdBuf.name = "CommandBufferCanvas";
+
+                this._lastRtID = -1;
                 this._drawLayer(layer, cmdBuf);
+
+                // this is necessary for webgl2. not sure why... just to be safe to disable the scissor.
+                cmdBuf.DisableScissorRect();
+
                 Graphics.ExecuteCommandBuffer(cmdBuf);
             }
 
             this._clearLayer(layer);
         }
-        
-         void _drawLayer(RenderLayer layer, CommandBuffer cmdBuf) {
-             if (layer.rtID == 0) {
-                 cmdBuf.SetRenderTarget(this._renderTexture);
-                 cmdBuf.ClearRenderTarget(true, true, UnityEngine.Color.clear);
-             }
-             else {
-                 cmdBuf.SetRenderTarget(layer.rtID);
-                 cmdBuf.ClearRenderTarget(true, true, UnityEngine.Color.clear);
-             }
 
-             foreach (var cmdObj in layer.draws) {
+        int _lastRtID;
+
+        void _setRenderTarget(CommandBuffer cmdBuf, int rtID, ref bool toClear) {
+            if (this._lastRtID == rtID) {
+                return;
+            }
+
+            this._lastRtID = rtID;
+            
+            if (rtID == 0) {
+                cmdBuf.SetRenderTarget(this._renderTexture);
+            } else {
+                cmdBuf.SetRenderTarget(rtID);
+            }
+            
+            if (toClear) {
+                cmdBuf.ClearRenderTarget(true, true, UnityEngine.Color.clear);
+                toClear = false;
+            }
+        }
+
+        void _drawLayer(RenderLayer layer, CommandBuffer cmdBuf) {
+            bool toClear = true;
+
+            foreach (var cmdObj in layer.draws) {
                 switch (cmdObj) {
                     case CmdLayer cmd:
                         var subLayer = cmd.layer;
@@ -782,23 +807,18 @@ namespace Unity.UIWidgets.ui {
                             useMipMap = false,
                             autoGenerateMips = false,
                         };
-                
-                        if (QualitySettings.antiAliasing != 0) {
-                            desc.msaaSamples = QualitySettings.antiAliasing;
+
+                        if (this._renderTexture.antiAliasing != 0 && !subLayer.noMSAA) {
+                            desc.msaaSamples = this._renderTexture.antiAliasing;
                         }
-                
+
                         cmdBuf.GetTemporaryRT(subLayer.rtID, desc, subLayer.filterMode);
                         this._drawLayer(subLayer, cmdBuf);
-                        
-                        if (layer.rtID == 0) {
-                            cmdBuf.SetRenderTarget(this._renderTexture);
-                        }
-                        else {
-                            cmdBuf.SetRenderTarget(layer.rtID);
-                        }
 
                         break;
                     case CmdDraw cmd:
+                        this._setRenderTarget(cmdBuf, layer.rtID, ref toClear);
+                        
                         if (cmd.layer != null) {
                             if (cmd.layer.rtID == 0) {
                                 cmdBuf.SetGlobalTexture(CmdDraw.texId, this._renderTexture);
@@ -822,8 +842,8 @@ namespace Unity.UIWidgets.ui {
                         if (mesh == null) {
                             continue;
                         }
-                        
-                        D.assert(mesh.vertices.Count > 0);  
+
+                        D.assert(mesh.vertices.Count > 0);
                         cmd.meshObj.SetVertices(mesh.vertices);
                         cmd.meshObj.SetTriangles(mesh.triangles, 0, false);
                         cmd.meshObj.SetUVs(0, mesh.uv);
@@ -851,11 +871,6 @@ namespace Unity.UIWidgets.ui {
 
             foreach (var subLayer in layer.layers) {
                 cmdBuf.ReleaseTemporaryRT(subLayer.rtID);
-            }
-            
-            if (layer.rtID == 0) {
-                // this is necessary for webgl2. not sure why... just to be safe to disable the scissor.
-                cmdBuf.DisableScissorRect();
             }
         }
 
@@ -887,6 +902,7 @@ namespace Unity.UIWidgets.ui {
             public int width;
             public int height;
             public FilterMode filterMode = FilterMode.Point;
+            public bool noMSAA = false;
             public Rect layerBounds;
             public Paint layerPaint;
             public readonly List<object> draws = new List<object>();

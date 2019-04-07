@@ -55,7 +55,7 @@ namespace Unity.UIWidgets.engine {
         }
 
         protected override Surface createSurface() {
-            return new EditorWindowSurface(this._uiWidgetsPanel.applyRenderTexture);
+            return new WindowSurfaceImpl(this._uiWidgetsPanel.applyRenderTexture);
         }
 
         public override GUIContent titleContent {
@@ -64,6 +64,10 @@ namespace Unity.UIWidgets.engine {
 
         protected override float queryDevicePixelRatio() {
             return this._uiWidgetsPanel.devicePixelRatio;
+        }
+        
+        protected override int queryAntiAliasing() {
+            return this._uiWidgetsPanel.antiAliasing;
         }
 
         protected override Vector2 queryWindowSize() {
@@ -100,6 +104,7 @@ namespace Unity.UIWidgets.engine {
         static Event _repaintEvent;
 
         [SerializeField] protected float devicePixelRatioOverride;
+        [SerializeField] protected int antiAliasingOverride = Window.defaultAntiAliasing;
         WindowAdapter _windowAdapter;
         Texture _texture;
         Vector2 _lastMouseMove;
@@ -124,6 +129,11 @@ namespace Unity.UIWidgets.engine {
 
         protected override void OnEnable() {
             base.OnEnable();
+            
+            
+#if UNITY_ANDROID
+            Screen.fullScreen = false;
+#endif
             //Disable the default touch -> mouse event conversion on mobile devices
             Input.simulateMouseWithTouches = false;
 
@@ -155,6 +165,12 @@ namespace Unity.UIWidgets.engine {
                 return this.devicePixelRatioOverride > 0
                     ? this.devicePixelRatioOverride
                     : this._displayMetrics.devicePixelRatio;
+            }
+        }
+        
+        public int antiAliasing {
+            get {
+                return this.antiAliasingOverride >= 0 ? this.antiAliasingOverride : QualitySettings.antiAliasing;
             }
         }
 
