@@ -30,7 +30,6 @@ namespace UIScripts.LoginPage
                             })),
                         pure: true
                     )),
-                backgroundColor: CustomTheme.CustomTheme.EDColor,
                 body: _buildBody()
             );
         }
@@ -38,14 +37,13 @@ namespace UIScripts.LoginPage
         private Widget _buildBody()
         {
             return new Container(
-                margin: EdgeInsets.only(top: 50),
+                color: CustomTheme.CustomTheme.EDColor,
                 child: new ListView(
                     children: new List<Widget>
                     {
                         new Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.only(bottom: 50),
-                            child: new Text("使用手机号码登录", style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
+                            margin: EdgeInsets.only(top: 100, left: 20),
+                            child: new Text("使用手机号码登录", style: new TextStyle(fontWeight: FontWeight.w500, fontSize: 20))
                         ),
 
                         new Padding(padding: EdgeInsets.only(top: 20)),
@@ -57,9 +55,9 @@ namespace UIScripts.LoginPage
                                     margin: EdgeInsets.all(20),
                                     obscureText: false, editingController: PhoneEdit, maxLength: 11,
                                     regexCondition: @"^[A-Za-z0-9]+$",
-                                    onEditingComplete: () =>
+                                    onChanged: (text) =>
                                     {
-                                        dispatcher.dispatch(new AccountState() {InputResult = PhoneEdit.text});
+                                        dispatcher.dispatch(new AccountState() {InputResult = text});
                                     })
                             )
                         ),
@@ -72,9 +70,9 @@ namespace UIScripts.LoginPage
                                     margin: EdgeInsets.all(20),
                                     obscureText: true, editingController: PasswordEdit, maxLength: 16,
                                     regexCondition: @"^[A-Za-z0-9]+$",
-                                    onEditingComplete: () =>
+                                    onChanged: (text) =>
                                     {
-                                        dispatcher.dispatch(new PasswordState() {InputResult = PasswordEdit.text});
+                                        dispatcher.dispatch(new PasswordState() {InputResult = text});
                                     }))
                         ),
 
@@ -112,8 +110,9 @@ namespace UIScripts.LoginPage
 
                         new StoreConnector<AppState, object>(
                             converter: (state) => null,
-                            builder: ((context, model, dispatcher) => new Padding(
-                                    padding: EdgeInsets.all(80),
+                            builder: ((context, model, dispatcher) => new Container(
+//                                    padding: EdgeInsets.all(80),
+                                    alignment: Alignment.center,
                                     child: new GestureDetector(
                                         onTap: () =>
                                         {

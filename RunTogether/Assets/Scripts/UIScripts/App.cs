@@ -103,6 +103,7 @@ namespace UIScripts
                     break;
                 case RequestOpCodeEnum.RequestLogin:
                     //TODO:登陆请求
+                    Debug.Log(state.Account + "  " + state.Password);
                     break;
                 case RequestOpCodeEnum.RequestRegister:
                     //TODO:注册请求

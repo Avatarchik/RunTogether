@@ -47,25 +47,24 @@ namespace UIScripts.LoginPage
 
         private Widget _buildBody(BuildContext context)
         {
-            return new Container(
-                margin: EdgeInsets.only(top: 50),
-                child: new ListView(
-                    children: new List<Widget>
-                    {
-                        new Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.only(bottom: 50),
-                            child: new Text("用手机号注册", style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
-                        ),
+            return new ListView(
+                physics: new AlwaysScrollableScrollPhysics(),
+                children: new List<Widget>
+                {
+                    new Container(
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.only(top: 100, bottom: 10),
+                        child: new Text("用手机号注册", style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
+                    ),
 
-                        new StoreConnector<AppState, string>(
-                            converter: (state) => state.RegisterAvatar,
-                            builder: ((buildContext, model, dispatcher) =>
-                                new GestureDetector(
-                                    child: new AvatarWidget(
-                                        HelperWidgets._createImageProvider(AvatarImageType.Memory, model)),
-                                    onTap: () =>
-                                    {
+                    new StoreConnector<AppState, string>(
+                        converter: (state) => state.RegisterAvatar,
+                        builder: ((buildContext, model, dispatcher) =>
+                            new GestureDetector(
+                                child: new AvatarWidget(
+                                    HelperWidgets._createImageProvider(AvatarImageType.Memory, model)),
+                                onTap: () =>
+                                {
 #if !UNITY_EDITOR && UNITY_IOS
                                         NativeGallery.GetImageFromGallery((path) =>
                                         {
@@ -77,137 +76,126 @@ namespace UIScripts.LoginPage
                                             }
                                         });
 #endif
-                                    }
-                                )
+                                }
                             )
-                        ),
+                        )
+                    ),
 
-                        new Padding(padding: EdgeInsets.only(top: 5)),
+                    new Padding(padding: EdgeInsets.only(top: 15)),
 
-                        new StoreConnector<AppState, AppState>(
-                            converter: (state) => state,
-                            builder: ((buildContext, model, dispatcher) =>
-                                new TextFieldExtern("请设置昵称，如一起跑",
-                                    margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-                                    editingController: NameEdit,
-                                    onEditingComplete: () =>
-                                    {
-                                        dispatcher.dispatch(new SetNickNameState() {InputResult = PhoneEdit.text});
-                                    }))
-                        ),
-
-                        new StoreConnector<AppState, AppState>(
-                            converter: (state) => state,
-                            builder: ((buildContext, model, dispatcher) =>
-                                new TextFieldExtern("请填写手机号码",
-                                    margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-                                    editingController: PhoneEdit, maxLength: 11, regexCondition: @"^[0-9]*$",
-                                    onEditingComplete: () =>
-                                    {
-                                        dispatcher.dispatch(new PasswordState() {InputResult = PhoneEdit.text});
-                                    }
-                                )
+                    new StoreConnector<AppState, AppState>(
+                        converter: (state) => state,
+                        builder: ((buildContext, model, dispatcher) =>
+                            new TextFieldExtern("请设置昵称，如一起跑",
+                                margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+                                editingController: NameEdit,
+                                onChanged: (text) =>
+                                {
+                                    dispatcher.dispatch(new SetNickNameState() {InputResult = text});
+                                }))
+                    ),
+                    new StoreConnector<AppState, AppState>(
+                        converter: (state) => state,
+                        builder: ((buildContext, model, dispatcher) =>
+                            new TextFieldExtern("请填写手机号码",
+                                margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+                                editingController: PhoneEdit, maxLength: 11, regexCondition: @"^[0-9]*$",
+                                onChanged: (text) => { dispatcher.dispatch(new PasswordState() {InputResult = text}); }
                             )
-                        ),
-
-                        new StoreConnector<AppState, AppState>(
-                            converter: (state) => state,
-                            builder: ((buildContext, model, dispatcher) =>
-                                new TextFieldExtern("请填写密码(英文字符、数字)",
-                                    margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-                                    obscureText: true, editingController: PasswordEdit, maxLength: 16,
-                                    regexCondition: @"^[A-Za-z0-9]+$",
-                                    onEditingComplete: () =>
-                                    {
-                                        dispatcher.dispatch(new PasswordState() {InputResult = PasswordEdit.text});
-                                    }
-                                )
+                        )
+                    ),
+                    new StoreConnector<AppState, AppState>(
+                        converter: (state) => state,
+                        builder: ((buildContext, model, dispatcher) =>
+                            new TextFieldExtern("请填写密码(英文字符、数字)",
+                                margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+                                obscureText: true, editingController: PasswordEdit, maxLength: 16,
+                                regexCondition: @"^[A-Za-z0-9]+$",
+                                onChanged: (text) => { dispatcher.dispatch(new PasswordState() {InputResult = text}); }
                             )
-                        ),
+                        )
+                    ),
+                    new Stack(
+                        children: new List<Widget>
+                        {
+                            new TextFieldExtern("请填写验证码", margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+                                maxLength: 6, editingController: VerfyCodeEdit),
 
-                        new Stack(
-                            children: new List<Widget>
-                            {
-                                new TextFieldExtern("请填写验证码", margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-                                    maxLength: 6, editingController: VerfyCodeEdit),
-
-                                new StoreConnector<AppState, AppState>(
-                                    converter: (state) => state,
-                                    builder: ((context1, model, dispatcher) =>
-                                        model.RequestOpCode ==
-                                        RequestOpCodeEnum.RequestVerfyCode
-                                            ? new Container(
-                                                alignment: Alignment.centerRight,
-                                                padding: EdgeInsets.only(right: 25, bottom: 5),
-                                                child: new CountdownWidget(
-                                                    timeSpan: new TimeSpan(0, 0, model.CountdownTime),
-                                                    () =>
+                            new StoreConnector<AppState, AppState>(
+                                converter: (state) => state,
+                                builder: ((context1, model, dispatcher) =>
+                                    model.RequestOpCode ==
+                                    RequestOpCodeEnum.RequestVerfyCode
+                                        ? new Container(
+                                            alignment: Alignment.centerRight,
+                                            padding: EdgeInsets.only(right: 25, bottom: 5),
+                                            child: new CountdownWidget(
+                                                timeSpan: new TimeSpan(0, 0, model.CountdownTime),
+                                                () =>
+                                                {
+                                                    dispatcher.dispatch(new RegisterState()
                                                     {
-                                                        dispatcher.dispatch(new RegisterState()
-                                                        {
-                                                            Context = context,
-                                                            RequestOpCode =
-                                                                RequestOpCodeEnum.None,
-                                                            SigInOrSignUpOpCode =
-                                                                SigInOrSignUpOpCodeEnum.None
-                                                        });
-                                                    },
-                                                    Counter: model.CountdownTime
-                                                )
+                                                        Context = context,
+                                                        RequestOpCode =
+                                                            RequestOpCodeEnum.None,
+                                                        SigInOrSignUpOpCode =
+                                                            SigInOrSignUpOpCodeEnum.None
+                                                    });
+                                                },
+                                                Counter: model.CountdownTime
                                             )
-                                            : new Container(
-                                                alignment: Alignment.centerRight,
-                                                padding: EdgeInsets.only(right: 25, bottom: 5),
-                                                child: new GestureDetector(child: new Icon(icon: Icons.send, size: 20),
-                                                    onTap: () =>
+                                        )
+                                        : new Container(
+                                            alignment: Alignment.centerRight,
+                                            padding: EdgeInsets.only(right: 25, bottom: 5),
+                                            child: new GestureDetector(child: new Icon(icon: Icons.send, size: 20),
+                                                onTap: () =>
+                                                {
+                                                    dispatcher.dispatch(new CountdownState() {CountdownTime = 60});
+                                                    dispatcher.dispatch(new RegisterState()
                                                     {
-                                                        dispatcher.dispatch(new CountdownState() {CountdownTime = 60});
-                                                        dispatcher.dispatch(new RegisterState()
-                                                        {
-                                                            Context = context,
-                                                            RequestOpCode =
-                                                                RequestOpCodeEnum.RequestVerfyCode,
-                                                            SigInOrSignUpOpCode =
-                                                                SigInOrSignUpOpCodeEnum.None
-                                                        });
-                                                    }
-                                                )
+                                                        Context = context,
+                                                        RequestOpCode =
+                                                            RequestOpCodeEnum.RequestVerfyCode,
+                                                        SigInOrSignUpOpCode =
+                                                            SigInOrSignUpOpCodeEnum.None
+                                                    });
+                                                }
                                             )
-                                    )
+                                        )
                                 )
-                            }
-                        ),
+                            )
+                        }
+                    ),
+                    new StoreConnector<AppState, AppState>(
+                        converter: (state) => state,
+                        builder: ((buildContext, model, dispatcher) => new Container(
+                                margin: EdgeInsets.all(20f),
+                                width: MediaQuery.of(context).size.width,
+                                child: new FlatButton(color: Colors.green,
+                                    child: new Text("注册",
+                                        style: CustomTheme.CustomTheme.DefaultTextThemen.display2),
+                                    onPressed: () =>
+                                    {
+                                        //TODO:Register
+                                        //防止用户漏空提交
+                                        if (string.IsNullOrEmpty(model.Account)
+                                            || string.IsNullOrEmpty(model.Password)
+                                            || string.IsNullOrEmpty(model.NickName)
+                                            || string.IsNullOrEmpty(model.VerfyCode)) return;
 
-                        new StoreConnector<AppState, AppState>(
-                            converter: (state) => state,
-                            builder: ((buildContext, model, dispatcher) => new Container(
-                                    margin: EdgeInsets.all(20f),
-                                    width: MediaQuery.of(context).size.width,
-                                    child: new FlatButton(color: Colors.green,
-                                        child: new Text("注册",
-                                            style: CustomTheme.CustomTheme.DefaultTextThemen.display2),
-                                        onPressed: () =>
+                                        dispatcher.dispatch(new RegisterState()
                                         {
-                                            //TODO:Register
-                                            //防止用户漏空提交
-                                            if (string.IsNullOrEmpty(model.Account)
-                                                || string.IsNullOrEmpty(model.Password)
-                                                || string.IsNullOrEmpty(model.NickName)
-                                                || string.IsNullOrEmpty(model.VerfyCode)) return;
-
-                                            dispatcher.dispatch(new RegisterState()
-                                            {
-                                                RequestOpCode = RequestOpCodeEnum.RequestRegister,
-                                                SigInOrSignUpOpCode = SigInOrSignUpOpCodeEnum.None,
-                                                Context = context
-                                            });
-                                        }
-                                    )
+                                            RequestOpCode = RequestOpCodeEnum.RequestRegister,
+                                            SigInOrSignUpOpCode = SigInOrSignUpOpCodeEnum.None,
+                                            Context = context
+                                        });
+                                    }
                                 )
                             )
-                        ),
-                    }
-                )
+                        )
+                    ),
+                }
             );
         }
     }
