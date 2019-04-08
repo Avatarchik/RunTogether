@@ -71,7 +71,7 @@ namespace UIScripts
                         labelText: widget.HintText,
                         contentPadding: EdgeInsets.all(5.0f),
                         fillColor: Colors.transparent,
-                        filled: true,
+                        filled: false,
                         focusedBorder: new UnderlineInputBorder(
                             borderSide: new BorderSide(color: Colors.black)
                         )
