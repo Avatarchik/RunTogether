@@ -75,9 +75,10 @@ namespace UIScripts
                         focusedBorder: new UnderlineInputBorder(
                             borderSide: new BorderSide(color: Colors.black)
                         )
-                    ),                                        
+                    ),  
                     inputFormatters: widget.TextInputFormatter,
-                    onChanged:widget.onChanged
+                    onChanged:widget.onChanged,
+                    keyboardAppearance:Brightness.light
                 )
             );
         }

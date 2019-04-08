@@ -49,12 +49,12 @@ namespace UIScripts.LoginPage
                         new Padding(padding: EdgeInsets.only(top: 20)),
 
                         new StoreConnector<AppState, string>(
-                            converter: (state) => state.Password,
+                            converter: (state) => state.Account,
                             builder: ((context, model, dispatcher) =>
                                 new TextFieldExtern("请填写手机号码",
                                     margin: EdgeInsets.all(20),
                                     obscureText: false, editingController: PhoneEdit, maxLength: 11,
-                                    regexCondition: @"^[A-Za-z0-9]+$",
+                                    regexCondition: @"^[0-9]+$",
                                     onChanged: (text) =>
                                     {
                                         dispatcher.dispatch(new AccountState() {InputResult = text});
