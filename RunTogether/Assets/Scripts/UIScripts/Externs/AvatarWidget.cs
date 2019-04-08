@@ -23,7 +23,7 @@ namespace UIScripts.Externs
                 height: Height,
                 decoration: new BoxDecoration(
                     shape: BoxShape.circle,
-                    image: new DecorationImage(ImageProvider, fit: BoxFit.cover)
+                    image: new DecorationImage(ImageProvider, fit: BoxFit.contain)
                 )
             );
         }
