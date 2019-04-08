@@ -39,7 +39,7 @@ namespace UIScripts.LoginPage
         {
             return new Container(
                 margin: EdgeInsets.only(top: 50),
-                child: new Column(
+                child: new ListView(
                     children: new List<Widget>
                     {
                         new Container(
@@ -60,7 +60,8 @@ namespace UIScripts.LoginPage
                                     onEditingComplete: () =>
                                     {
                                         dispatcher.dispatch(new AccountState() {InputResult = PhoneEdit.text});
-                                    }))
+                                    })
+                            )
                         ),
 
 
@@ -114,7 +115,10 @@ namespace UIScripts.LoginPage
                             builder: ((context, model, dispatcher) => new Padding(
                                     padding: EdgeInsets.all(80),
                                     child: new GestureDetector(
-                                        onTap: () => { },
+                                        onTap: () =>
+                                        {
+                                            //TODO:找回密码
+                                        },
                                         child: new Text("登陆遇到问题？")
                                     )
                                 )
