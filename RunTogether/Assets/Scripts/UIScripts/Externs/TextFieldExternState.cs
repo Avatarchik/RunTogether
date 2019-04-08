@@ -17,9 +17,8 @@ namespace UIScripts
         internal readonly TextInputAction InputAction;
         internal readonly TextEditingController EditingController;
         internal readonly EdgeInsets Margin;
-        internal readonly bool ObscureText;
-        internal readonly VoidCallback onEditingComplete;
-        internal readonly ValueChanged<string> onSubmitted;
+        internal readonly bool ObscureText;        
+        internal readonly ValueChanged<string> onChanged;
         internal RegexMatchTextFormatter RegexMatch;
         internal readonly List<TextInputFormatter> TextInputFormatter;
 
@@ -30,9 +29,8 @@ namespace UIScripts
         public TextFieldExtern(string hintText,
             EdgeInsets margin = null,
             bool obscureText = false,
-            TextEditingController editingController = null,
-            VoidCallback onEditingComplete = null,
-            ValueChanged<string> onSubmitted = null,
+            TextEditingController editingController = null,            
+            ValueChanged<string> onChanged = null,
             int maxLength = 32,
             string regexCondition = null
         )
@@ -40,9 +38,8 @@ namespace UIScripts
             HintText = hintText;
             EditingController = editingController;
             Margin = margin;
-            ObscureText = obscureText;
-            this.onEditingComplete = onEditingComplete;
-            this.onSubmitted = onSubmitted;
+            ObscureText = obscureText;            
+            this.onChanged = onChanged;
             this.MaxLength = maxLength;
             this.RegexCondition = regexCondition;
             this.TextInputFormatter = new List<TextInputFormatter>();
@@ -78,10 +75,9 @@ namespace UIScripts
                         focusedBorder: new UnderlineInputBorder(
                             borderSide: new BorderSide(color: Colors.black)
                         )
-                    ),
-                    onEditingComplete: widget.onEditingComplete,
-                    onSubmitted: widget.onSubmitted,
-                    inputFormatters: widget.TextInputFormatter
+                    ),                                        
+                    inputFormatters: widget.TextInputFormatter,
+                    onChanged:widget.onChanged
                 )
             );
         }
