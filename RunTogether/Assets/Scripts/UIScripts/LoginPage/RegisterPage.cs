@@ -49,7 +49,7 @@ namespace UIScripts.LoginPage
         {
             return new Container(
                 margin: EdgeInsets.only(top: 50),
-                child: new Column(
+                child: new ListView(
                     children: new List<Widget>
                     {
                         new Container(
