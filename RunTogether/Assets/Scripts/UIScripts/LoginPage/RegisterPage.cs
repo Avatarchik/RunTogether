@@ -88,7 +88,7 @@ namespace UIScripts.LoginPage
                             converter: (state) => state,
                             builder: ((buildContext, model, dispatcher) =>
                                 new TextFieldExtern("请设置昵称，如一起跑",
-                                    padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                                    margin: EdgeInsets.only(left: 20, right: 20, top: 20),
                                     editingController: NameEdit,
                                     onEditingComplete: () =>
                                     {
@@ -100,7 +100,7 @@ namespace UIScripts.LoginPage
                             converter: (state) => state,
                             builder: ((buildContext, model, dispatcher) =>
                                 new TextFieldExtern("请填写手机号码",
-                                    padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                                    margin: EdgeInsets.only(left: 20, right: 20, top: 20),
                                     editingController: PhoneEdit, maxLength: 11, regexCondition: @"^[0-9]*$",
                                     onEditingComplete: () =>
                                     {
@@ -114,7 +114,7 @@ namespace UIScripts.LoginPage
                             converter: (state) => state,
                             builder: ((buildContext, model, dispatcher) =>
                                 new TextFieldExtern("请填写密码(英文字符、数字)",
-                                    padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                                    margin: EdgeInsets.only(left: 20, right: 20, top: 20),
                                     obscureText: true, editingController: PasswordEdit, maxLength: 16,
                                     regexCondition: @"^[A-Za-z0-9]+$",
                                     onEditingComplete: () =>
@@ -128,7 +128,7 @@ namespace UIScripts.LoginPage
                         new Stack(
                             children: new List<Widget>
                             {
-                                new TextFieldExtern("请填写验证码", padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                                new TextFieldExtern("请填写验证码", margin: EdgeInsets.only(left: 20, right: 20, top: 20),
                                     maxLength: 6, editingController: VerfyCodeEdit),
 
                                 new StoreConnector<AppState, AppState>(
@@ -140,7 +140,7 @@ namespace UIScripts.LoginPage
                                                 alignment: Alignment.centerRight,
                                                 padding: EdgeInsets.only(right: 25, bottom: 5),
                                                 child: new CountdownWidget(
-                                                    timeSpan: new TimeSpan(0, 0, 60),
+                                                    timeSpan: new TimeSpan(0, 0, model.CountdownTime),
                                                     () =>
                                                     {
                                                         dispatcher.dispatch(new RegisterState()

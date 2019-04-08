@@ -1,6 +1,7 @@
 using System;
 using Unity.UIWidgets;
 using Unity.UIWidgets.animation;
+using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
 using Unity.UIWidgets.Redux;
 using Unity.UIWidgets.ui;
@@ -42,14 +43,15 @@ namespace UIScripts.LoginPage
             base.initState();
             OnCompleted = onCompleted;
             Controller = new AnimationController(vsync: this, duration: timeSpan);
-            Controller.addListener(() => { Dispatcher.dispatch(new CountdownState() {CountdownTime = CountValue.value}); });
+            Controller.addListener(() =>
+            {
+                Dispatcher.dispatch(new CountdownState() {CountdownTime = CountValue.value});
+            });
             Controller.addStatusListener((status) =>
             {
-                if (status == AnimationStatus.completed)
-                {
-                    OnCompleted?.Invoke();
-                    Controller.reset();
-                }
+                if (status != AnimationStatus.completed) return;
+                OnCompleted?.Invoke();
+                Controller.reset();
             });
             CountValue = new IntTween(Counter, 0).animate(Controller);
             Controller.forward();
@@ -64,14 +66,14 @@ namespace UIScripts.LoginPage
                 {
                     Dispatcher = dispatcher;
                     return new Text(model,
-                        style: new TextStyle(fontSize: 40, fontWeight: FontWeight.w700));
+                        style: new TextStyle(fontSize: 18, fontWeight: FontWeight.normal,color:Colors.grey));
                 }),
                 pure: true
             );
         }
 
         public override void dispose()
-        {           
+        {
             Controller.stop();
             Controller.dispose();
             base.dispose();

@@ -40,7 +40,7 @@ namespace UIScripts.RunPage
                                 padding: EdgeInsets.only(left: 20, top: 20),
                                 child: new Text("填写您的匹配条件。", textAlign: TextAlign.left)
                             ),
-                            new TextFieldExtern(HintText, padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                            new TextFieldExtern(HintText, margin: EdgeInsets.only(left: 20, right: 20, top: 20),
                                 editingController: CondtioinController,regexCondition:RegexCondition),
                             new Container(
                                 alignment: Alignment.center,

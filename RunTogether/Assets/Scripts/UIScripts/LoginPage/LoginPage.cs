@@ -1,19 +1,16 @@
-using Datas;
 using System.Collections.Generic;
-using Unity.UIWidgets;
 using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
 using Unity.UIWidgets.Redux;
 using Unity.UIWidgets.ui;
 using Unity.UIWidgets.widgets;
-using UnityEngine;
 
 namespace UIScripts.LoginPage
 {
     public class LoginPage : StatelessWidget
     {
-        private TextEditingController PasswordEdit = new TextEditingController("");
-        private TextEditingController PhoneEdit = new TextEditingController("");
+        private readonly TextEditingController PasswordEdit = new TextEditingController("");
+        private readonly TextEditingController PhoneEdit = new TextEditingController("");
 
         public override Widget build(BuildContext context)
         {
@@ -21,7 +18,7 @@ namespace UIScripts.LoginPage
                 appBar: HelperWidgets._buildCloseAppBar(isCenterTitle: true, title: new Text(""),
                     lealding: new StoreConnector<AppState, object>(
                         converter: (state) => null,
-                        builder: ((BuildContext, model, dispatcher) => new IconButton(
+                        builder: ((buildContext, model, dispatcher) => new IconButton(
                             icon: new Icon(icon: Icons.close),
                             onPressed: () =>
                             {
@@ -34,11 +31,11 @@ namespace UIScripts.LoginPage
                         pure: true
                     )),
                 backgroundColor: CustomTheme.CustomTheme.EDColor,
-                body: _buildBody(context)
+                body: _buildBody()
             );
         }
 
-        private Widget _buildBody(BuildContext buildContext)
+        private Widget _buildBody()
         {
             return new Container(
                 margin: EdgeInsets.only(top: 50),
@@ -52,15 +49,12 @@ namespace UIScripts.LoginPage
                         ),
 
                         new Padding(padding: EdgeInsets.only(top: 20)),
-//
-//                        new TextFieldExtern("请填写手机号码", padding: EdgeInsets.only(left: 20, right: 20, top: 20),
-//                            editingController: PhoneEdit, onEditingComplete: OnEditCompletedIsPhoneNumbers,
-//                            maxLength: 11, regexCondition: @"^[0-9]*$"),
+
                         new StoreConnector<AppState, string>(
                             converter: (state) => state.Password,
                             builder: ((context, model, dispatcher) =>
                                 new TextFieldExtern("请填写手机号码",
-                                    padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                                    margin: EdgeInsets.all(20),
                                     obscureText: false, editingController: PhoneEdit, maxLength: 11,
                                     regexCondition: @"^[A-Za-z0-9]+$",
                                     onEditingComplete: () =>
@@ -74,7 +68,7 @@ namespace UIScripts.LoginPage
                             converter: (state) => state.Password,
                             builder: ((context, model, dispatcher) =>
                                 new TextFieldExtern("请填写密码(英文字符、数字)",
-                                    padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                                    margin: EdgeInsets.all(20),
                                     obscureText: true, editingController: PasswordEdit, maxLength: 16,
                                     regexCondition: @"^[A-Za-z0-9]+$",
                                     onEditingComplete: () =>
@@ -115,43 +109,20 @@ namespace UIScripts.LoginPage
                             pure: true
                         ),
 
-
-                        new Padding(
-                            padding: EdgeInsets.all(120),
-                            child: new GestureDetector(
-                                onTap: () => { },
-                                child: new Text("登陆遇到问题？")
+                        new StoreConnector<AppState, object>(
+                            converter: (state) => null,
+                            builder: ((context, model, dispatcher) => new Padding(
+                                    padding: EdgeInsets.all(80),
+                                    child: new GestureDetector(
+                                        onTap: () => { },
+                                        child: new Text("登陆遇到问题？")
+                                    )
+                                )
                             )
-                        ),
+                        )
                     }
                 )
             );
-        }
-
-
-        private void OnEditCompletedIsPhoneNumbers()
-        {
-            if (HelperWidgets.IsCellphoneNumber(PhoneEdit.text))
-                UnityEngine.Debug.Log("it is telephone numbers");
-            else
-                UnityEngine.Debug.Log("it is not telephone numbers");
-        }
-
-
-        private void OnLoginedCallback(BuildContext buildContext)
-        {
-            Route tmpEditProfileRoute = new PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) => new MainPage(),
-                transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-                    new PageTransition(routeAnimation: animation, child: child, beginDirection: new Offset(0f, 1f),
-                        endDirection: Offset.zero)
-            );
-
-            //TODO:Login
-            AppManager.Instance.SetLoginState(true);
-            Navigator.pop(buildContext);
-            Navigator.pop(buildContext);
-            Navigator.push(buildContext, tmpEditProfileRoute);
         }
     }
 }
