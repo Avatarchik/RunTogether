@@ -32,7 +32,7 @@ namespace UIScripts.LoginPage
                             {
                                 dispatcher.dispatch(new RegisterState()
                                 {
-                                    SigInOrSignUpOpCode = SigInOrSignUpOpCodeEnum.Close,
+                                    userOpCode = UserOpCodeEnum.Close,
                                     RequestOpCode = model.RequestOpCode,
                                     Context = context
                                 });
@@ -138,8 +138,8 @@ namespace UIScripts.LoginPage
                                                         Context = context,
                                                         RequestOpCode =
                                                             RequestOpCodeEnum.None,
-                                                        SigInOrSignUpOpCode =
-                                                            SigInOrSignUpOpCodeEnum.None
+                                                        userOpCode =
+                                                            UserOpCodeEnum.None
                                                     });
                                                 },
                                                 Counter: model.CountdownTime
@@ -157,8 +157,8 @@ namespace UIScripts.LoginPage
                                                         Context = context,
                                                         RequestOpCode =
                                                             RequestOpCodeEnum.RequestVerfyCode,
-                                                        SigInOrSignUpOpCode =
-                                                            SigInOrSignUpOpCodeEnum.None
+                                                        userOpCode =
+                                                            UserOpCodeEnum.None
                                                     });
                                                 }
                                             )
@@ -187,7 +187,7 @@ namespace UIScripts.LoginPage
                                         dispatcher.dispatch(new RegisterState()
                                         {
                                             RequestOpCode = RequestOpCodeEnum.RequestRegister,
-                                            SigInOrSignUpOpCode = SigInOrSignUpOpCodeEnum.None,
+                                            userOpCode = UserOpCodeEnum.None,
                                             Context = context
                                         });
                                     }

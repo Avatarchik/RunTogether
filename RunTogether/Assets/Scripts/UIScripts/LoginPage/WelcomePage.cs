@@ -38,7 +38,7 @@ namespace UIScripts.LoginPage
                                                 {
                                                     dispatcher.dispatch(new LoginState()
                                                     {
-                                                        SigInOrSignUpOpCode = SigInOrSignUpOpCodeEnum.GoToLoginPage,
+                                                        userOpCode = UserOpCodeEnum.GoToLoginPage,
                                                         Context = context
                                                     });
                                                 }
@@ -57,7 +57,7 @@ namespace UIScripts.LoginPage
                                                 {
                                                     dispatcher.dispatch(new RegisterState()
                                                     {
-                                                        SigInOrSignUpOpCode = SigInOrSignUpOpCodeEnum.GoToRegisterPage,
+                                                        userOpCode = UserOpCodeEnum.GoToRegisterPage,
                                                         RequestOpCode = model.RequestOpCode,
                                                         Context = context
                                                     });

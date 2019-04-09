@@ -5,28 +5,37 @@ using Unity.UIWidgets.widgets;
 
 namespace UIScripts
 {
-    public class LoginRegisterBaseState
+    public abstract class BaseState
     {
-        public BuildContext Context;
-        public SigInOrSignUpOpCodeEnum SigInOrSignUpOpCode;
+        public UserOpCodeEnum userOpCode;
         public RequestOpCodeEnum RequestOpCode;
+        public RequestResultEnum RequestResult;
+        public BuildContext Context;
+
+    }
+    
+    
+    public abstract class LoginRegisterBaseState:BaseState
+    {
+        
     }
 
 
-    public class SingleStringResult
+    public class SingleStringResult:BaseState
     {
         public string InputResult;
     }
 
     public class LoginState : LoginRegisterBaseState
     {
+        public string FailedMsg;
     }
 
     public class RegisterState : LoginRegisterBaseState
     {
     }
 
-    public struct CountdownState
+    public class CountdownState:BaseState
     {
         public int CountdownTime;
     }
@@ -45,8 +54,7 @@ namespace UIScripts
     public class SetVerfyCodeState:SingleStringResult
     {        
     }
-    public class SetRegisterAvatarState
+    public class SetRegisterAvatarState:SingleStringResult
     {
-        public string RegisterAvatar;
     }
 }

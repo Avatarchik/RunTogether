@@ -36,85 +36,74 @@ namespace UIScripts
 
         private AppState Reducer(AppState state, object action)
         {
-            var type = action.GetType().Name;
-            switch (type)
+
+            BaseState tmpBaseState = (action) as BaseState;
+            switch (tmpBaseState.userOpCode)
             {
-                case "LoginState":
-                    RegisterLoginAction(state, ((LoginState) action));
+                case UserOpCodeEnum.None: break;
+                case UserOpCodeEnum.Close:
+                    HelperWidgets.PopRoute(tmpBaseState.Context);
                     break;
-                case "RegisterState":
-                    RegisterLoginAction(state, ((RegisterState) action));
+                case UserOpCodeEnum.GoToLoginPage:
+                    HelperWidgets.PushNewRoute(tmpBaseState.Context, new LoginPage.LoginPage());
                     break;
-                case "CountdownState":
+                case UserOpCodeEnum.GoToRegisterPage:
+                    HelperWidgets.PushNewRoute(tmpBaseState.Context, new RegisterPage());
+                    break;
+                case UserOpCodeEnum.SendVerfyCode: 
                     CountdownState tmpCountdownState = ((CountdownState) action);
                     state.CountdownTime = tmpCountdownState.CountdownTime;
                     break;
-                case "AccountState":
+                case UserOpCodeEnum.TypingAccount:
                     AccountState tmpAccountState = ((AccountState) action);
                     state.Account = tmpAccountState.InputResult;
                     break;
-                case "PasswordState":
+                case UserOpCodeEnum.TypingPassword:
                     PasswordState tmpPasswordState = ((PasswordState) action);
                     state.Password = tmpPasswordState.InputResult;
                     break;
-                case "SetAvatarState":
-                    SetRegisterAvatarState tmpSetRegisterAvatarState = ((SetRegisterAvatarState) action);
-                    state.RegisterAvatar = tmpSetRegisterAvatarState.RegisterAvatar;
-                    break;
-                case "SetNickNameState":
+                case UserOpCodeEnum.TypingNickName:
                     SetNickNameState tmpSetNickNameState = ((SetNickNameState) action);
                     state.NickName = tmpSetNickNameState.InputResult;
                     break;
-                case "SetVerfyCodeState":
+                case UserOpCodeEnum.TypingVerfyCode:
                     SetVerfyCodeState tmpSetVerfyCodeState = ((SetVerfyCodeState) action);
                     state.VerfyCode = tmpSetVerfyCodeState.InputResult;
                     break;
+                case UserOpCodeEnum.SetupAvatar:
+                    SetRegisterAvatarState tmpSetRegisterAvatarState = ((SetRegisterAvatarState) action);
+                    state.RegisterAvatar = tmpSetRegisterAvatarState.InputResult;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
+           
 
-
+            switch (tmpBaseState.RequestResult)
+            {
+                case RequestResultEnum.None:
+                    break;
+                case RequestResultEnum.LoginSuccessed:
+                    HelperWidgets.PopRoute(tmpBaseState.Context);
+                    HelperWidgets.PopRoute(tmpBaseState.Context);
+                    HelperWidgets.PushNewRoute(tmpBaseState.Context,new MainPage());
+                    break;
+                case RequestResultEnum.LoginFailed:
+                    state.FialedMsg = ((LoginState) action).FailedMsg;
+                    break;
+                case RequestResultEnum.VerfyCodeSuccessed:
+                    break;
+                case RequestResultEnum.VerfyCodeFailed:
+                    break;
+                case RequestResultEnum.RegisterSuccessed:
+                    break;
+                case RequestResultEnum.RegisterFailed:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
             return state;
-        }
-
-
-        private void RegisterLoginAction(AppState state, LoginRegisterBaseState registerLoginState)
-        {
-            state.SigInOrSignUpOpCode = registerLoginState.SigInOrSignUpOpCode;
-            state.RequestOpCode = registerLoginState.RequestOpCode;
-
-            switch (registerLoginState.SigInOrSignUpOpCode)
-            {
-                case SigInOrSignUpOpCodeEnum.None: break;
-                case SigInOrSignUpOpCodeEnum.Close:
-                    HelperWidgets.PopRoute(registerLoginState.Context);
-                    break;
-                case SigInOrSignUpOpCodeEnum.GoToLoginPage:
-                    HelperWidgets.PushNewRoute(registerLoginState.Context, new LoginPage.LoginPage());
-                    break;
-                case SigInOrSignUpOpCodeEnum.GoToRegisterPage:
-                    HelperWidgets.PushNewRoute(registerLoginState.Context, new RegisterPage());
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            switch (registerLoginState.RequestOpCode)
-            {
-                case RequestOpCodeEnum.None:
-                    break;
-                case RequestOpCodeEnum.RequestLogin:
-                    //TODO:登陆请求
-                    Debug.Log(state.Account + "  " + state.Password);
-                    break;
-                case RequestOpCodeEnum.RequestRegister:
-                    //TODO:注册请求
-                    break;
-                case RequestOpCodeEnum.RequestVerfyCode:
-                    //TODO:发送验证码请求
-                    Debug.Log("Sent! " + state.RequestOpCode);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
         }
     }
 }

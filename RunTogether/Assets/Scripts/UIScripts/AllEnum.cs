@@ -1,11 +1,17 @@
 namespace UIScripts
 {
-    public enum SigInOrSignUpOpCodeEnum
+    public enum UserOpCodeEnum
     {
         None,
         Close,
         GoToLoginPage,
         GoToRegisterPage,
+        TypingAccount,
+        TypingPassword,
+        TypingNickName,
+        TypingVerfyCode,
+        SendVerfyCode,
+        SetupAvatar,
     }
 
     public enum RequestOpCodeEnum
@@ -13,6 +19,19 @@ namespace UIScripts
         None,
         RequestLogin,
         RequestRegister,
-        RequestVerfyCode,        
+        RequestVerfyCode,
+    }
+
+    public enum RequestResultEnum
+    {
+        None,
+        LoginSuccessed,
+        LoginFailed,
+
+        VerfyCodeSuccessed,
+        VerfyCodeFailed,
+
+        RegisterSuccessed,
+        RegisterFailed,
     }
 }

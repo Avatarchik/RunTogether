@@ -24,7 +24,7 @@ namespace UIScripts.LoginPage
                             {
                                 dispatcher.dispatch(new LoginState()
                                 {
-                                    SigInOrSignUpOpCode = SigInOrSignUpOpCodeEnum.Close,
+                                    userOpCode = UserOpCodeEnum.Close,
                                     Context = context
                                 });
                             })),
@@ -54,7 +54,7 @@ namespace UIScripts.LoginPage
                                 new TextFieldExtern("请填写手机号码",
                                     margin: EdgeInsets.all(20),
                                     obscureText: false, editingController: PhoneEdit, maxLength: 11,
-                                    regexCondition: @"^[0-9]+$",
+                                    regexCondition: @"^[0-9]*$",
                                     onChanged: (text) =>
                                     {
                                         dispatcher.dispatch(new AccountState() {InputResult = text});
@@ -98,7 +98,7 @@ namespace UIScripts.LoginPage
                                             dispatcher.dispatch(new LoginState()
                                             {
                                                 Context = context,
-                                                SigInOrSignUpOpCode = SigInOrSignUpOpCodeEnum.None,
+                                                userOpCode = UserOpCodeEnum.None,
                                                 RequestOpCode = RequestOpCodeEnum.RequestLogin
                                             });
                                         }
@@ -111,7 +111,7 @@ namespace UIScripts.LoginPage
                         new StoreConnector<AppState, object>(
                             converter: (state) => null,
                             builder: ((context, model, dispatcher) => new Container(
-//                                    padding: EdgeInsets.all(80),
+                                    margin: EdgeInsets.all(40),
                                     alignment: Alignment.center,
                                     child: new GestureDetector(
                                         onTap: () =>

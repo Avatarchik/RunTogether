@@ -184,7 +184,8 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
-  devicePixelRatioOverride: 2
+  devicePixelRatioOverride: 0
+  antiAliasingOverride: 4
 --- !u!1 &997782486
 GameObject:
   m_ObjectHideFlags: 0
@@ -380,9 +381,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GetUserData:
-    AvatarUrl: https://avatar.gitee.com/uploads/62/1370162_Advancer68.png!avatar60?1495855142
-    Mottor: tes
-    NickName: NSWell
+    AvatarUrl: 
+    Mottor: 
+    NickName: 
 --- !u!1 &1539332716
 GameObject:
   m_ObjectHideFlags: 0
