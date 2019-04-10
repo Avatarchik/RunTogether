@@ -21,6 +21,9 @@ namespace UIScripts
 
         //倒计时
         public int CountdownTime;
+        
+        //验证码是否已发送
+        public bool VerfyCodeWasSent;
 
         #endregion
 
@@ -32,10 +35,8 @@ namespace UIScripts
         //账户
         public string Account;
 
-        //用户是否已经登陆
-        public bool WasLogined;
-
         public string FialedMsg;
+        public float RegisterOrLoginButtonOpacity = 0.6f;
 
         #endregion
 
@@ -53,6 +54,18 @@ namespace UIScripts
         public AppState()
         {
             RegisterAvatar = Application.streamingAssetsPath + "/avatar.png";
+        }
+
+        public AppState Clone()
+        {
+            return new AppState
+            {
+                RegisterOrLoginButtonOpacity = RegisterOrLoginButtonOpacity,
+                UserOpCode = UserOpCode,
+                RequestOpCode = RequestOpCode,
+                RequestResult = RequestResult,
+                buildContext = buildContext,
+            };
         }
     }
 }

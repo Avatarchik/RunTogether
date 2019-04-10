@@ -32,7 +32,7 @@ namespace UIScripts.LoginPage
                             {
                                 dispatcher.dispatch(new RegisterState()
                                 {
-                                    userOpCode = UserOpCodeEnum.Close,
+                                    UserOpCode = UserOpCodeEnum.Close,
                                     RequestOpCode = model.RequestOpCode,
                                     Context = context
                                 });
@@ -66,15 +66,18 @@ namespace UIScripts.LoginPage
                                 onTap: () =>
                                 {
 #if !UNITY_EDITOR && UNITY_IOS
-                                        NativeGallery.GetImageFromGallery((path) =>
+                                    NativeGallery.GetImageFromGallery((path) =>
+                                    {
+                                        if (string.IsNullOrEmpty(path)) return;
+                                        using (WindowProvider.of(context).getScope())
                                         {
-                                            if (string.IsNullOrEmpty(path)) return;
-                                            using (WindowProvider.of(context).getScope())
+                                            dispatcher.dispatch(new SetRegisterAvatarState()
                                             {
-                                                dispatcher.dispatch(new SetRegisterAvatarState() {RegisterAvatar =
- path});
-                                            }
-                                        });
+                                                InputResult = path,
+                                                UserOpCode = UserOpCodeEnum.SetupAvatar,
+                                            });
+                                        }
+                                    });
 #endif
                                 }
                             )
@@ -91,7 +94,12 @@ namespace UIScripts.LoginPage
                                 editingController: NameEdit,
                                 onChanged: (text) =>
                                 {
-                                    dispatcher.dispatch(new SetNickNameState() {InputResult = text});
+                                    dispatcher.dispatch(new SetNickNameState()
+                                    {
+                                        UserOpCode = UserOpCodeEnum.TypingNickName,
+                                        InputResult = text,
+                                        PageState = PageStateEnum.RegisterPage
+                                    });
                                 }))
                     ),
                     new StoreConnector<AppState, AppState>(
@@ -100,7 +108,15 @@ namespace UIScripts.LoginPage
                             new TextFieldExtern("请填写手机号码",
                                 margin: EdgeInsets.only(left: 20, right: 20, top: 20),
                                 editingController: PhoneEdit, maxLength: 11, regexCondition: @"^[0-9]*$",
-                                onChanged: (text) => { dispatcher.dispatch(new PasswordState() {InputResult = text}); }
+                                onChanged: (text) =>
+                                {
+                                    dispatcher.dispatch(new AccountState()
+                                    {
+                                        UserOpCode = UserOpCodeEnum.TypingAccount,
+                                        InputResult = text,
+                                        PageState = PageStateEnum.RegisterPage
+                                    });
+                                }
                             )
                         )
                     ),
@@ -111,21 +127,42 @@ namespace UIScripts.LoginPage
                                 margin: EdgeInsets.only(left: 20, right: 20, top: 20),
                                 obscureText: true, editingController: PasswordEdit, maxLength: 16,
                                 regexCondition: @"^[A-Za-z0-9]+$",
-                                onChanged: (text) => { dispatcher.dispatch(new PasswordState() {InputResult = text}); }
+                                onChanged: (text) =>
+                                {
+                                    dispatcher.dispatch(new PasswordState()
+                                    {
+                                        UserOpCode = UserOpCodeEnum.TypingPassword,
+                                        InputResult = text,
+                                        PageState = PageStateEnum.RegisterPage
+                                    });
+                                }
                             )
                         )
                     ),
                     new Stack(
                         children: new List<Widget>
                         {
-                            new TextFieldExtern("请填写验证码", margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-                                maxLength: 6, editingController: VerfyCodeEdit),
+                            new StoreConnector<AppState, AppState>(
+                                converter: (state) => state,
+                                builder: ((buildContext, model, dispatcher) =>
+                                    new TextFieldExtern("请填写验证码", margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+                                        maxLength: 6, editingController: VerfyCodeEdit,
+                                        onChanged: (text) =>
+                                        {
+                                            dispatcher.dispatch(new SetVerfyCodeState()
+                                            {
+                                                Context = buildContext,
+                                                UserOpCode = UserOpCodeEnum.TypingVerfyCode,
+                                                InputResult = text
+                                            });
+                                        })
+                                )
+                            ),
 
                             new StoreConnector<AppState, AppState>(
                                 converter: (state) => state,
                                 builder: ((context1, model, dispatcher) =>
-                                    model.RequestOpCode ==
-                                    RequestOpCodeEnum.RequestVerfyCode
+                                    model.VerfyCodeWasSent
                                         ? new Container(
                                             alignment: Alignment.centerRight,
                                             padding: EdgeInsets.only(right: 25, bottom: 5),
@@ -136,10 +173,7 @@ namespace UIScripts.LoginPage
                                                     dispatcher.dispatch(new RegisterState()
                                                     {
                                                         Context = context,
-                                                        RequestOpCode =
-                                                            RequestOpCodeEnum.None,
-                                                        userOpCode =
-                                                            UserOpCodeEnum.None
+                                                        UserOpCode = UserOpCodeEnum.None
                                                     });
                                                 },
                                                 Counter: model.CountdownTime
@@ -151,14 +185,10 @@ namespace UIScripts.LoginPage
                                             child: new GestureDetector(child: new Icon(icon: Icons.send, size: 20),
                                                 onTap: () =>
                                                 {
-                                                    dispatcher.dispatch(new CountdownState() {CountdownTime = 60});
-                                                    dispatcher.dispatch(new RegisterState()
+                                                    dispatcher.dispatch(new CountdownState()
                                                     {
-                                                        Context = context,
-                                                        RequestOpCode =
-                                                            RequestOpCodeEnum.RequestVerfyCode,
-                                                        userOpCode =
-                                                            UserOpCodeEnum.None
+                                                        CountdownTime = 60,
+                                                        UserOpCode = UserOpCodeEnum.SendVerfyCode
                                                     });
                                                 }
                                             )
@@ -187,7 +217,7 @@ namespace UIScripts.LoginPage
                                         dispatcher.dispatch(new RegisterState()
                                         {
                                             RequestOpCode = RequestOpCodeEnum.RequestRegister,
-                                            userOpCode = UserOpCodeEnum.None,
+                                            UserOpCode = UserOpCodeEnum.None,
                                             Context = context
                                         });
                                     }

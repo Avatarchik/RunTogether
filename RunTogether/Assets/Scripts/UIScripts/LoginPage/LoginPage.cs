@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Unity.UIWidgets.animation;
 using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
 using Unity.UIWidgets.Redux;
@@ -7,10 +9,29 @@ using Unity.UIWidgets.widgets;
 
 namespace UIScripts.LoginPage
 {
-    public class LoginPage : StatelessWidget
+    public class LoginPage : StatefulWidget
+    {
+        public override State createState()
+        {
+            return new _LoginPage();
+        }
+    }
+
+
+    public class _LoginPage : SingleTickerProviderStateMixin<LoginPage>
     {
         private readonly TextEditingController PasswordEdit = new TextEditingController("");
         private readonly TextEditingController PhoneEdit = new TextEditingController("");
+        private Animation<float> Animation;
+        private AnimationController AnimController;
+
+        public override void initState()
+        {
+            base.initState();
+            AnimController = new AnimationController(vsync: this,
+                duration: new TimeSpan(0, 0, 0, 0, 100));
+            Animation = new FloatTween(.7f, 1f).animate(AnimController);
+        }
 
         public override Widget build(BuildContext context)
         {
@@ -24,7 +45,7 @@ namespace UIScripts.LoginPage
                             {
                                 dispatcher.dispatch(new LoginState()
                                 {
-                                    userOpCode = UserOpCodeEnum.Close,
+                                    UserOpCode = UserOpCodeEnum.Close,
                                     Context = context
                                 });
                             })),
@@ -57,7 +78,12 @@ namespace UIScripts.LoginPage
                                     regexCondition: @"^[0-9]*$",
                                     onChanged: (text) =>
                                     {
-                                        dispatcher.dispatch(new AccountState() {InputResult = text});
+                                        dispatcher.dispatch(new AccountState()
+                                        {
+                                            InputResult = text,
+                                            UserOpCode = UserOpCodeEnum.TypingAccount,
+                                            PageState = PageStateEnum.LoginPage
+                                        });
                                     })
                             )
                         ),
@@ -69,10 +95,15 @@ namespace UIScripts.LoginPage
                                 new TextFieldExtern("请填写密码(英文字符、数字)",
                                     margin: EdgeInsets.all(20),
                                     obscureText: true, editingController: PasswordEdit, maxLength: 16,
-                                    regexCondition: @"^[A-Za-z0-9]+$",
+                                    regexCondition: @"^[A-Za-z0-9]*$",
                                     onChanged: (text) =>
                                     {
-                                        dispatcher.dispatch(new PasswordState() {InputResult = text});
+                                        dispatcher.dispatch(new PasswordState()
+                                        {
+                                            InputResult = text,
+                                            UserOpCode = UserOpCodeEnum.TypingPassword,
+                                            PageState = PageStateEnum.LoginPage
+                                        });
                                     }))
                         ),
 
@@ -98,7 +129,7 @@ namespace UIScripts.LoginPage
                                             dispatcher.dispatch(new LoginState()
                                             {
                                                 Context = context,
-                                                userOpCode = UserOpCodeEnum.None,
+                                                UserOpCode = UserOpCodeEnum.None,
                                                 RequestOpCode = RequestOpCodeEnum.RequestLogin
                                             });
                                         }

@@ -34,4 +34,12 @@ namespace UIScripts
         RegisterSuccessed,
         RegisterFailed,
     }
+
+    public enum PageStateEnum
+    {
+        WelcomePage,
+        LoginPage,
+        RegisterPage,
+        MainPage,
+    }
 }
