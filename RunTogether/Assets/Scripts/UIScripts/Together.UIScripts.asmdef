@@ -3,7 +3,8 @@
     "references": [
         "Unity.UIWidgets",
         "RunTogether.Datas",
-        "RunTorgether.NativeAPI"
+        "RunTorgether.NativeAPI",
+        "RunTogether.HTTP"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

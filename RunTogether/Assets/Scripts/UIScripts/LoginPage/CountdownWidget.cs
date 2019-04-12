@@ -45,7 +45,7 @@ namespace UIScripts.LoginPage
             Controller = new AnimationController(vsync: this, duration: timeSpan);
             Controller.addListener(() =>
             {
-                Dispatcher.dispatch(new CountdownState()
+                Dispatcher.dispatch(new CountdownAction()
                 {
                     CountdownTime = CountValue.value,
                     UserOpCode = UserOpCodeEnum.SendVerfyCode                    

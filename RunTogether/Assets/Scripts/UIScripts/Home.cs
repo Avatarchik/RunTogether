@@ -9,11 +9,6 @@ namespace UIScripts
 {
     public class Home : StatelessWidget
     {
-//        private readonly List<Widget> Pages = new List<Widget>()
-//        {
-//            new MainPage(),
-//            new WelcomePage(),
-//        };
         public override Widget build(BuildContext buildContext)
         {
             return new StoreConnector<AppState, RequestResultEnum>(

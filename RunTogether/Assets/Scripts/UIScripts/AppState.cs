@@ -21,7 +21,7 @@ namespace UIScripts
 
         //倒计时
         public int CountdownTime;
-        
+
         //验证码是否已发送
         public bool VerfyCodeWasSent;
 
@@ -35,9 +35,6 @@ namespace UIScripts
         //账户
         public string Account;
 
-        public string FialedMsg;
-        public float RegisterOrLoginButtonOpacity = 0.6f;
-
         #endregion
 
         #region User Option State
@@ -48,7 +45,7 @@ namespace UIScripts
 
         #endregion
 
-
+        public bool HideCircularProgressIndicator = true;
         public BuildContext buildContext;
 
         public AppState()
@@ -60,7 +57,6 @@ namespace UIScripts
         {
             return new AppState
             {
-                RegisterOrLoginButtonOpacity = RegisterOrLoginButtonOpacity,
                 UserOpCode = UserOpCode,
                 RequestOpCode = RequestOpCode,
                 RequestResult = RequestResult,

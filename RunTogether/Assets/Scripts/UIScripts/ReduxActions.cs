@@ -1,12 +1,15 @@
 using System;
+using System.Collections.Generic;
 using BestHTTP;
 using UIScripts.LoginPage;
+using Unity.UIWidgets;
 using Unity.UIWidgets.ui;
 using Unity.UIWidgets.widgets;
+using UnityEngine;
 
 namespace UIScripts
 {
-    public abstract class BaseState
+    public abstract class BaseAction
     {
         public UserOpCodeEnum UserOpCode;
         public RequestOpCodeEnum RequestOpCode;
@@ -17,57 +20,87 @@ namespace UIScripts
     }
 
 
-    public abstract class LoginRegisterBaseState : BaseState
+    public class LoginRegisterAction : BaseAction
     {
-    }
+        private readonly Action SuccessedCallback;
+        private readonly Action<string> FailedCallback;
+        private readonly Dictionary<string, string> RequestParamaters;
 
-
-    public class SingleStringResult : BaseState
-    {
-        public string InputResult;
-    }
-
-    public class LoginState : LoginRegisterBaseState
-    {
-        public void Request(string account,string password)
+        public LoginRegisterAction(Dictionary<string, string> parmaters, Action successedCallback = null,
+            Action<string> failedCallback = null)
         {
-            HTTPRequest tmpRequest = new HTTPRequest(new Uri(""),OnFinished);
+            RequestParamaters = parmaters;
+            SuccessedCallback = successedCallback;
+            FailedCallback = failedCallback;
+        }
+
+
+        internal void Request()
+        {
+            Debug.Log("Request");
+            Debug.Assert(RequestParamaters.ContainsKey("url"), "Paramaters is no contain url key");
+            HTTPRequest tmpRequest = new HTTPRequest(new Uri(RequestParamaters["url"]), OnFinished);
             tmpRequest.Send();
         }
 
         private void OnFinished(HTTPRequest originalrequest, HTTPResponse response)
         {
-            
+            if (response == null) return;
+            if (response.IsSuccess)
+            {
+                SuccessedCallback?.Invoke();
+            }
+            else
+            {
+                FailedCallback?.Invoke(response.Message);
+            }
         }
     }
 
-    public class RegisterState : LoginRegisterBaseState
+
+    public class SingleStringResult : BaseAction
     {
-        
+        public string InputResult;
     }
 
-    public class CountdownState : BaseState
+    public class LoginAction : LoginRegisterAction
+    {
+        public LoginAction(Dictionary<string, string> parmaters = null, Action successedCallback = null,
+            Action<string> failedCallback = null) : base(parmaters, successedCallback, failedCallback)
+        {
+        }
+    }
+
+    public class RegisterAction : LoginRegisterAction
+    {
+        public RegisterAction(Dictionary<string, string> parmaters = null, Action successedCallback = null,
+            Action<string> failedCallback = null) : base(parmaters, successedCallback, failedCallback)
+        {
+        }
+    }
+
+    public class CountdownAction : BaseAction
     {
         public int CountdownTime;
     }
 
-    public class PasswordState : SingleStringResult
+    public class PasswordAction : SingleStringResult
     {
     }
 
-    public class AccountState : SingleStringResult
+    public class AccountAction : SingleStringResult
     {
     }
 
-    public class SetNickNameState : SingleStringResult
+    public class SetNickNameAction : SingleStringResult
     {
     }
 
-    public class SetVerfyCodeState : SingleStringResult
+    public class SetVerfyCodeAction : SingleStringResult
     {
     }
 
-    public class SetRegisterAvatarState : SingleStringResult
+    public class SetRegisterAvatarAction : SingleStringResult
     {
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Datas;
 using UIScripts.LoginPage;
 using Unity.UIWidgets;
@@ -36,73 +37,92 @@ namespace UIScripts
 
         private AppState Reducer(AppState state, object action)
         {
-            BaseState tmpBaseState = (action) as BaseState;
-            if (tmpBaseState == null) return state;
+            BaseAction tmpBaseAction = (action) as BaseAction;
+            
+            if (tmpBaseAction == null) return state;
             var tmpAppState = state;
-            switch (tmpBaseState.UserOpCode)
+            switch (tmpBaseAction.UserOpCode)
             {
                 case UserOpCodeEnum.None: break;
                 case UserOpCodeEnum.Close:
-                    HelperWidgets.PopRoute(tmpBaseState.Context);
+                    HelperWidgets.PopRoute(tmpBaseAction.Context);
                     break;
                 case UserOpCodeEnum.GoToLoginPage:
-                    HelperWidgets.PushNewRoute(tmpBaseState.Context, new LoginPage.LoginPage());
+                    HelperWidgets.PushNewRoute(tmpBaseAction.Context, new LoginPage.LoginPage());
                     break;
                 case UserOpCodeEnum.GoToRegisterPage:
-                    HelperWidgets.PushNewRoute(tmpBaseState.Context, new RegisterPage());
+                    HelperWidgets.PushNewRoute(tmpBaseAction.Context, new RegisterPage());
                     break;
                 case UserOpCodeEnum.SendVerfyCode:
-                    tmpAppState.UserOpCode = tmpBaseState.UserOpCode;
-                    CountdownState tmpCountdownState = ((CountdownState) action);
-                    tmpAppState.CountdownTime = tmpCountdownState.CountdownTime;
+                    tmpAppState.UserOpCode = tmpBaseAction.UserOpCode;
+                    CountdownAction tmpCountdownAction = ((CountdownAction) action);
+                    tmpAppState.CountdownTime = tmpCountdownAction.CountdownTime;
                     tmpAppState.VerfyCodeWasSent = true;
                     break;
                 case UserOpCodeEnum.TypingAccount:
-                    AccountState tmpAccountState = ((AccountState) action);
-                    tmpAppState.Account = tmpAccountState.InputResult;
+                    AccountAction tmpAccountAction = ((AccountAction) action);
+                    tmpAppState.Account = tmpAccountAction.InputResult;
                     break;
                 case UserOpCodeEnum.TypingPassword:
-                    PasswordState tmpPasswordState = ((PasswordState) action);
-                    tmpAppState.Password = tmpPasswordState.InputResult;
+                    PasswordAction tmpPasswordAction = ((PasswordAction) action);
+                    tmpAppState.Password = tmpPasswordAction.InputResult;
                     break;
                 case UserOpCodeEnum.TypingNickName:
-                    SetNickNameState tmpSetNickNameState = ((SetNickNameState) action);
-                    tmpAppState.NickName = tmpSetNickNameState.InputResult;
+                    SetNickNameAction tmpSetNickNameAction = ((SetNickNameAction) action);
+                    tmpAppState.NickName = tmpSetNickNameAction.InputResult;
                     break;
                 case UserOpCodeEnum.TypingVerfyCode:
-                    SetVerfyCodeState tmpSetVerfyCodeState = ((SetVerfyCodeState) action);
-                    tmpAppState.VerfyCode = tmpSetVerfyCodeState.InputResult;
+                    SetVerfyCodeAction tmpSetVerfyCodeAction = ((SetVerfyCodeAction) action);
+                    tmpAppState.VerfyCode = tmpSetVerfyCodeAction.InputResult;
                     break;
                 case UserOpCodeEnum.SetupAvatar:
-                    SetRegisterAvatarState tmpSetRegisterAvatarState = ((SetRegisterAvatarState) action);
-                    tmpAppState.RegisterAvatar = tmpSetRegisterAvatarState.InputResult;
+                    SetRegisterAvatarAction tmpSetRegisterAvatarAction = ((SetRegisterAvatarAction) action);
+                    tmpAppState.RegisterAvatar = tmpSetRegisterAvatarAction.InputResult;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
+            switch (tmpBaseAction.RequestOpCode)
+            {
+                case RequestOpCodeEnum.None:
+                    break;
+                case RequestOpCodeEnum.RequestLogin:
+                    LoginAction tmpLoginAction = (tmpBaseAction as LoginAction);
+                    tmpLoginAction?.Request();
+                    state.HideCircularProgressIndicator = false;
+                    break;
+                case RequestOpCodeEnum.RequestRegister:
+                    break;
+                case RequestOpCodeEnum.RequestVerfyCode:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
-            switch (tmpBaseState.RequestResult)
+            switch (tmpBaseAction.RequestResult)
             {
                 case RequestResultEnum.None:
                     break;
                 case RequestResultEnum.LoginSuccessed:
-                    HelperWidgets.PopRoute(tmpBaseState.Context);
-                    HelperWidgets.PopRoute(tmpBaseState.Context);
-                    HelperWidgets.PushNewRoute(tmpBaseState.Context, new MainPage());
+                    HelperWidgets.PushNewRoute(tmpBaseAction.Context, new MainPage());
                     break;
                 case RequestResultEnum.LoginFailed:
-                    state.FialedMsg = tmpBaseState.FailedMsg;
+                    break;
+                case RequestResultEnum.VerfyCodeSuccessed:
                     break;
                 case RequestResultEnum.VerfyCodeFailed:
-                    state.FialedMsg = tmpBaseState.FailedMsg;
+                    break;
+                case RequestResultEnum.RegisterSuccessed:
                     break;
                 case RequestResultEnum.RegisterFailed:
-                    state.FialedMsg = tmpBaseState.FailedMsg;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+//       
+
 
             return tmpAppState;
         }

@@ -30,7 +30,7 @@ namespace UIScripts.LoginPage
                             icon: new Icon(icon: Icons.close),
                             onPressed: () =>
                             {
-                                dispatcher.dispatch(new RegisterState()
+                                dispatcher.dispatch(new RegisterAction()
                                 {
                                     UserOpCode = UserOpCodeEnum.Close,
                                     RequestOpCode = model.RequestOpCode,
@@ -94,7 +94,7 @@ namespace UIScripts.LoginPage
                                 editingController: NameEdit,
                                 onChanged: (text) =>
                                 {
-                                    dispatcher.dispatch(new SetNickNameState()
+                                    dispatcher.dispatch(new SetNickNameAction()
                                     {
                                         UserOpCode = UserOpCodeEnum.TypingNickName,
                                         InputResult = text,
@@ -110,7 +110,7 @@ namespace UIScripts.LoginPage
                                 editingController: PhoneEdit, maxLength: 11, regexCondition: @"^[0-9]*$",
                                 onChanged: (text) =>
                                 {
-                                    dispatcher.dispatch(new AccountState()
+                                    dispatcher.dispatch(new AccountAction()
                                     {
                                         UserOpCode = UserOpCodeEnum.TypingAccount,
                                         InputResult = text,
@@ -129,7 +129,7 @@ namespace UIScripts.LoginPage
                                 regexCondition: @"^[A-Za-z0-9]+$",
                                 onChanged: (text) =>
                                 {
-                                    dispatcher.dispatch(new PasswordState()
+                                    dispatcher.dispatch(new PasswordAction()
                                     {
                                         UserOpCode = UserOpCodeEnum.TypingPassword,
                                         InputResult = text,
@@ -149,7 +149,7 @@ namespace UIScripts.LoginPage
                                         maxLength: 6, editingController: VerfyCodeEdit,
                                         onChanged: (text) =>
                                         {
-                                            dispatcher.dispatch(new SetVerfyCodeState()
+                                            dispatcher.dispatch(new SetVerfyCodeAction()
                                             {
                                                 Context = buildContext,
                                                 UserOpCode = UserOpCodeEnum.TypingVerfyCode,
@@ -170,7 +170,7 @@ namespace UIScripts.LoginPage
                                                 timeSpan: new TimeSpan(0, 0, model.CountdownTime),
                                                 () =>
                                                 {
-                                                    dispatcher.dispatch(new RegisterState()
+                                                    dispatcher.dispatch(new RegisterAction()
                                                     {
                                                         Context = context,
                                                         UserOpCode = UserOpCodeEnum.None
@@ -185,7 +185,7 @@ namespace UIScripts.LoginPage
                                             child: new GestureDetector(child: new Icon(icon: Icons.send, size: 20),
                                                 onTap: () =>
                                                 {
-                                                    dispatcher.dispatch(new CountdownState()
+                                                    dispatcher.dispatch(new CountdownAction()
                                                     {
                                                         CountdownTime = 60,
                                                         UserOpCode = UserOpCodeEnum.SendVerfyCode
@@ -214,7 +214,7 @@ namespace UIScripts.LoginPage
                                             || string.IsNullOrEmpty(model.NickName)
                                             || string.IsNullOrEmpty(model.VerfyCode)) return;
 
-                                        dispatcher.dispatch(new RegisterState()
+                                        dispatcher.dispatch(new RegisterAction()
                                         {
                                             RequestOpCode = RequestOpCodeEnum.RequestRegister,
                                             UserOpCode = UserOpCodeEnum.None,

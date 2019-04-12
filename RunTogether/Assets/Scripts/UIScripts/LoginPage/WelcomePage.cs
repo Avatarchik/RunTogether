@@ -36,7 +36,7 @@ namespace UIScripts.LoginPage
                                                     style: CustomTheme.CustomTheme.DefaultTextThemen.display3),
                                                 onPressed: () =>
                                                 {
-                                                    dispatcher.dispatch(new LoginState()
+                                                    dispatcher.dispatch(new LoginAction()
                                                     {
                                                         UserOpCode = UserOpCodeEnum.GoToLoginPage,
                                                         Context = context
@@ -55,7 +55,7 @@ namespace UIScripts.LoginPage
                                                     style: CustomTheme.CustomTheme.DefaultTextThemen.display2),
                                                 onPressed: () =>
                                                 {
-                                                    dispatcher.dispatch(new RegisterState()
+                                                    dispatcher.dispatch(new RegisterAction()
                                                     {
                                                         UserOpCode = UserOpCodeEnum.GoToRegisterPage,
                                                         RequestOpCode = model.RequestOpCode,
