@@ -34,7 +34,7 @@ namespace UIScripts
 
         //账户
         public string Account;
-
+        public string LoginState = "登陆";
         #endregion
 
         #region User Option State

@@ -89,10 +89,11 @@ namespace UIScripts
                 case RequestOpCodeEnum.None:
                     break;
                 case RequestOpCodeEnum.RequestLogin:
+                    tmpAppState.LoginState = "登陆中";
                     LoginAction tmpLoginAction = (tmpBaseAction as LoginAction);
                     tmpLoginAction?.Request();
                     tmpAppState.RequestResult = RequestResultEnum.LoginSuccessed;
-                    state.HideCircularProgressIndicator = false;
+                    tmpAppState.HideCircularProgressIndicator = false;
                     break;
                 case RequestOpCodeEnum.RequestRegister:
                     RegisterAction tmpRegisterAction = (tmpBaseAction as RegisterAction);
@@ -109,10 +110,13 @@ namespace UIScripts
                 case RequestResultEnum.None:
                     break;
                 case RequestResultEnum.LoginSuccessed:
-                    state.HideCircularProgressIndicator = true;
+                    tmpAppState.LoginState = "登陆成功";
+                    tmpAppState.HideCircularProgressIndicator = true;
                     HelperWidgets.PopRoute(tmpBaseAction.Context);
                     break;
                 case RequestResultEnum.LoginFailed:
+                    tmpAppState.LoginState = "登陆";
+                    tmpAppState.HideCircularProgressIndicator = true;
                     break;
                 case RequestResultEnum.VerfyCodeSuccessed:
                     break;
