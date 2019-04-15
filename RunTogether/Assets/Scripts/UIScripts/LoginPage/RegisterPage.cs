@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Timers;
 using Datas;
 using UIScripts.Externs;
+using Unity.UIWidgets;
 using Unity.UIWidgets.animation;
 using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
@@ -71,7 +72,7 @@ namespace UIScripts.LoginPage
                                         if (string.IsNullOrEmpty(path)) return;
                                         using (WindowProvider.of(context).getScope())
                                         {
-                                            dispatcher.dispatch(new SetRegisterAvatarState()
+                                            dispatcher.dispatch(new SetRegisterAvatarAction()
                                             {
                                                 InputResult = path,
                                                 UserOpCode = UserOpCodeEnum.SetupAvatar,
@@ -214,12 +215,7 @@ namespace UIScripts.LoginPage
                                             || string.IsNullOrEmpty(model.NickName)
                                             || string.IsNullOrEmpty(model.VerfyCode)) return;
 
-                                        dispatcher.dispatch(new RegisterAction()
-                                        {
-                                            RequestOpCode = RequestOpCodeEnum.RequestRegister,
-                                            UserOpCode = UserOpCodeEnum.None,
-                                            Context = context
-                                        });
+                                        dispatcher.dispatch(Register(model, context, dispatcher));
                                     }
                                 )
                             )
@@ -227,6 +223,26 @@ namespace UIScripts.LoginPage
                     ),
                 }
             );
+        }
+
+
+        private RegisterAction Register(AppState appState, BuildContext context, Dispatcher dispatcher)
+        {
+            Dictionary<string, string> tmpParamaters = new Dictionary<string, string>
+            {
+                {"url", System.IO.Path.Combine(APIsInfo.APIGetWay, APIsInfo.User_Register)},
+                {"headimages", "Headimages"},
+                {"nickname", appState.NickName},
+                {"password", appState.Password},
+                {"phone", appState.Account},
+            };
+            return new RegisterAction(tmpParamaters, (result) => { Debug.Log(result); },
+                (result) => { Debug.Log(result); })
+            {
+                RequestOpCode = RequestOpCodeEnum.RequestRegister,
+                UserOpCode = UserOpCodeEnum.None,
+                Context = context
+            };
         }
     }
 }

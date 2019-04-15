@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BestHTTP;
 using Datas;
 using UIScripts.LoginPage;
 using Unity.UIWidgets;
@@ -38,7 +39,7 @@ namespace UIScripts
         private AppState Reducer(AppState state, object action)
         {
             BaseAction tmpBaseAction = (action) as BaseAction;
-            
+
             if (tmpBaseAction == null) return state;
             var tmpAppState = state;
             switch (tmpBaseAction.UserOpCode)
@@ -90,9 +91,12 @@ namespace UIScripts
                 case RequestOpCodeEnum.RequestLogin:
                     LoginAction tmpLoginAction = (tmpBaseAction as LoginAction);
                     tmpLoginAction?.Request();
+                    tmpAppState.RequestResult = RequestResultEnum.LoginSuccessed;
                     state.HideCircularProgressIndicator = false;
                     break;
                 case RequestOpCodeEnum.RequestRegister:
+                    RegisterAction tmpRegisterAction = (tmpBaseAction as RegisterAction);
+                    tmpRegisterAction?.Request();
                     break;
                 case RequestOpCodeEnum.RequestVerfyCode:
                     break;
@@ -105,7 +109,8 @@ namespace UIScripts
                 case RequestResultEnum.None:
                     break;
                 case RequestResultEnum.LoginSuccessed:
-                    HelperWidgets.PushNewRoute(tmpBaseAction.Context, new MainPage());
+                    state.HideCircularProgressIndicator = true;
+                    HelperWidgets.PopRoute(tmpBaseAction.Context);
                     break;
                 case RequestResultEnum.LoginFailed:
                     break;

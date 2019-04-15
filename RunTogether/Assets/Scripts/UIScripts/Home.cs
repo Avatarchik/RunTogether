@@ -11,12 +11,12 @@ namespace UIScripts
     {
         public override Widget build(BuildContext buildContext)
         {
-            return new StoreConnector<AppState, RequestResultEnum>(
-                converter: (state) => state.RequestResult,
+            return new StoreConnector<AppState, AppState>(
+                converter: (state) => state,
                 builder: ((context, model, dispatcher) =>
-                    model == RequestResultEnum.LoginSuccessed
-                        ? new SizedBox(child: new MainPage())
-                        : new SizedBox(child: new WelcomePage())
+                    model.RequestResult == RequestResultEnum.LoginSuccessed
+                        ? (Widget) new MainPage()
+                        : new WelcomePage()
                 )
             );
         }

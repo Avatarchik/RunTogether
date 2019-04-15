@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using BestHTTP.JSON;
+using Datas;
 using Unity.UIWidgets;
 using Unity.UIWidgets.animation;
 using Unity.UIWidgets.material;
@@ -131,7 +133,7 @@ namespace UIScripts.LoginPage
                                                     }
 
                                                     Debug.Log("dispathcer");
-                                                    dispatcher.dispatch(RequestLogin(context, dispatcher));
+                                                    dispatcher.dispatch(RequestLogin(model, context, dispatcher));
                                                 }
                                             )
                                         )
@@ -177,20 +179,32 @@ namespace UIScripts.LoginPage
         }
 
 
-        private LoginAction RequestLogin(BuildContext context, Dispatcher dispatcher)
+        private LoginAction RequestLogin(AppState appState, BuildContext context, Dispatcher dispatcher)
         {
-            Dictionary<string, string> tmpRequestParamaters = new Dictionary<string, string>();
-            tmpRequestParamaters.Add("url", "https://baidu.com");
+            Dictionary<string, string> tmpRequestParamaters = new Dictionary<string, string>
+            {
+                {"url", System.IO.Path.Combine(APIsInfo.APIGetWay, APIsInfo.User_Login)},
+                {"password", appState.Password},
+                {"phone", appState.Account}
+            };
 
-            LoginAction tmpLoginAction = new LoginAction(tmpRequestParamaters, () =>
+
+            LoginAction tmpLoginAction = new LoginAction(tmpRequestParamaters, (result) =>
                 {
-                    using (WindowProvider.of(context).getScope())
+                    RequestUserRespon tmpRequestUserRespon = JsonUtility.FromJson<RequestUserRespon>(result);
+                    Debug.Log(result);
+                    switch (tmpRequestUserRespon.code)
                     {
-                        dispatcher.dispatch(new LoginRegisterAction(null)
-                        {
-                            Context = context,
-                            RequestResult = RequestResultEnum.LoginSuccessed
-                        });
+                        case 103: break;
+                        case 104: break;
+                        case 105: break;
+                        case 106: break;
+                        case 200:
+                            OnLoginSuccessed(dispatcher);
+                            break;
+                        case 400:
+                            Debug.LogError("404 not found");
+                            break;
                     }
                 },
                 (msg) => { Debug.Log(msg); });
@@ -198,6 +212,29 @@ namespace UIScripts.LoginPage
             tmpLoginAction.UserOpCode = UserOpCodeEnum.None;
             tmpLoginAction.RequestOpCode = RequestOpCodeEnum.RequestLogin;
             return tmpLoginAction;
+        }
+
+
+        private void OnLoginSuccessed(Dispatcher dispatcher)
+        {
+            using (WindowProvider.of(context).getScope())
+            {
+                dispatcher.dispatch(new LoginRegisterAction(null)
+                {
+                    Context = context,
+                    RequestResult = RequestResultEnum.LoginSuccessed
+                });
+            }
+        }
+
+
+        private void OnPasswordError(Dispatcher dispatcher)
+        {
+        }
+
+
+        private void AccountDoesNotExist(Dispatcher dispatcher)
+        {
         }
     }
 }
