@@ -51,14 +51,16 @@ namespace UIScripts
 
                     tmpRequest.AddField(filed.Key, filed.Value);
                     //将字符串转为url code
-                    tmpSign += filed.Key + "=" + System.Web.HttpUtility.UrlEncode(filed.Value) + "&";
+                    tmpSign += filed.Key + "=" + System.Web.HttpUtility.UrlEncode(filed.Value,Encoding.UTF8) + "&";
                 }
 
                 //设置签名
                 tmpSign = tmpSign.Remove(tmpSign.LastIndexOf('&'));
+                Debug.Log("url "+tmpSign);
+
                 tmpSign = HelperWidgets.EncryptString(tmpSign + "Runtogether2018");
                 tmpRequest.AddField("sign", tmpSign);
-//                Debug.Log(tmpSign);
+                Debug.Log("MD5"+tmpSign);
             }
 
             tmpRequest.Send();

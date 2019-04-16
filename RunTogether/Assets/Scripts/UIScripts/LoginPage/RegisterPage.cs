@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Timers;
 using Datas;
 using UIScripts.Externs;
-using Unity.UIWidgets;
 using Unity.UIWidgets.animation;
 using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
@@ -11,6 +10,7 @@ using Unity.UIWidgets.Redux;
 using Unity.UIWidgets.ui;
 using Unity.UIWidgets.widgets;
 using UnityEngine;
+using DialogUtils = Unity.UIWidgets.material.DialogUtils;
 
 namespace UIScripts.LoginPage
 {
@@ -223,9 +223,7 @@ namespace UIScripts.LoginPage
                                         if (!HelperWidgets.IsCellphoneNumber(model.Account)) return;
                                         if (string.IsNullOrEmpty(model.VerfyCode) || model.VerfyCode.Length < 6) return;
 
-                                        //防止多次点击
-                                        if (model.RequestOpCode == RequestOpCodeEnum.RequestRegister) return;
-                                        dispatcher.dispatch(Register(model, context, dispatcher));
+                                        dispatcher.dispatch(Register(model, context));
                                     }
                                 )
                             )
@@ -236,17 +234,50 @@ namespace UIScripts.LoginPage
         }
 
 
-        private RegisterAction Register(AppState appState, BuildContext context, Dispatcher dispatcher)
+        private void ShowDialog(string title, string content, BuildContext context)
+        {
+            DialogUtils.showDialog(context: context, builder: (buildContext => new AlertDialog(
+                title: new Text(title),
+                content: new Text(content),
+                actions: new List<Widget>
+                {
+                    new FlatButton(child: new Text("Ok"), onPressed: () => { Navigator.pop(context); })
+                }
+            )));
+        }
+
+        private RegisterAction Register(AppState appState, BuildContext context)
         {
             Dictionary<string, string> tmpParamaters = new Dictionary<string, string>
             {
-                {"url", System.IO.Path.Combine(APIsInfo.APIGetWay, APIsInfo.User_Register)},
+                {"url", new Uri(new Uri(APIsInfo.APIGetWay), APIsInfo.User_Register).ToString()},
                 {"headimages", "Headimages"},
                 {"nickname", appState.NickName},
                 {"password", appState.Password},
                 {"phone", appState.Account},
             };
-            return new RegisterAction(tmpParamaters, (result) => { Debug.Log(result); },
+            return new RegisterAction(tmpParamaters, (result) =>
+                {
+                    RequestUserRespon tmpRequestUserRespon = JsonUtility.FromJson<RequestUserRespon>(result);
+                    Debug.Log(result);
+                    using (WindowProvider.of(context).getScope())
+                    {
+                        switch (tmpRequestUserRespon.code)
+                        {
+                            case 103:
+                            case 104:
+                            case 105:
+                            case 106:
+                            case 400:
+                                ShowDialog("注册", "注册账户失败，请更换账户重试", context);
+                                break;
+                            case 200:
+                            case 1:
+                                ShowDialog("注册", "注册成功", context);
+                                break;
+                        }
+                    }
+                },
                 (result) => { Debug.Log(result); })
             {
                 RequestOpCode = RequestOpCodeEnum.RequestRegister,
