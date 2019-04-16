@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Web;
 using BestHTTP;
 using UIScripts.LoginPage;
 using Unity.UIWidgets;
@@ -51,7 +54,7 @@ namespace UIScripts
 
                     tmpRequest.AddField(filed.Key, filed.Value);
                     //将字符串转为url code
-                    tmpSign += filed.Key + "=" + System.Web.HttpUtility.UrlEncode(filed.Value,Encoding.UTF8) + "&";
+                    tmpSign += filed.Key + "=" + UrlEncode(filed.Value) + "&";
                 }
 
                 //设置签名
@@ -64,6 +67,17 @@ namespace UIScripts
             }
 
             tmpRequest.Send();
+        }
+        
+        private  string UrlEncode(string str)
+        {
+            string urlStr = HttpUtility.UrlEncode(str);
+            var urlCode = Regex.Matches(urlStr, "%[a-f0-9]{2}", RegexOptions.Compiled).Cast<Match>().Select(m => m.Value).Distinct();
+            foreach (string item in urlCode)
+            {
+                urlStr = urlStr.Replace(item, item.ToUpper());
+            }
+            return urlStr;
         }
 
         private void OnFinished(HTTPRequest originalrequest, HTTPResponse response)
