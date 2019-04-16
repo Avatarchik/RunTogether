@@ -19,7 +19,8 @@ namespace UIScripts
         internal readonly TextEditingController EditingController;
         internal readonly EdgeInsets Margin;
         internal readonly bool ObscureText;
-        internal readonly ValueChanged<string> onChanged;
+        internal readonly ValueChanged<string> OnChanged;
+        internal readonly ValueChanged<string> OnSubmitted;
         internal RegexMatchTextFormatter RegexMatch;
         internal readonly List<TextInputFormatter> TextInputFormatter;
         internal readonly FocusNode FocusNode;
@@ -32,6 +33,7 @@ namespace UIScripts
             bool obscureText = false,
             TextEditingController editingController = null,
             ValueChanged<string> onChanged = null,
+            ValueChanged<string> onSubmitted = null,
             int maxLength = 32,
             string regexCondition = null,
             string errorText = null,
@@ -44,10 +46,11 @@ namespace UIScripts
             EditingController = editingController;
             Margin = margin;
             ObscureText = obscureText;
-            this.onChanged = onChanged;
-            this.MaxLength = maxLength;
-            this.RegexCondition = regexCondition;
-            this.TextInputFormatter = new List<TextInputFormatter>();
+            OnChanged = onChanged;
+            OnSubmitted = onSubmitted;
+            MaxLength = maxLength;
+            RegexCondition = regexCondition;
+            TextInputFormatter = new List<TextInputFormatter>();
             TextInputFormatter.Add(new LengthLimitingTextInputFormatter(MaxLength));
             if (regexCondition != null)
                 TextInputFormatter.Add(new RegexMatchTextFormatter(RegexCondition));
@@ -84,7 +87,8 @@ namespace UIScripts
                         )
                     ),
                     inputFormatters: widget.TextInputFormatter,
-                    onChanged: widget.onChanged,
+                    onChanged: widget?.OnChanged,
+                    onSubmitted: widget?.OnSubmitted,
                     keyboardAppearance: Brightness.light
                 )
             );

@@ -72,6 +72,11 @@ namespace UIScripts
                 case UserOpCodeEnum.TypingPassword:
                     PasswordAction tmpPasswordAction = ((PasswordAction) action);
                     tmpAppState.Password = tmpPasswordAction.InputResult;
+                    tmpAppState.PasswordTextFieldErrorText =
+                        HelperWidgets.IsValidPassword(tmpAppState.Password)
+                        || string.IsNullOrEmpty(tmpAppState.Password)
+                            ? null
+                            : "";                    
                     break;
                 case UserOpCodeEnum.TypingNickName:
                     SetNickNameAction tmpSetNickNameAction = ((SetNickNameAction) action);

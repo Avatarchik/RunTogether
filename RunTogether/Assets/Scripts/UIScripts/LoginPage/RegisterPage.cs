@@ -93,6 +93,7 @@ namespace UIScripts.LoginPage
                             new TextFieldExtern("请设置昵称，如一起跑",
                                 margin: EdgeInsets.only(left: 20, right: 20, top: 20),
                                 editingController: NameEdit,
+                                focusNode: new FocusNode(),
                                 onChanged: (text) =>
                                 {
                                     dispatcher.dispatch(new SetNickNameAction()
@@ -109,7 +110,9 @@ namespace UIScripts.LoginPage
                             new TextFieldExtern("请填写手机号码",
                                 margin: EdgeInsets.only(left: 20, right: 20, top: 20),
                                 editingController: PhoneEdit, maxLength: 11,
+                                focusNode: new FocusNode(),
                                 regexCondition: @"^[0-9]*$",
+                                errorText: model.AccountTextFieldErrorText,
                                 onChanged: (text) =>
                                 {
                                     dispatcher.dispatch(new AccountAction()
@@ -125,10 +128,12 @@ namespace UIScripts.LoginPage
                     new StoreConnector<AppState, AppState>(
                         converter: (state) => state,
                         builder: ((buildContext, model, dispatcher) =>
-                            new TextFieldExtern("请填写密码(英文字符、数字)",
+                            new TextFieldExtern("请填写密码(字母、数字至少8位)",
                                 margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+                                focusNode: new FocusNode(),
                                 obscureText: true, editingController: PasswordEdit, maxLength: 16,
                                 regexCondition: @"^[A-Za-z0-9]*$",
+                                errorText: model.PasswordTextFieldErrorText,
                                 onChanged: (text) =>
                                 {
                                     dispatcher.dispatch(new PasswordAction()
@@ -149,6 +154,7 @@ namespace UIScripts.LoginPage
                                 builder: ((buildContext, model, dispatcher) =>
                                     new TextFieldExtern("请填写验证码", margin: EdgeInsets.only(left: 20, right: 20, top: 20),
                                         maxLength: 6, editingController: VerfyCodeEdit,
+                                        focusNode: new FocusNode(),
                                         regexCondition: @"^[0-9]*$",
                                         onChanged: (text) =>
                                         {
