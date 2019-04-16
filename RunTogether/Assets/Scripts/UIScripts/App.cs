@@ -63,6 +63,11 @@ namespace UIScripts
                 case UserOpCodeEnum.TypingAccount:
                     AccountAction tmpAccountAction = ((AccountAction) action);
                     tmpAppState.Account = tmpAccountAction.InputResult;
+                    tmpAppState.AccountTextFieldErrorText =
+                        HelperWidgets.IsCellphoneNumber(tmpAppState.Account)
+                        || string.IsNullOrEmpty(tmpAppState.Account)
+                            ? null
+                            : "";
                     break;
                 case UserOpCodeEnum.TypingPassword:
                     PasswordAction tmpPasswordAction = ((PasswordAction) action);

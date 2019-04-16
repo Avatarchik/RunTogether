@@ -46,6 +46,11 @@ namespace UIScripts
         #endregion
 
         public bool HideCircularProgressIndicator = true;
+        public bool LoginButtinActive = false;
+        public bool RegisterButtinActive = false;
+        public string AccountTextFieldErrorText;
+        public string PasswordTextFieldErrorText;
+
         public BuildContext buildContext;
 
         public AppState()

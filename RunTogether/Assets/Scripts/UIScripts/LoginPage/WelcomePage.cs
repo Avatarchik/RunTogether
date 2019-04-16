@@ -17,9 +17,9 @@ namespace UIScripts.LoginPage
                 fit: StackFit.expand,
                 children: new List<Widget>
                 {
-//                    new Container(
-//                        child: Image.asset("splashscreen", fit: BoxFit.cover)
-//                    ),
+                    new Container(
+                        child: Image.asset("splashscreen", fit: BoxFit.cover)
+                    ),
                     new Container(
                         margin: EdgeInsets.only(bottom: 35),
                         child: new Row(

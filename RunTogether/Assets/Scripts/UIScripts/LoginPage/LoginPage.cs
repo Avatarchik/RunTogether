@@ -80,13 +80,15 @@ namespace UIScripts.LoginPage
 
                         new Padding(padding: EdgeInsets.only(top: 20)),
 
-                        new StoreConnector<AppState, string>(
-                            converter: (state) => state.Account,
+                        new StoreConnector<AppState, AppState>(
+                            converter: (state) => state,
                             builder: ((context, model, dispatcher) =>
                                 new TextFieldExtern("请填写手机号码",
                                     margin: EdgeInsets.all(20),
                                     obscureText: false, editingController: PhoneEdit, maxLength: 11,
                                     regexCondition: @"^[0-9]*$",
+                                    errorText: model.AccountTextFieldErrorText,
+                                    focusNode: new FocusNode(),
                                     onChanged: (text) =>
                                     {
                                         dispatcher.dispatch(new AccountAction()
@@ -106,6 +108,7 @@ namespace UIScripts.LoginPage
                                     margin: EdgeInsets.all(20),
                                     obscureText: true, editingController: PasswordEdit, maxLength: 16,
                                     regexCondition: @"^[A-Za-z0-9]*$",
+                                    focusNode: new FocusNode(),
                                     onChanged: (text) =>
                                     {
                                         dispatcher.dispatch(new PasswordAction()
@@ -126,7 +129,7 @@ namespace UIScripts.LoginPage
                                     child: new FlatButton(color: Colors.green,
                                         child: new StoreConnector<AppState, AppState>(
                                             converter: (state) => state,
-                                            builder: ((buildContext, viewModel, dispatcher1) =>
+                                            builder: ((loginBtnContext, viewModel, dispatcher1) =>
                                                 viewModel.HideCircularProgressIndicator
                                                     ? (Widget) new Text(viewModel.LoginState,
                                                         style: CustomTheme.CustomTheme.DefaultTextThemen.display2)
@@ -148,11 +151,10 @@ namespace UIScripts.LoginPage
                                         {
                                             //防止用户漏空提交
                                             if (string.IsNullOrEmpty(model.Account) ||
-                                                string.IsNullOrEmpty(model.Password))
-                                            {
-                                                return;
-                                            }
+                                                string.IsNullOrEmpty(model.Password)) return;
 
+                                            //防止多次点击
+                                            if (model.RequestOpCode == RequestOpCodeEnum.RequestLogin) return;
                                             dispatcher.dispatch(RequestLogin(model, context, dispatcher));
                                         }
                                     )
@@ -182,11 +184,11 @@ namespace UIScripts.LoginPage
         }
 
 
-        private void _showDialog()
+        private void ShowDialog(string title, string content)
         {
             DialogUtils.showDialog(context: context, builder: (buildContext => new AlertDialog(
-                title: new Text("Error tips!"),
-                content: new Text("Error: your password or account was no right!"),
+                title: new Text(title),
+                content: new Text(content),
                 actions: new List<Widget>
                 {
                     new FlatButton(child: new Text("Ok"), onPressed: () => { Navigator.pop(context); })
@@ -206,18 +208,19 @@ namespace UIScripts.LoginPage
             LoginAction tmpLoginAction = new LoginAction(tmpRequestParamaters, (result) =>
                 {
                     RequestUserRespon tmpRequestUserRespon = JsonUtility.FromJson<RequestUserRespon>(result);
-                    Debug.Log(result);
+                    AppManager.Instance.InitUserData(new UserDatas(tmpRequestUserRespon.data.headimages,
+                        tmpRequestUserRespon.data.address, tmpRequestUserRespon.data.nickname));
                     using (WindowProvider.of(context).getScope())
                     {
                         switch (tmpRequestUserRespon.code)
                         {
                             case 103:
-                                OnPasswordError(dispatcher);
+                                WrongPassword(dispatcher);
                                 break;
                             case 104:
                             case 105:
                             case 106:
-
+                                AccountDoesNotExist(dispatcher);
                                 break;
                             case 200:
                                 OnLoginSuccessed(dispatcher);
@@ -235,7 +238,10 @@ namespace UIScripts.LoginPage
             return tmpLoginAction;
         }
 
-
+        /// <summary>
+        /// 登录成功回调
+        /// </summary>
+        /// <param name="dispatcher"></param>
         private void OnLoginSuccessed(Dispatcher dispatcher)
         {
             dispatcher.dispatch(new LoginRegisterAction(null)
@@ -245,10 +251,13 @@ namespace UIScripts.LoginPage
             });
         }
 
-
-        private void OnPasswordError(Dispatcher dispatcher)
+        /// <summary>
+        /// 密码错误回调
+        /// </summary>
+        /// <param name="dispatcher"></param>
+        private void WrongPassword(Dispatcher dispatcher)
         {
-            _showDialog();
+            ShowDialog("密码错误", "输入的密码错误，请重新输入密码");
             LoginAction tmpLoginAction = new LoginAction(null, null, null);
             tmpLoginAction.Context = context;
             tmpLoginAction.UserOpCode = UserOpCodeEnum.None;
@@ -257,10 +266,13 @@ namespace UIScripts.LoginPage
             dispatcher.dispatch(tmpLoginAction);
         }
 
-
+        /// <summary>
+        /// 账户不存在回调
+        /// </summary>
+        /// <param name="dispatcher"></param>
         private void AccountDoesNotExist(Dispatcher dispatcher)
         {
-            _showDialog();
+            ShowDialog("账户不存在", "该账户不存在，请确认账户后重试");
         }
     }
 }
