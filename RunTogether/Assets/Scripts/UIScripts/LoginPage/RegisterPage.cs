@@ -108,13 +108,14 @@ namespace UIScripts.LoginPage
                         builder: ((buildContext, model, dispatcher) =>
                             new TextFieldExtern("请填写手机号码",
                                 margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-                                editingController: PhoneEdit, maxLength: 11, regexCondition: @"^[0-9]*$",
+                                editingController: PhoneEdit, maxLength: 11,
+                                regexCondition: @"^[0-9]*$",
                                 onChanged: (text) =>
                                 {
                                     dispatcher.dispatch(new AccountAction()
                                     {
                                         UserOpCode = UserOpCodeEnum.TypingAccount,
-                                        InputResult = text,
+                                        InputResult = text.Trim(),
                                         PageState = PageStateEnum.RegisterPage
                                     });
                                 }
@@ -127,13 +128,13 @@ namespace UIScripts.LoginPage
                             new TextFieldExtern("请填写密码(英文字符、数字)",
                                 margin: EdgeInsets.only(left: 20, right: 20, top: 20),
                                 obscureText: true, editingController: PasswordEdit, maxLength: 16,
-                                regexCondition: @"^[A-Za-z0-9]+$",
+                                regexCondition: @"^[A-Za-z0-9]*$",
                                 onChanged: (text) =>
                                 {
                                     dispatcher.dispatch(new PasswordAction()
                                     {
                                         UserOpCode = UserOpCodeEnum.TypingPassword,
-                                        InputResult = text,
+                                        InputResult = text.Trim(),
                                         PageState = PageStateEnum.RegisterPage
                                     });
                                 }
@@ -148,13 +149,14 @@ namespace UIScripts.LoginPage
                                 builder: ((buildContext, model, dispatcher) =>
                                     new TextFieldExtern("请填写验证码", margin: EdgeInsets.only(left: 20, right: 20, top: 20),
                                         maxLength: 6, editingController: VerfyCodeEdit,
+                                        regexCondition: @"^[0-9]*$",
                                         onChanged: (text) =>
                                         {
                                             dispatcher.dispatch(new SetVerfyCodeAction()
                                             {
                                                 Context = buildContext,
                                                 UserOpCode = UserOpCodeEnum.TypingVerfyCode,
-                                                InputResult = text
+                                                InputResult = text.Trim()
                                             });
                                         })
                                 )
@@ -208,13 +210,15 @@ namespace UIScripts.LoginPage
                                         style: CustomTheme.CustomTheme.DefaultTextThemen.display2),
                                     onPressed: () =>
                                     {
-                                        //TODO:Register
                                         //防止用户漏空提交
-                                        if (string.IsNullOrEmpty(model.Account)
-                                            || string.IsNullOrEmpty(model.Password)
-                                            || string.IsNullOrEmpty(model.NickName)
-                                            || string.IsNullOrEmpty(model.VerfyCode)) return;
+                                        if (string.IsNullOrEmpty(model.Password)
+                                            || model.Password.Length < 6
+                                            || string.IsNullOrEmpty(model.NickName)) return;
+                                        if (!HelperWidgets.IsCellphoneNumber(model.Account)) return;
+                                        if (string.IsNullOrEmpty(model.VerfyCode) || model.VerfyCode.Length < 6) return;
 
+                                        //防止多次点击
+                                        if (model.RequestOpCode == RequestOpCodeEnum.RequestRegister) return;
                                         dispatcher.dispatch(Register(model, context, dispatcher));
                                     }
                                 )
