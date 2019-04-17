@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BestHTTP;
 using Datas;
 using UIScripts.LoginPage;
+using UIScripts.RunPage;
 using Unity.UIWidgets;
 using Unity.UIWidgets.engine;
 using Unity.UIWidgets.material;
@@ -20,7 +21,7 @@ namespace UIScripts
             var tmpStore = new Store<AppState>(Reducer, new AppState());
             return new StoreProvider<AppState>(tmpStore, child: new MaterialApp(
                     showPerformanceOverlay: false,
-                    home: new Home()
+                    home:new MainPage()
                 )
             );
         }
