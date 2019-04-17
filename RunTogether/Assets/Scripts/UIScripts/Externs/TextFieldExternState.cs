@@ -73,7 +73,7 @@ namespace UIScripts
                 child: new TextField(
                     controller: widget.EditingController,
                     autofocus: false,
-                    focusNode: widget.FocusNode,
+//                    focusNode: widget.FocusNode,
                     maxLines: 1,
                     obscureText: widget.ObscureText,
                     decoration: new InputDecoration(
