@@ -76,6 +76,8 @@ namespace UIScripts.LoginPage
                                             {
                                                 InputResult = path,
                                                 UserOpCode = UserOpCodeEnum.SetupAvatar,
+                                                byte[] bytes = System.IO.File.ReadAllBytes(path);
+                                                AvatarBase64 = Convert.ToBase64String(bytes);
                                             });
                                         }
                                     });
@@ -251,7 +253,7 @@ namespace UIScripts.LoginPage
             Dictionary<string, string> tmpParamaters = new Dictionary<string, string>
             {
                 {"url", new Uri(new Uri(APIsInfo.APIGetWay), APIsInfo.User_Register).ToString()},
-                {"headimages", "Headimages"},
+                {"headimages", appState.AvatarBase64},
                 {"nickname", appState.NickName},
                 {"password", appState.Password},
                 {"phone", appState.Account},

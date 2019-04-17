@@ -12,6 +12,7 @@ namespace UIScripts
 
         //用户设置的头像
         public string RegisterAvatar;
+        public string AvatarBase64;
 
         //验证码
         public string VerfyCode;

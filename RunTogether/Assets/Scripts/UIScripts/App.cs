@@ -21,7 +21,7 @@ namespace UIScripts
             var tmpStore = new Store<AppState>(Reducer, new AppState());
             return new StoreProvider<AppState>(tmpStore, child: new MaterialApp(
                     showPerformanceOverlay: false,
-                    home:new MainPage()
+                    home: new WelcomePage()
                 )
             );
         }
@@ -77,7 +77,7 @@ namespace UIScripts
                         HelperWidgets.IsValidPassword(tmpAppState.Password)
                         || string.IsNullOrEmpty(tmpAppState.Password)
                             ? null
-                            : "";                    
+                            : "";
                     break;
                 case UserOpCodeEnum.TypingNickName:
                     SetNickNameAction tmpSetNickNameAction = ((SetNickNameAction) action);
@@ -90,6 +90,7 @@ namespace UIScripts
                 case UserOpCodeEnum.SetupAvatar:
                     SetRegisterAvatarAction tmpSetRegisterAvatarAction = ((SetRegisterAvatarAction) action);
                     tmpAppState.RegisterAvatar = tmpSetRegisterAvatarAction.InputResult;
+                    tmpAppState.AvatarBase64 = tmpSetRegisterAvatarAction.AvatarBase64;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

@@ -139,5 +139,6 @@ namespace UIScripts
 
     public class SetRegisterAvatarAction : SingleStringResult
     {
+        public string AvatarBase64;
     }
 }
