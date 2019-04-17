@@ -8,13 +8,6 @@ namespace UIScripts.RunPage
 {
     public class MatchWidget : StatefulWidget
     {
-        internal readonly RunPageState RunPage;
-
-        public MatchWidget(RunPageState runPage)
-        {
-            this.RunPage = runPage;
-        }
-
         public override State createState()
         {
             return new MatchWidgetState();
@@ -37,14 +30,7 @@ namespace UIScripts.RunPage
                 appBar: new AppBar(
                     backgroundColor: new Color(0xffededed),
                     leading: new IconButton(icon: new Icon(icon: Icons.arrow_back_ios, color: Colors.grey),
-                        onPressed: () =>
-                        {
-                            widget.RunPage.PositionController.reverse().whenCompleteOrCancel(() =>
-                            {
-                                widget.RunPage.PagesIndex--;
-                                widget.RunPage.Refresh();
-                            });
-                        }),
+                        onPressed: () => { HelperWidgets.PopRoute(context); }),
                     title: new Text("连接(匹配)", style: new TextStyle(color: Colors.black)),
                     bottom: new TabBar(
                         indicatorColor: Colors.black,

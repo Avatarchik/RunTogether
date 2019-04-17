@@ -30,9 +30,7 @@ namespace UIScripts.RunPage
                     backgroundColor: Colors.green,
                     onPressed: () =>
                     {
-                        widget.RunPage.PagesIndex++;
-                        widget.RunPage.PositionController.forward();
-                        widget.RunPage.Refresh();
+                        HelperWidgets.PushNewRoute(context, new MatchWidget());
                     }
                 )
             );
