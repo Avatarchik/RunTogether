@@ -490,11 +490,11 @@ static int imagePickerState = 0; // 0 -> none, 1 -> showing (always in this stat
 	NSString *path;
 	if ([info[UIImagePickerControllerMediaType] isEqualToString:(NSString *)kUTTypeImage]) { // image picked
 		// Temporarily save image as PNG
-		UIImage *image = info[UIImagePickerControllerOriginalImage];
+		UIImage *image = info[UIImagePickerControllerEditedImage];
 		if (image == nil)
 			path = nil;
 		else {
-			[UIImagePNGRepresentation([self scaleImage:image maxSize:pickMediaMaxSize]) writeToFile:pickedMediaSavePath atomically:YES];
+			[UIImagePNGRepresentation(image) writeToFile:pickedMediaSavePath atomically:YES];
 			path = pickedMediaSavePath;
 		}
 	}
