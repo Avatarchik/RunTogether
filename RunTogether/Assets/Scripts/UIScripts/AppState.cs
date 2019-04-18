@@ -56,7 +56,9 @@ namespace UIScripts
 
         public AppState()
         {
-            RegisterAvatar = Application.streamingAssetsPath + "/avatar.png";
+//            RegisterAvatar = Application.streamingAssetsPath + "/avatar.png";
+//            AvatarBase64 = "data:image/jpeg;base64," +
+//                           Convert.ToBase64String(System.IO.File.ReadAllBytes(RegisterAvatar));
         }
 
         public AppState Clone()

@@ -207,6 +207,7 @@ namespace UIScripts.LoginPage
 
             LoginAction tmpLoginAction = new LoginAction(tmpRequestParamaters, (result) =>
                 {
+                    Debug.Log(result);
                     RequestUserRespon tmpRequestUserRespon = JsonUtility.FromJson<RequestUserRespon>(result);
                     AppManager.Instance.InitUserData(new UserDatas(tmpRequestUserRespon.data.headimages,
                         tmpRequestUserRespon.data.address, tmpRequestUserRespon.data.nickname));

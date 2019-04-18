@@ -76,8 +76,7 @@ namespace UIScripts.LoginPage
                                             {
                                                 InputResult = path,
                                                 UserOpCode = UserOpCodeEnum.SetupAvatar,
-                                                byte[] bytes = System.IO.File.ReadAllBytes(path);
-                                                AvatarBase64 = Convert.ToBase64String(bytes);
+                                                AvatarBase64 = "data:image/jpeg;base64,"+Convert.ToBase64String( System.IO.File.ReadAllBytes(path))
                                             });
                                         }
                                     });

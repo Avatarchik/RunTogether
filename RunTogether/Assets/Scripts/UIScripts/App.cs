@@ -21,7 +21,7 @@ namespace UIScripts
             var tmpStore = new Store<AppState>(Reducer, new AppState());
             return new StoreProvider<AppState>(tmpStore, child: new MaterialApp(
                     showPerformanceOverlay: false,
-                    home: new WelcomePage()
+                    home: new Home()
                 )
             );
         }
@@ -42,7 +42,7 @@ namespace UIScripts
             BaseAction tmpBaseAction = (action) as BaseAction;
 
             if (tmpBaseAction == null) return state;
-            var tmpAppState = state;
+            var tmpAppState = new AppState();
             switch (tmpBaseAction.UserOpCode)
             {
                 case UserOpCodeEnum.None: break;
