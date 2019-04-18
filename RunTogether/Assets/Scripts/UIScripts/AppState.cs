@@ -8,11 +8,12 @@ namespace UIScripts
 {
     public class AppState
     {
+        public RequestResultEnum RequestResult;
+        
         #region Register State
 
         //用户设置的头像
-        public string RegisterAvatar;
-        public string AvatarBase64;
+        public string RegisterAvatar;      
 
         //验证码
         public string VerfyCode;
@@ -36,40 +37,19 @@ namespace UIScripts
         //账户
         public string Account;
         public string LoginState = "登陆";
-        #endregion
-
-        #region User Option State
-
-        public UserOpCodeEnum UserOpCode;
-        public RequestOpCodeEnum RequestOpCode;
-        public RequestResultEnum RequestResult;
+        public bool Logined;
 
         #endregion
+
 
         public bool HideCircularProgressIndicator = true;
-        public bool LoginButtinActive = false;
-        public bool RegisterButtinActive = false;
         public string AccountTextFieldErrorText;
         public string PasswordTextFieldErrorText;
 
-        public BuildContext buildContext;
 
         public AppState()
         {
-//            RegisterAvatar = Application.streamingAssetsPath + "/avatar.png";
-//            AvatarBase64 = "data:image/jpeg;base64," +
-//                           Convert.ToBase64String(System.IO.File.ReadAllBytes(RegisterAvatar));
-        }
-
-        public AppState Clone()
-        {
-            return new AppState
-            {
-                UserOpCode = UserOpCode,
-                RequestOpCode = RequestOpCode,
-                RequestResult = RequestResult,
-                buildContext = buildContext,
-            };
+            RegisterAvatar = Application.streamingAssetsPath + "/avatar.png";
         }
     }
 }

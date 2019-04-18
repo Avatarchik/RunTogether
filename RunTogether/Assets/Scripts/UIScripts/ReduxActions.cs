@@ -15,12 +15,7 @@ namespace UIScripts
 {
     public abstract class BaseAction
     {
-        public UserOpCodeEnum UserOpCode;
-        public RequestOpCodeEnum RequestOpCode;
-        public RequestResultEnum RequestResult;
-        public PageStateEnum PageState;
         public BuildContext Context;
-        public string FailedMsg;
     }
 
 
@@ -29,6 +24,7 @@ namespace UIScripts
         private readonly Action<string> SuccessedCallback;
         private readonly Action<string> FailedCallback;
         private readonly Dictionary<string, string> RequestParamaters;
+        public RequestResultEnum RequestResult;
 
         public LoginRegisterAction(Dictionary<string, string> parmaters, Action<string> successedCallback = null,
             Action<string> failedCallback = null)
@@ -59,24 +55,23 @@ namespace UIScripts
 
                 //设置签名
                 tmpSign = tmpSign.Remove(tmpSign.LastIndexOf('&'));
-                Debug.Log("url "+tmpSign);
-
                 tmpSign = HelperWidgets.EncryptString(tmpSign + "Runtogether2018");
                 tmpRequest.AddField("sign", tmpSign);
-                Debug.Log("MD5"+tmpSign);
             }
 
             tmpRequest.Send();
         }
-        
-        private  string UrlEncode(string str)
+
+        private string UrlEncode(string str)
         {
             string urlStr = HttpUtility.UrlEncode(str);
-            var urlCode = Regex.Matches(urlStr, "%[a-f0-9]{2}", RegexOptions.Compiled).Cast<Match>().Select(m => m.Value).Distinct();
+            var urlCode = Regex.Matches(urlStr, "%[a-f0-9]{2}", RegexOptions.Compiled).Cast<Match>()
+                .Select(m => m.Value).Distinct();
             foreach (string item in urlCode)
             {
                 urlStr = urlStr.Replace(item, item.ToUpper());
             }
+
             return urlStr;
         }
 
@@ -105,7 +100,7 @@ namespace UIScripts
         public LoginAction(Dictionary<string, string> parmaters = null, Action<string> successedCallback = null,
             Action<string> failedCallback = null) : base(parmaters, successedCallback, failedCallback)
         {
-        }
+        } 
     }
 
     public class RegisterAction : LoginRegisterAction
@@ -140,5 +135,5 @@ namespace UIScripts
     public class SetRegisterAvatarAction : SingleStringResult
     {
         public string AvatarBase64;
-    }
+    }       
 }

@@ -40,110 +40,34 @@ namespace UIScripts
         private AppState Reducer(AppState state, object action)
         {
             BaseAction tmpBaseAction = (action) as BaseAction;
-
             if (tmpBaseAction == null) return state;
-            var tmpAppState = new AppState();
-            switch (tmpBaseAction.UserOpCode)
-            {
-                case UserOpCodeEnum.None: break;
-                case UserOpCodeEnum.Close:
-                    HelperWidgets.PopRoute(tmpBaseAction.Context);
-                    break;
-                case UserOpCodeEnum.GoToLoginPage:
-                    HelperWidgets.PushNewRoute(tmpBaseAction.Context, new LoginPage.LoginPage());
-                    break;
-                case UserOpCodeEnum.GoToRegisterPage:
-                    HelperWidgets.PushNewRoute(tmpBaseAction.Context, new RegisterPage());
-                    break;
-                case UserOpCodeEnum.SendVerfyCode:
-                    tmpAppState.UserOpCode = tmpBaseAction.UserOpCode;
-                    CountdownAction tmpCountdownAction = ((CountdownAction) action);
-                    tmpAppState.CountdownTime = tmpCountdownAction.CountdownTime;
-                    tmpAppState.VerfyCodeWasSent = true;
-                    break;
-                case UserOpCodeEnum.TypingAccount:
-                    AccountAction tmpAccountAction = ((AccountAction) action);
-                    tmpAppState.Account = tmpAccountAction.InputResult;
-                    tmpAppState.AccountTextFieldErrorText =
-                        HelperWidgets.IsCellphoneNumber(tmpAppState.Account)
-                        || string.IsNullOrEmpty(tmpAppState.Account)
-                            ? null
-                            : "";
-                    break;
-                case UserOpCodeEnum.TypingPassword:
-                    PasswordAction tmpPasswordAction = ((PasswordAction) action);
-                    tmpAppState.Password = tmpPasswordAction.InputResult;
-                    tmpAppState.PasswordTextFieldErrorText =
-                        HelperWidgets.IsValidPassword(tmpAppState.Password)
-                        || string.IsNullOrEmpty(tmpAppState.Password)
-                            ? null
-                            : "";
-                    break;
-                case UserOpCodeEnum.TypingNickName:
-                    SetNickNameAction tmpSetNickNameAction = ((SetNickNameAction) action);
-                    tmpAppState.NickName = tmpSetNickNameAction.InputResult;
-                    break;
-                case UserOpCodeEnum.TypingVerfyCode:
-                    SetVerfyCodeAction tmpSetVerfyCodeAction = ((SetVerfyCodeAction) action);
-                    tmpAppState.VerfyCode = tmpSetVerfyCodeAction.InputResult;
-                    break;
-                case UserOpCodeEnum.SetupAvatar:
-                    SetRegisterAvatarAction tmpSetRegisterAvatarAction = ((SetRegisterAvatarAction) action);
-                    tmpAppState.RegisterAvatar = tmpSetRegisterAvatarAction.InputResult;
-                    tmpAppState.AvatarBase64 = tmpSetRegisterAvatarAction.AvatarBase64;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
 
-            switch (tmpBaseAction.RequestOpCode)
+            AppState tmpAppState = new AppState();
+
+
+            if (tmpBaseAction.GetType() == typeof(RegisterAction))
             {
-                case RequestOpCodeEnum.None:
-                    break;
-                case RequestOpCodeEnum.RequestLogin:
-                    tmpAppState.LoginState = "登陆中";
-                    LoginAction tmpLoginAction = (tmpBaseAction as LoginAction);
+                RegisterAction tmpRegisterAction = (tmpBaseAction as RegisterAction);
+                tmpRegisterAction?.Request();
+            }
+            else if (tmpBaseAction.GetType() == typeof(LoginAction))
+            {
+                LoginAction tmpLoginAction = (tmpBaseAction as LoginAction);
+                if (tmpLoginAction.RequestResult == RequestResultEnum.LoginSuccessed)
+                    tmpAppState.Logined = true;
+                else
                     tmpLoginAction?.Request();
-                    tmpAppState.RequestResult = RequestResultEnum.LoginSuccessed;
-                    tmpAppState.HideCircularProgressIndicator = false;
-                    break;
-                case RequestOpCodeEnum.RequestRegister:
-                    RegisterAction tmpRegisterAction = (tmpBaseAction as RegisterAction);
-                    tmpRegisterAction?.Request();
-                    break;
-                case RequestOpCodeEnum.RequestVerfyCode:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
-
-            switch (tmpBaseAction.RequestResult)
+            else if (tmpBaseAction.GetType() == typeof(AccountAction))
             {
-                case RequestResultEnum.None:
-                    break;
-                case RequestResultEnum.LoginSuccessed:
-                    tmpAppState.LoginState = "登陆成功";
-                    tmpAppState.HideCircularProgressIndicator = true;
-                    HelperWidgets.PopRoute(tmpBaseAction.Context);
-                    break;
-                case RequestResultEnum.LoginFailed:
-                    tmpAppState.LoginState = "登陆";
-                    tmpAppState.HideCircularProgressIndicator = true;
-                    break;
-                case RequestResultEnum.VerfyCodeSuccessed:
-                    break;
-                case RequestResultEnum.VerfyCodeFailed:
-                    break;
-                case RequestResultEnum.RegisterSuccessed:
-                    break;
-                case RequestResultEnum.RegisterFailed:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                AccountAction tmpAccountAction = (tmpBaseAction as AccountAction);
+                tmpAppState.Account = tmpAccountAction.InputResult;
             }
-
-//       
-
+            else if (tmpBaseAction.GetType() == typeof(PasswordAction))
+            {
+                PasswordAction tmpPasswordAction = (tmpBaseAction as PasswordAction);
+                tmpAppState.Password = tmpPasswordAction.InputResult;
+            }
 
             return tmpAppState;
         }

@@ -17,49 +17,27 @@ using DialogUtils = Unity.UIWidgets.material.DialogUtils;
 
 namespace UIScripts.LoginPage
 {
-    public class LoginPage : StatefulWidget
-    {
-        public override State createState()
-        {
-            return new _LoginPage();
-        }
-    }
-
-
-    public class _LoginPage : SingleTickerProviderStateMixin<LoginPage>
+    public class LoginPage : StatelessWidget
     {
         private readonly TextEditingController PasswordEdit = new TextEditingController("");
         private readonly TextEditingController PhoneEdit = new TextEditingController("");
-        private Animation<float> Animation;
-        private AnimationController AnimController;
-        private Animation<Color> CircularProgressIndicatorColor;
+        private BuildContext BuidlContext;
 
-        public override void initState()
-        {
-            base.initState();
-            AnimController = new AnimationController(vsync: this,
-                duration: new TimeSpan(0, 0, 0, 0, 100));
-            Animation = new FloatTween(.7f, 1f).animate(AnimController);
-            CircularProgressIndicatorColor = new AlwaysStoppedAnimation<Color>(Colors.white);
-        }
+
+        private string Account;
+
+
+        private readonly Animation<Color> CircularProgressIndicatorColor =
+            new AlwaysStoppedAnimation<Color>(Colors.white);
 
         public override Widget build(BuildContext context)
         {
+            BuidlContext = context;
             return new Scaffold(
                 appBar: HelperWidgets._buildCloseAppBar(isCenterTitle: true, title: new Text(""),
-                    lealding: new StoreConnector<AppState, object>(
-                        converter: (state) => null,
-                        builder: ((buildContext, model, dispatcher) => new IconButton(
-                            icon: new Icon(icon: Icons.close),
-                            onPressed: () =>
-                            {
-                                dispatcher.dispatch(new LoginAction()
-                                {
-                                    UserOpCode = UserOpCodeEnum.Close,
-                                    Context = context
-                                });
-                            })),
-                        pure: true
+                    lealding: new IconButton(
+                        icon: new Icon(icon: Icons.close),
+                        onPressed: () => { HelperWidgets.PopRoute(context); }
                     )),
                 body: _buildBody()
             );
@@ -67,147 +45,109 @@ namespace UIScripts.LoginPage
 
         private Widget _buildBody()
         {
-            return new Container(
-                color: CustomTheme.CustomTheme.EDColor,
-                child: new ListView(
-                    children: new List<Widget>
-                    {
-                        new Container(
-                            margin: EdgeInsets.only(top: 100, left: 20),
-                            child: new Text("使用手机号码登录",
-                                style: new TextStyle(fontWeight: FontWeight.w500, fontSize: 20))
-                        ),
+            return new StoreConnector<AppState, AppState>(
+                converter: (state) => state,
+                builder: ((context, model, dispatcher) => new Container(
+                    color: CustomTheme.CustomTheme.EDColor,
+                    child: new ListView(
+                        children: new List<Widget>
+                        {
+                            new Container(
+                                margin: EdgeInsets.only(top: 100, left: 20),
+                                child: new Text("使用手机号码登录",
+                                    style: new TextStyle(fontWeight: FontWeight.w500, fontSize: 20))
+                            ),
 
-                        new Padding(padding: EdgeInsets.only(top: 20)),
+                            new Padding(padding: EdgeInsets.only(top: 20)),
 
-                        new StoreConnector<AppState, AppState>(
-                            converter: (state) => state,
-                            builder: ((context, model, dispatcher) =>
-                                new TextFieldExtern("请填写手机号码",
-                                    margin: EdgeInsets.all(20),
-                                    obscureText: false, editingController: PhoneEdit, maxLength: 11,
-                                    regexCondition: @"^[0-9]*$",
-                                    errorText: model.AccountTextFieldErrorText,
-                                    focusNode: new FocusNode(),
-                                    onChanged: (text) =>
-                                    {
-                                        dispatcher.dispatch(new AccountAction()
-                                        {
-                                            InputResult = text,
-                                            UserOpCode = UserOpCodeEnum.TypingAccount
-                                        });
-                                    })
-                            )
-                        ),
+                            new TextFieldExtern("请填写手机号码",
+                                margin: EdgeInsets.all(20),
+                                obscureText: false, editingController: PhoneEdit, maxLength: 11,
+                                regexCondition: @"^[0-9]*$",
+                                errorText: string.IsNullOrEmpty(model.Account) ? null :
+                                HelperWidgets.IsCellphoneNumber(model?.Account) ? null : string.Empty,
+                                onChanged: (text) => { dispatcher.dispatch(new AccountAction {InputResult = text}); }
+                            ),
+
+                            new TextFieldExtern("请填写密码(英文字符、数字)",
+                                margin: EdgeInsets.all(20),
+                                obscureText: true, editingController: PasswordEdit, maxLength: 16,
+                                regexCondition: @"^[A-Za-z0-9]*$"
+                            ),
 
 
-                        new StoreConnector<AppState, string>(
-                            converter: (state) => state.Password,
-                            builder: ((context, model, dispatcher) =>
-                                new TextFieldExtern("请填写密码(英文字符、数字)",
-                                    margin: EdgeInsets.all(20),
-                                    obscureText: true, editingController: PasswordEdit, maxLength: 16,
-                                    regexCondition: @"^[A-Za-z0-9]*$",
-                                    focusNode: new FocusNode(),
-                                    onChanged: (text) =>
-                                    {
-                                        dispatcher.dispatch(new PasswordAction()
-                                        {
-                                            InputResult = text,
-                                            UserOpCode = UserOpCodeEnum.TypingPassword
-                                        });
-                                    }))
-                        ),
-
-
-                        new StoreConnector<AppState, AppState>(
-                            converter: (state) => state,
-                            builder: ((context, model, dispatcher) =>
-                                new Container(
-                                    margin: EdgeInsets.all(20f),
-                                    width: MediaQuery.of(context).size.width,
-                                    child: new FlatButton(color: Colors.green,
-                                        child: new StoreConnector<AppState, AppState>(
-                                            converter: (state) => state,
-                                            builder: ((loginBtnContext, viewModel, dispatcher1) =>
-                                                viewModel.HideCircularProgressIndicator
-                                                    ? (Widget) new Text(viewModel.LoginState,
-                                                        style: CustomTheme.CustomTheme.DefaultTextThemen.display2)
-                                                    : new Row(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: new List<Widget>
-                                                        {
-                                                            new CustomCircularProgressIndicator(
-                                                                valueColor: CircularProgressIndicatorColor),
-                                                            new SizedBox(width: 10),
-                                                            new Text(viewModel.LoginState,
-                                                                style: CustomTheme.CustomTheme.DefaultTextThemen
-                                                                    .display2)
-                                                        }
-                                                    )
-                                            )
+                            new Container(
+                                margin: EdgeInsets.all(20f),
+                                width: MediaQuery.of(context).size.width,
+                                child: new FlatButton(color: Colors.green,
+                                    child: model.HideCircularProgressIndicator
+                                        ? (Widget) new Text(model.LoginState,
+                                            style: CustomTheme.CustomTheme.DefaultTextThemen.display2)
+                                        : new Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: new List<Widget>
+                                            {
+                                                new CustomCircularProgressIndicator(
+                                                    valueColor: CircularProgressIndicatorColor),
+                                                new SizedBox(width: 10),
+                                                new Text(model.LoginState,
+                                                    style: CustomTheme.CustomTheme.DefaultTextThemen
+                                                        .display2)
+                                            }
                                         ),
-                                        onPressed: () =>
-                                        {
-                                            //防止用户漏空提交
-                                            if (string.IsNullOrEmpty(model.Account) ||
-                                                string.IsNullOrEmpty(model.Password)) return;
+                                    onPressed: () =>
+                                    {
+                                        //防止用户漏空提交
+                                        if (!HelperWidgets.IsCellphoneNumber(PhoneEdit.text)
+                                            || !HelperWidgets.IsValidPassword(PasswordEdit.text)) return;
 
-                                            //防止多次点击
-                                            if (model.RequestOpCode == RequestOpCodeEnum.RequestLogin) return;
-                                            dispatcher.dispatch(RequestLogin(model, context, dispatcher));
-                                        }
-                                    )
+                                        //TODO:防止多次点击
+                                        dispatcher.dispatch(RequestLogin(context, dispatcher));
+                                    }
                                 )
                             ),
-                            pure: true
-                        ),
 
-                        new StoreConnector<AppState, object>(
-                            converter: (state) => null,
-                            builder: ((context, model, dispatcher) => new Container(
-                                    margin: EdgeInsets.all(40),
-                                    alignment: Alignment.center,
-                                    child: new GestureDetector(
-                                        onTap: () =>
-                                        {
-                                            //TODO:找回密码
-                                        },
-                                        child: new Text("登陆遇到问题？")
-                                    )
+                            new Container(
+                                margin: EdgeInsets.all(40),
+                                alignment: Alignment.center,
+                                child: new GestureDetector(
+                                    onTap: () =>
+                                    {
+                                        //TODO:找回密码
+                                    },
+                                    child: new Text("登陆遇到问题？")
                                 )
                             )
-                        )
-                    }
-                )
+                        }
+                    )
+                ))
             );
         }
 
 
         private void ShowDialog(string title, string content)
         {
-            DialogUtils.showDialog(context: context, builder: (buildContext => new AlertDialog(
+            DialogUtils.showDialog(context: BuidlContext, builder: (buildContext => new AlertDialog(
                 title: new Text(title),
                 content: new Text(content),
                 actions: new List<Widget>
                 {
-                    new FlatButton(child: new Text("Ok"), onPressed: () => { Navigator.pop(context); })
+                    new FlatButton(child: new Text("Ok"), onPressed: () => { Navigator.pop(BuidlContext); })
                 }
             )));
         }
 
-        private LoginAction RequestLogin(AppState appState, BuildContext context, Dispatcher dispatcher)
+        private LoginAction RequestLogin(BuildContext context, Dispatcher dispatcher)
         {
             Dictionary<string, string> tmpRequestParamaters = new Dictionary<string, string>
             {
                 {"url", new Uri(new Uri(APIsInfo.APIGetWay), APIsInfo.User_Login).ToString()},
-                {"password", appState.Password},
-                {"phone", appState.Account}
+                {"password", PasswordEdit.text},
+                {"phone", PhoneEdit.text}
             };
 
             LoginAction tmpLoginAction = new LoginAction(tmpRequestParamaters, (result) =>
                 {
-                    Debug.Log(result);
                     RequestUserRespon tmpRequestUserRespon = JsonUtility.FromJson<RequestUserRespon>(result);
                     AppManager.Instance.InitUserData(new UserDatas(tmpRequestUserRespon.data.headimages,
                         tmpRequestUserRespon.data.address, tmpRequestUserRespon.data.nickname));
@@ -216,15 +156,16 @@ namespace UIScripts.LoginPage
                         switch (tmpRequestUserRespon.code)
                         {
                             case 103:
-                                WrongPassword(dispatcher);
+                                ShowDialog("密码错误", "输入的密码错误，请重新输入密码");
                                 break;
                             case 104:
                             case 105:
                             case 106:
-                                AccountDoesNotExist(dispatcher);
+                                ShowDialog("账户不存在", "该账户不存在，请确认账户后重试");
                                 break;
                             case 200:
-                                OnLoginSuccessed(dispatcher);
+                                dispatcher.dispatch(new LoginAction {RequestResult = RequestResultEnum.LoginSuccessed});
+                                HelperWidgets.PopRoute(BuidlContext);
                                 break;
                             case 400:
                                 Debug.LogError("404 not found");
@@ -233,47 +174,7 @@ namespace UIScripts.LoginPage
                     }
                 },
                 (msg) => { Debug.Log(msg); });
-            tmpLoginAction.Context = context;
-            tmpLoginAction.UserOpCode = UserOpCodeEnum.None;
-            tmpLoginAction.RequestOpCode = RequestOpCodeEnum.RequestLogin;
             return tmpLoginAction;
-        }
-
-        /// <summary>
-        /// 登录成功回调
-        /// </summary>
-        /// <param name="dispatcher"></param>
-        private void OnLoginSuccessed(Dispatcher dispatcher)
-        {
-            dispatcher.dispatch(new LoginRegisterAction(null)
-            {
-                Context = context,
-                RequestResult = RequestResultEnum.LoginSuccessed
-            });
-        }
-
-        /// <summary>
-        /// 密码错误回调
-        /// </summary>
-        /// <param name="dispatcher"></param>
-        private void WrongPassword(Dispatcher dispatcher)
-        {
-            ShowDialog("密码错误", "输入的密码错误，请重新输入密码");
-            LoginAction tmpLoginAction = new LoginAction(null, null, null);
-            tmpLoginAction.Context = context;
-            tmpLoginAction.UserOpCode = UserOpCodeEnum.None;
-            tmpLoginAction.RequestOpCode = RequestOpCodeEnum.None;
-            tmpLoginAction.RequestResult = RequestResultEnum.LoginFailed;
-            dispatcher.dispatch(tmpLoginAction);
-        }
-
-        /// <summary>
-        /// 账户不存在回调
-        /// </summary>
-        /// <param name="dispatcher"></param>
-        private void AccountDoesNotExist(Dispatcher dispatcher)
-        {
-            ShowDialog("账户不存在", "该账户不存在，请确认账户后重试");
         }
     }
 }

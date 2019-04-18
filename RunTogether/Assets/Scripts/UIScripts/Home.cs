@@ -13,10 +13,7 @@ namespace UIScripts
         {
             return new StoreConnector<AppState, AppState>(
                 converter: (state) => state,
-                builder: ((context, model, dispatcher) =>
-                    model.RequestResult == RequestResultEnum.LoginSuccessed
-                        ? (Widget) new MainPage()
-                        : new WelcomePage()
+                builder: ((context, model, dispatcher) => model.Logined ? (Widget) new MainPage() : new WelcomePage()
                 )
             );
         }

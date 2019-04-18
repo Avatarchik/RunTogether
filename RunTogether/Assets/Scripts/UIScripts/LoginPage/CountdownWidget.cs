@@ -48,7 +48,7 @@ namespace UIScripts.LoginPage
                 Dispatcher.dispatch(new CountdownAction()
                 {
                     CountdownTime = CountValue.value,
-                    UserOpCode = UserOpCodeEnum.SendVerfyCode                    
+                                        
                 });
             });
             Controller.addStatusListener((status) =>
