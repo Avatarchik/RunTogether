@@ -37,7 +37,7 @@ namespace UIScripts.LoginPage
                 appBar: HelperWidgets._buildCloseAppBar(isCenterTitle: true, title: new Text(""),
                     lealding: new IconButton(
                         icon: new Icon(icon: Icons.close),
-                        onPressed: () => { HelperWidgets.PopRoute(context); }
+                        onPressed: () => { Navigator.pop(context); }
                     )),
                 body: _buildBody()
             );
@@ -165,6 +165,9 @@ namespace UIScripts.LoginPage
                                 break;
                             case 200:
                                 dispatcher.dispatch(new LoginAction {RequestResult = RequestResultEnum.LoginSuccessed});
+                                PlayerPrefs.SetString("account", PhoneEdit.text);
+                                PlayerPrefs.SetString("password", PasswordEdit.text);
+                                PlayerPrefs.SetString("logined", "Yes");
                                 HelperWidgets.PopRoute(BuidlContext);
                                 break;
                             case 400:

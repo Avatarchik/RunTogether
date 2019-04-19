@@ -15,7 +15,7 @@ namespace UIScripts
 {
     public abstract class BaseAction
     {
-        public BuildContext Context;
+      
     }
 
 

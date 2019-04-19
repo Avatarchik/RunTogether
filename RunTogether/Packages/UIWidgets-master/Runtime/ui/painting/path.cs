@@ -458,7 +458,6 @@ namespace Unity.UIWidgets.ui {
                     }
                 }
             }
-
             // Split arc into max 90 degree segments.
             int ndivs = Mathf.Max(1, Mathf.Min((int) (Mathf.Abs(da) / (Mathf.PI * 0.5f) + 0.5f), 5));
             float hda = (da / ndivs) / 2.0f;
@@ -1124,9 +1123,9 @@ namespace Unity.UIWidgets.ui {
                 this.addPoint(0, 0, PointFlags.corner);
             }
 
-            var path = this._paths.Last();
+            var path = this._paths[this._paths.Count - 1];
             if (path.count > 0) {
-                var pt = this._points.Last();
+                var pt = this._points[this._points.Count - 1];
                 if (PathUtils.ptEquals(pt.x, pt.y, point.x, point.y, this._distTol)) {
                     pt.flags |= point.flags;
                     return;
@@ -1147,7 +1146,7 @@ namespace Unity.UIWidgets.ui {
                 y1 = 0;
             }
             else {
-                var pt = this._points.Last();
+                var pt = this._points[this._points.Count - 1];
                 x1 = pt.x;
                 y1 = pt.y;
             }
@@ -1174,7 +1173,7 @@ namespace Unity.UIWidgets.ui {
                 return;
             }
 
-            var path = this._paths.Last();
+            var path = this._paths[this._paths.Count - 1];
             path.winding = winding;
         }
 
@@ -1631,15 +1630,15 @@ namespace Unity.UIWidgets.ui {
             float dlx = dy;
             float dly = -dx;
 
+            for (var i = 0; i < ncap; i++) {
+                float a = (float) i / (ncap - 1) * Mathf.PI;
+                float ax = Mathf.Cos(a) * w, ay = Mathf.Sin(a) * w;
+                dst.Add(new Vector2(px - dlx * ax - dx * ay, py - dly * ax - dy * ay));
+                dst.Add(new Vector2(px, py));
+            }
 
             dst.Add(new Vector2(px + dlx * w, py + dly * w));
             dst.Add(new Vector2(px - dlx * w, py - dly * w));
-            for (var i = 0; i < ncap; i++) {
-                float a = i / (ncap - 1) * Mathf.PI;
-                float ax = Mathf.Cos(a) * w, ay = Mathf.Sin(a) * w;
-                dst.Add(new Vector2(px, py));
-                dst.Add(new Vector2(px - dlx * ax + dx * ay, py - dly * ax + dy * ay));
-            }
         }
 
         public static void roundCapEnd(this List<Vector3> dst, PathPoint p,
@@ -1649,15 +1648,15 @@ namespace Unity.UIWidgets.ui {
             float dlx = dy;
             float dly = -dx;
 
-            for (var i = 0; i < ncap; i++) {
-                float a = i / (ncap - 1) * Mathf.PI;
-                float ax = Mathf.Cos(a) * w, ay = Mathf.Sin(a) * w;
-                dst.Add(new Vector2(px - dlx * ax - dx * ay, py - dly * ax - dy * ay));
-                dst.Add(new Vector2(px, py));
-            }
-
             dst.Add(new Vector2(px + dlx * w, py + dly * w));
             dst.Add(new Vector2(px - dlx * w, py - dly * w));
+
+            for (var i = 0; i < ncap; i++) {
+                float a = (float) i / (ncap - 1) * Mathf.PI;
+                float ax = Mathf.Cos(a) * w, ay = Mathf.Sin(a) * w;
+                dst.Add(new Vector2(px, py));
+                dst.Add(new Vector2(px - dlx * ax + dx * ay, py - dly * ax + dy * ay));
+            }
         }
 
         public static void chooseBevel(bool bevel, PathPoint p0, PathPoint p1, float w,
@@ -1704,7 +1703,7 @@ namespace Unity.UIWidgets.ui {
 
                 var n = Mathf.CeilToInt((a0 - a1) / Mathf.PI * ncap).clamp(2, ncap);
                 for (var i = 0; i < n; i++) {
-                    float u = i / (n - 1);
+                    float u = (float) i / (n - 1);
                     float a = a0 + u * (a1 - a0);
                     float rx = p1.x + Mathf.Cos(a) * rw;
                     float ry = p1.y + Mathf.Sin(a) * rw;
@@ -1732,7 +1731,7 @@ namespace Unity.UIWidgets.ui {
 
                 var n = Mathf.CeilToInt((a1 - a0) / Mathf.PI * ncap).clamp(2, ncap);
                 for (var i = 0; i < n; i++) {
-                    float u = i / (n - 1);
+                    float u = (float) i / (n - 1);
                     float a = a0 + u * (a1 - a0);
                     float lx = p1.x + Mathf.Cos(a) * lw;
                     float ly = p1.y + Mathf.Sin(a) * lw;

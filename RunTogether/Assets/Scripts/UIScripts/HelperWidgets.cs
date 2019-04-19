@@ -59,7 +59,8 @@ namespace UIScripts
                 centerTitle: isCenterTitle,
                 backgroundColor: CustomTheme.CustomTheme.EDColor,
                 textTheme: CustomTheme.CustomTheme.DefaultTextThemen,
-                iconTheme: CustomTheme.CustomTheme.AppbarIconThemen
+                iconTheme: CustomTheme.CustomTheme.AppbarIconThemen,
+                elevation:0
             );
         }
 

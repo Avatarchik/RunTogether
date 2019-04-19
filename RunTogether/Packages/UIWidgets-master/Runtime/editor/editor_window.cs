@@ -91,9 +91,9 @@ namespace Unity.UIWidgets.editor {
         protected override float queryDevicePixelRatio() {
             return EditorGUIUtility.pixelsPerPoint;
         }
-        
+
         protected override int queryAntiAliasing() {
-            return Window.defaultAntiAliasing;
+            return defaultAntiAliasing;
         }
 
         protected override Vector2 queryWindowSize() {
@@ -106,14 +106,14 @@ namespace Unity.UIWidgets.editor {
 
         float? _lastUpdateTime;
 
-        protected override float getUnscaledDeltaTime() {
+        protected override void updateDeltaTime() {
             if (this._lastUpdateTime == null) {
                 this._lastUpdateTime = (float) EditorApplication.timeSinceStartup;
             }
 
-            float deltaTime = (float) EditorApplication.timeSinceStartup - this._lastUpdateTime.Value;
+            this.deltaTime = (float) EditorApplication.timeSinceStartup - this._lastUpdateTime.Value;
+            this.unscaledDeltaTime = this.deltaTime;
             this._lastUpdateTime = (float) EditorApplication.timeSinceStartup;
-            return deltaTime;
         }
     }
 
@@ -122,7 +122,7 @@ namespace Unity.UIWidgets.editor {
     public interface WindowHost {
         Window window { get; }
     }
-    
+
     public abstract class WindowAdapter : Window {
         static readonly List<WindowAdapter> _windowAdapters = new List<WindowAdapter>();
 
@@ -161,8 +161,12 @@ namespace Unity.UIWidgets.editor {
             return TimeSpan.FromSeconds(Time.time);
         }
 
-        protected virtual float getUnscaledDeltaTime() {
-            return Time.unscaledDeltaTime;
+        protected float deltaTime;
+        protected float unscaledDeltaTime;
+
+        protected virtual void updateDeltaTime() {
+            this.deltaTime = Time.unscaledDeltaTime;
+            this.unscaledDeltaTime = Time.deltaTime;
         }
 
         protected virtual void updateSafeArea() {
@@ -177,7 +181,7 @@ namespace Unity.UIWidgets.editor {
         public void OnEnable() {
             this._devicePixelRatio = this.queryDevicePixelRatio();
             this._antiAliasing = this.queryAntiAliasing();
-            
+
             var size = this.queryWindowSize();
             this._lastWindowWidth = size.x;
             this._lastWindowHeight = size.y;
@@ -288,7 +292,7 @@ namespace Unity.UIWidgets.editor {
                 if (this.displayMetricsChanged()) {
                     this._devicePixelRatio = this.queryDevicePixelRatio();
                     this._antiAliasing = this.queryAntiAliasing();
-                    
+
                     var size = this.queryWindowSize();
                     this._lastWindowWidth = size.x;
                     this._lastWindowHeight = size.y;
@@ -388,7 +392,7 @@ namespace Unity.UIWidgets.editor {
                     );
                 }
                 else if (evt.type == EventType.ScrollWheel) {
-                    this._scrollInput.onScroll(-evt.delta.x * this._devicePixelRatio,
+                    this.onScroll(-evt.delta.x * this._devicePixelRatio,
                         -evt.delta.y * this._devicePixelRatio,
                         evt.mousePosition.x * this._devicePixelRatio,
                         evt.mousePosition.y * this._devicePixelRatio,
@@ -407,8 +411,17 @@ namespace Unity.UIWidgets.editor {
             TextInput.OnGUI();
         }
 
-        void _updateScrollInput() {
-            var deltaScroll = this._scrollInput.getScrollDelta();
+        public void onScroll(float deltaX, float deltaY, float posX, float posY, int buttonId) {
+            this._scrollInput.onScroll(deltaX,
+                deltaY,
+                posX,
+                posY,
+                buttonId
+            );
+        }
+
+        void _updateScrollInput(float deltaTime) {
+            var deltaScroll = this._scrollInput.getScrollDelta(deltaTime);
 
             if (deltaScroll == Vector2.zero) {
                 return;
@@ -431,24 +444,37 @@ namespace Unity.UIWidgets.editor {
         }
 
         public void Update() {
-            this.updateDeltaTime(this.getUnscaledDeltaTime());
+            this.updateDeltaTime();
+            this.updateFPS(this.unscaledDeltaTime);
 
             Timer.update();
 
             bool hasFocus = this.hasFocus();
             using (this.getScope()) {
                 WidgetsBinding.instance.focusManager.focusNone(!hasFocus);
-                this._updateScrollInput();
+                this._updateScrollInput(this.deltaTime);
                 TextInput.Update();
                 this._timerProvider.update(this.flushMicrotasks);
                 this.flushMicrotasks();
             }
         }
-
+        
+        static readonly TimeSpan _coolDownDelay = new TimeSpan(0, 0, 0, 0, 200);
+        static Timer frameCoolDownTimer;
+        
         public override void scheduleFrame(bool regenerateLayerTree = true) {
             if (regenerateLayerTree) {
                 this._regenerateLayerTree = true;
             }
+
+            onFrameRateSpeedUp();
+            frameCoolDownTimer?.cancel();
+            frameCoolDownTimer = instance.run(
+                _coolDownDelay,
+                () => {
+                    onFrameRateCoolDown();
+                    frameCoolDownTimer = null;
+                });
         }
 
         public override void render(Scene scene) {

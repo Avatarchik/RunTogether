@@ -5,6 +5,7 @@ using Datas;
 using UIScripts.LoginPage;
 using UIScripts.RunPage;
 using Unity.UIWidgets;
+using Unity.UIWidgets.animation;
 using Unity.UIWidgets.engine;
 using Unity.UIWidgets.material;
 using Unity.UIWidgets.Redux;
@@ -24,6 +25,25 @@ namespace UIScripts
                     home: new Home()
                 )
             );
+        }
+
+        protected PageRouteFactory pageRouteBuilder
+        {
+            get
+            {
+                return (RouteSettings settings, WidgetBuilder builder) =>
+                    new PageRouteBuilder(
+                        settings: settings,
+                        pageBuilder: (BuildContext context, Animation<float> animation,
+                            Animation<float> secondaryAnimation) => builder(context),
+                        transitionsBuilder: (BuildContext context, Animation<float>
+                                animation, Animation<float> secondaryAnimation, Widget child) =>
+                            new _FadeUpwardsPageTransition(
+                                routeAnimation: animation,
+                                child: child
+                            )
+                    );
+            }
         }
 
         protected override void OnEnable()

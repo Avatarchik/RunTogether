@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Timers;
 using Datas;
 using UIScripts.Externs;
-using Unity.UIWidgets.animation;
 using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
 using Unity.UIWidgets.Redux;
@@ -87,7 +85,7 @@ namespace UIScripts.LoginPage
                                     {
                                         AvatarBase64 =
                                             "data:image/jpeg;base64," +
-                                            Convert.ToBase64String(System.IO.File.ReadAllBytes(path))
+                                            Convert.ToBase64String(System.IO.File.ReadAllBytes(path));
                                         dispatcher.dispatch(new SetRegisterAvatarAction {InputResult = path});
                                     }
                                 });
@@ -145,8 +143,6 @@ namespace UIScripts.LoginPage
                                     {
                                         dispatcher.dispatch(new SetVerfyCodeAction()
                                         {
-                                            Context = buildContext,
-
                                             InputResult = text.Trim()
                                         });
                                     }),
@@ -161,7 +157,7 @@ namespace UIScripts.LoginPage
                                             {
                                                 dispatcher.dispatch(new RegisterAction()
                                                 {
-                                                    Context = context,
+                                                   
                                                 });
                                             },
                                             Counter: model.CountdownTime
