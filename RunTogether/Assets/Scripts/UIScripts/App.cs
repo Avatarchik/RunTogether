@@ -68,15 +68,15 @@ namespace UIScripts
             if (tmpBaseAction.GetType() == typeof(RegisterAction))
             {
                 RegisterAction tmpRegisterAction = (tmpBaseAction as RegisterAction);
-                tmpRegisterAction?.Request();
+                tmpRegisterAction?.webServerApiRequest.Request();
             }
             else if (tmpBaseAction.GetType() == typeof(LoginAction))
             {
                 LoginAction tmpLoginAction = (tmpBaseAction as LoginAction);
-                if (tmpLoginAction.RequestResult == RequestResultEnum.LoginSuccessed)
+                if (tmpLoginAction?.webServerApiRequest.RequestResult == RequestResultEnum.LoginSuccessed)
                     tmpAppState.Logined = true;
                 else
-                    tmpLoginAction?.Request();
+                    tmpLoginAction?.webServerApiRequest.Request();
             }
             else if (tmpBaseAction.GetType() == typeof(AccountAction))
             {

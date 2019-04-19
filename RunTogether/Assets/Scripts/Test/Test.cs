@@ -18,19 +18,19 @@ public class Test : MonoBehaviour
 
     public void RequestTeset()
     {
-        Dictionary<string, string> tmpParamaters = new Dictionary<string, string>
-        {
-            {"url", "http://rt.api.weacw.com/index/user/register"},
-            {"headimages", "123"},
-            {"nickname", "123"},
-            {"password", "123"},
-            {"phone", "123"},
-        };
-
-
-        RegisterAction re = new RegisterAction(tmpParamaters, (result) => { Debug.Log(result); },
-            (result) => { Debug.Log(result); });
-
-        re?.Request();
+//        Dictionary<string, string> tmpParamaters = new Dictionary<string, string>
+//        {
+//            {"url", "http://rt.api.weacw.com/index/user/register"},
+//            {"headimages", "123"},
+//            {"nickname", "123"},
+//            {"password", "123"},
+//            {"phone", "123"},
+//        };
+//
+//
+//        RegisterAction re = new RegisterAction(tmpParamaters, (result) => { Debug.Log(result); },
+//            (result) => { Debug.Log(result); });
+//
+//        re?.Request();
     }
 }

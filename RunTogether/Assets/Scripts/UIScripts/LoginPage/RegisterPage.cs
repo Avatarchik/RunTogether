@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Datas;
 using UIScripts.Externs;
+using Unit;
 using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
 using Unity.UIWidgets.Redux;
@@ -157,7 +158,6 @@ namespace UIScripts.LoginPage
                                             {
                                                 dispatcher.dispatch(new RegisterAction()
                                                 {
-                                                   
                                                 });
                                             },
                                             Counter: model.CountdownTime
@@ -219,7 +219,6 @@ namespace UIScripts.LoginPage
 
         private RegisterAction Register(BuildContext context)
         {
-            Debug.Log("Do");
             Dictionary<string, string> tmpParamaters = new Dictionary<string, string>
             {
                 {"url", new Uri(new Uri(APIsInfo.APIGetWay), APIsInfo.User_Register).ToString()},
@@ -228,30 +227,32 @@ namespace UIScripts.LoginPage
                 {"password", PasswordEdit.text},
                 {"phone", PhoneEdit.text},
             };
-            return new RegisterAction(tmpParamaters, (result) =>
-                {
-                    RequestUserRespon tmpRequestUserRespon = JsonUtility.FromJson<RequestUserRespon>(result);
-                    Debug.Log(result);
-                    using (WindowProvider.of(context).getScope())
+            WebServerApiRequest tmpWebServerApiRequest =
+                new WebServerApiRequest(tmpParamaters, (result) =>
                     {
-                        switch (tmpRequestUserRespon.code)
+                        RequestUserRespon tmpRequestUserRespon = JsonUtility.FromJson<RequestUserRespon>(result);
+                        Debug.Log(result);
+                        using (WindowProvider.of(context).getScope())
                         {
-                            case 103:
-                            case 104:
-                            case 105:
-                            case 106:
-                            case 400:
-                                ShowDialog("注册", "注册账户失败，请更换账户重试", context);
-                                break;
-                            case 200:
-                            case 1:
-                                ShowDialog("注册", "注册成功", context);
-                                break;
+                            switch (tmpRequestUserRespon.code)
+                            {
+                                case 103:
+                                case 104:
+                                case 105:
+                                case 106:
+                                case 400:
+                                    ShowDialog("注册", "注册账户失败，请更换账户重试", context);
+                                    break;
+                                case 200:
+                                case 1:
+                                    ShowDialog("注册", "注册成功", context);
+                                    break;
+                            }
                         }
-                    }
-                },
-                (result) => { Debug.Log(result); }
-            );
+                    },
+                    (result) => { Debug.Log(result); }
+                );
+            return new RegisterAction() {webServerApiRequest = tmpWebServerApiRequest};
         }
     }
 }

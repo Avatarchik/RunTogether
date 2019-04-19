@@ -1,13 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using Datas;
+using Unit;
 using Unity.UIWidgets.foundation;
 using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
 using Unity.UIWidgets.ui;
 using Unity.UIWidgets.widgets;
+using UnityEngine;
+using DialogUtils = Unity.UIWidgets.material.DialogUtils;
 
 namespace UIScripts
 {
@@ -17,7 +22,7 @@ namespace UIScripts
         {
             return Regex.IsMatch(password, @"^[A-Za-z_0-9]{8,16}$");
         }
-       
+
         public static bool IsCellphoneNumber(string str_handset)
         {
             return Regex.IsMatch(str_handset, @"^[1]+[3,4,5,8]+\d{9}");
@@ -60,7 +65,7 @@ namespace UIScripts
                 backgroundColor: CustomTheme.CustomTheme.EDColor,
                 textTheme: CustomTheme.CustomTheme.DefaultTextThemen,
                 iconTheme: CustomTheme.CustomTheme.AppbarIconThemen,
-                elevation:0
+                elevation: 0
             );
         }
 
@@ -87,23 +92,66 @@ namespace UIScripts
         }
 
 
-        public static string EncryptString(string str)
+        public static void ShowDialog(string title, string content, BuildContext context)
         {
-            MD5 md5 = MD5.Create();
-            // 将字符串转换成字节数组
-            byte[] byteOld = Encoding.UTF8.GetBytes(str);
-            // 调用加密方法
-            byte[] byteNew = md5.ComputeHash(byteOld);
-            // 将加密结果转换为字符串
-            StringBuilder sb = new StringBuilder();
-            foreach (byte b in byteNew)
+            DialogUtils.showDialog(context: context, builder: (buildContext => new AlertDialog(
+                title: new Text(title),
+                content: new Text(content),
+                actions: new List<Widget>
+                {
+                    new FlatButton(child: new Text("Ok"), onPressed: () => { Navigator.pop(context); })
+                }
+            )));
+        }
+
+
+        public static WebServerApiRequest Login(BuildContext context, bool autoRequest = true,
+            string account = null, string password = null, Action<RequestUserRespon> successedResult = null)
+        {
+            Dictionary<string, string> tmpRequestParamaters = new Dictionary<string, string>
             {
-                // 将字节转换成16进制表示的字符串，
-                sb.Append(b.ToString("x2"));
+                {"url", new Uri(new Uri(APIsInfo.APIGetWay), APIsInfo.User_Login).ToString()},
+                {"password", password ?? PlayerPrefs.GetString("password")},
+                {"phone", account ?? PlayerPrefs.GetString("account")}
+            };
+
+            WebServerApiRequest tmpRequest = new WebServerApiRequest
+            (tmpRequestParamaters, (result) =>
+                {
+                    RequestUserRespon tmpRequestUserRespon = JsonUtility.FromJson<RequestUserRespon>(result);
+                    Debug.Log(result);
+                    using (WindowProvider.of(context).getScope())
+                    {
+                        switch (tmpRequestUserRespon.code)
+                        {
+                            case 103:
+                                ShowDialog("密码错误", "输入的密码错误，请重新输入密码", context);
+                                break;
+                            case 104:
+                            case 105:
+                            case 106:
+                                ShowDialog("账户不存在", "该账户不存在，请确认账户后重试", context);
+                                break;
+                            case 200:
+                                AppManager.Instance.InitUserData(new UserDatas(tmpRequestUserRespon.data.headimages,
+                                    tmpRequestUserRespon.data.address, tmpRequestUserRespon.data.nickname));
+                                successedResult?.Invoke(tmpRequestUserRespon);
+                                break;
+                            case 400:
+                                Debug.LogError("404 not found");
+                                break;
+                        }
+                    }
+                },
+                (msg) => { Debug.Log(msg); });
+            if (autoRequest)
+            {
+                tmpRequest.Request();
+                return null;
             }
 
-            // 返回加密的字符串
-            return sb.ToString();
+            else
+                return tmpRequest;
         }
     }
 

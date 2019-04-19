@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BestHTTP.JSON;
 using Datas;
 using UIScripts.Externs;
+using Unit;
 using Unity.UIWidgets;
 using Unity.UIWidgets.animation;
 using Unity.UIWidgets.material;
@@ -125,58 +126,32 @@ namespace UIScripts.LoginPage
         }
 
 
-        private void ShowDialog(string title, string content)
-        {
-            DialogUtils.showDialog(context: BuidlContext, builder: (buildContext => new AlertDialog(
-                title: new Text(title),
-                content: new Text(content),
-                actions: new List<Widget>
-                {
-                    new FlatButton(child: new Text("Ok"), onPressed: () => { Navigator.pop(BuidlContext); })
-                }
-            )));
-        }
-
         private LoginAction RequestLogin(BuildContext context, Dispatcher dispatcher)
         {
-            Dictionary<string, string> tmpRequestParamaters = new Dictionary<string, string>
-            {
-                {"url", new Uri(new Uri(APIsInfo.APIGetWay), APIsInfo.User_Login).ToString()},
-                {"password", PasswordEdit.text},
-                {"phone", PhoneEdit.text}
-            };
-
-            LoginAction tmpLoginAction = new LoginAction(tmpRequestParamaters, (result) =>
-                {
-                    RequestUserRespon tmpRequestUserRespon = JsonUtility.FromJson<RequestUserRespon>(result);
-                    AppManager.Instance.InitUserData(new UserDatas(tmpRequestUserRespon.data.headimages,
-                        tmpRequestUserRespon.data.address, tmpRequestUserRespon.data.nickname));
-                    using (WindowProvider.of(context).getScope())
+            LoginAction tmpLoginAction = new LoginAction();
+            tmpLoginAction.webServerApiRequest =
+                HelperWidgets.Login(context,
+                    autoRequest: false,
+                    account: PhoneEdit.text,
+                    password: PasswordEdit.text,
+                    successedResult: (result) =>
                     {
-                        switch (tmpRequestUserRespon.code)
+                        dispatcher.dispatch(new LoginAction
                         {
-                            case 103:
-                                ShowDialog("密码错误", "输入的密码错误，请重新输入密码");
-                                break;
-                            case 104:
-                            case 105:
-                            case 106:
-                                ShowDialog("账户不存在", "该账户不存在，请确认账户后重试");
-                                break;
-                            case 200:
-                                dispatcher.dispatch(new LoginAction {RequestResult = RequestResultEnum.LoginSuccessed});
-                                PlayerPrefs.SetString("account", PhoneEdit.text);
-                                PlayerPrefs.SetString("password", PasswordEdit.text);
-                                PlayerPrefs.SetString("logined", "Yes");
-                                HelperWidgets.PopRoute(BuidlContext);
-                                break;
-                            case 400:
-                                Debug.LogError("404 not found");
-                                break;
-                        }
+                            webServerApiRequest = new WebServerApiRequest
+                            {
+                                RequestResult = RequestResultEnum.LoginSuccessed
+                            }
+                        });
+
+
+                        PlayerPrefs.SetString("account", PhoneEdit.text);
+                        PlayerPrefs.SetString("password", PasswordEdit.text);
+                        PlayerPrefs.SetString("logined", "Yes");
+                        HelperWidgets.PopRoute(BuidlContext);
                     }
-                },
-                (msg) => { Debug.Log(msg); });
+                );
+
             return tmpLoginAction;
         }
     }

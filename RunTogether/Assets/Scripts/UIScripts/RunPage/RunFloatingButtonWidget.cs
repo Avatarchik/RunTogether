@@ -31,7 +31,7 @@ namespace UIScripts.RunPage
                     onPressed: () =>
                     {
                         HelperWidgets.PushNewRoute(context, new MatchWidget());
-                    }
+                    },elevation:0
                 )
             );
         }

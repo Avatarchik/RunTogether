@@ -16,7 +16,8 @@ namespace UIScripts.FriendPage
                     backgroundColor: new Color(0xffededed),
                     title: new Text("好友", style: new Unity.UIWidgets.painting.TextStyle(color: Colors.black),
                         textAlign: TextAlign.center),
-                    centerTitle: true
+                    centerTitle: true,
+                    elevation:0
                 ),
                 body: new Container(
                     color: new Color(0xffededed),

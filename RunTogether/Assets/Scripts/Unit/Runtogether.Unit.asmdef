@@ -1,11 +1,7 @@
 {
-    "name": "Together.UIScripts",
+    "name": "Runtogether.Unit",
     "references": [
-        "RunTogether.Datas",
-        "RunTorgether.NativeAPI",
-        "RunTogether.HTTP",
-        "Unity.UIWidgets",
-        "Runtogether.Unit"
+        "GUID:6fd6947ec030647c2ac2fb8f0f1fa829"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],
