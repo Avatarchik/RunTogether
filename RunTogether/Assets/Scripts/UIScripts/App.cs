@@ -27,24 +27,6 @@ namespace UIScripts
             );
         }
 
-        protected PageRouteFactory pageRouteBuilder
-        {
-            get
-            {
-                return (RouteSettings settings, WidgetBuilder builder) =>
-                    new PageRouteBuilder(
-                        settings: settings,
-                        pageBuilder: (BuildContext context, Animation<float> animation,
-                            Animation<float> secondaryAnimation) => builder(context),
-                        transitionsBuilder: (BuildContext context, Animation<float>
-                                animation, Animation<float> secondaryAnimation, Widget child) =>
-                            new _FadeUpwardsPageTransition(
-                                routeAnimation: animation,
-                                child: child
-                            )
-                    );
-            }
-        }
 
         protected override void OnEnable()
         {
