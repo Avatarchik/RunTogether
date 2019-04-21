@@ -1,3 +1,4 @@
+using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
 using Unity.UIWidgets.widgets;
 
@@ -18,14 +19,21 @@ namespace UIScripts.Externs
 
         public override Widget build(BuildContext context)
         {
-            return new Container(
-                width: Width,
-                height: Height,
-                decoration: new BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: new DecorationImage(ImageProvider, fit: BoxFit.contain)
-                )
-            );
+            return
+                new Container(
+                    child: new ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: new Container(
+                            width: Width,
+                            height: Height,
+                            decoration: new BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                image: new DecorationImage(ImageProvider, fit: BoxFit.cover),
+                                borderRadius: BorderRadius.circular(5)
+                            )
+                        )
+                    )
+                );
         }
     }
 }

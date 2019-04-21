@@ -22,7 +22,8 @@ namespace UIScripts
             var tmpStore = new Store<AppState>(Reducer, new AppState());
             return new StoreProvider<AppState>(tmpStore, child: new MaterialApp(
                     showPerformanceOverlay: false,
-                    home: new Home()
+//                    home: new Home()
+                    home:new ForgetPasswordPage()
                 )
             );
         }

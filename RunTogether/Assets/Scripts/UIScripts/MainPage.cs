@@ -15,7 +15,7 @@ namespace UIScripts
     public class MainViewState : State<MainPage>
     {
         private readonly List<Widget> Pages = new List<Widget>();
-        private int currentSelected = 0;
+        private int currentSelected = 1;
 
         public override void initState()
         {

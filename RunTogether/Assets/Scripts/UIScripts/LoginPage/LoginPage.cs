@@ -98,9 +98,19 @@ namespace UIScripts.LoginPage
                                         ),
                                     onPressed: () =>
                                     {
-                                        //防止用户漏空提交
-                                        if (!HelperWidgets.IsCellphoneNumber(PhoneEdit.text)
-                                            || !HelperWidgets.IsValidPassword(PasswordEdit.text)) return;
+                                        if (!HelperWidgets.IsCellphoneNumber(PhoneEdit.text))
+                                        {
+                                            HelperWidgets.ShowDialog("错误提示", "输入的手机号格式有误，请确认后重试", context);
+                                            return;
+                                        }
+
+
+                                        if (!HelperWidgets.IsValidPassword(PasswordEdit.text))
+                                        {
+                                            HelperWidgets.ShowDialog("错误提示", "请输入密码", context);
+                                            return;
+                                        }
+
 
                                         //TODO:防止多次点击
                                         dispatcher.dispatch(RequestLogin(context, dispatcher));
