@@ -21,7 +21,7 @@ namespace UIScripts
 
     public class LoginRegisterAction : BaseAction
     {
-        public WebServerApiRequest webServerApiRequest;     
+        public WebServerApiRequest webServerApiRequest;
     }
 
 
@@ -47,6 +47,11 @@ namespace UIScripts
     {
     }
 
+    public class PasswordAgainAction : SingleStringResult
+    {
+        public string PasswordAgain;
+    }
+
     public class AccountAction : SingleStringResult
     {
     }
@@ -62,5 +67,21 @@ namespace UIScripts
     public class SetRegisterAvatarAction : SingleStringResult
     {
         public string AvatarBase64;
+    }
+
+
+    public class BaseUserInfoAction : BaseAction
+    {
+        public string Account;
+        public string Password;
+    }
+
+
+    public class RegisterUserInfoAction : BaseUserInfoAction
+    {
+        public string PasswordAgain;
+        public string VerfyCode;
+        public string NickName;
+        public string Avatart;
     }
 }

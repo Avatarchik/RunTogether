@@ -6,6 +6,7 @@ using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
 using Unity.UIWidgets.ui;
 using Unity.UIWidgets.widgets;
+using Image = Unity.UIWidgets.widgets.Image;
 
 namespace UIScripts.ProfilePage
 {
@@ -55,8 +56,7 @@ namespace UIScripts.ProfilePage
                     {
                         new ListTileWithDividerWidget(titleWidget: new Text("Avatar"),
                             trailingWidget: new AvatarWidget(
-                                HelperWidgets._createImageProvider(AvatarImageType.NetWork,
-                                    Datas.AppManager.Instance.GetUserData.AvatarUrl)),
+                                Image.network(Datas.AppManager.Instance.GetUserData.AvatarUrl)),
                             onTap: GoToAvatarEdit),
 
 
@@ -96,8 +96,8 @@ namespace UIScripts.ProfilePage
             };
             return new MultipTrailingWidget(tmpTrailings);
         }
-        
-        
+
+
         private void BackToPrevious()
         {
             Navigator.pop(context);

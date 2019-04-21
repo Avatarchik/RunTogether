@@ -15,28 +15,37 @@ namespace UIScripts.LoginPage
                     null,
                     new Text("更改密码"),
                     () => { HelperWidgets.PopRoute(context); }),
-                body: _buildBody()
+                body: _buildBody(context),
+                backgroundColor: CustomTheme.CustomTheme.EDColor
             );
         }
 
 
-        private Widget _buildBody()
+        private Widget _buildBody(BuildContext context)
         {
             return new Center(
                 child: new Column(
                     children: new List<Widget>
                     {
                         new TextFieldExtern(hintText: "请输入手机号", margin: EdgeInsets.all(20)),
-                        new Padding(
-                            padding: EdgeInsets.only(top: 20),
-                            child: new RaisedButton(child: new Text("确定"), onPressed: null, elevation: 0)
+                        new Row(
+                            children: new List<Widget>
+                            {
+                                new Flexible(
+                                    child: new TextFieldExtern(hintText: "请输入验证码", margin: EdgeInsets.all(20))
+                                ),
+                                new Padding(
+                                    padding: EdgeInsets.only(right: 20),
+                                    child: new RaisedButton(child: new Text("发送"))
+                                )
+                            }
                         ),
-//                        new Row(children: new List<Widget>
-//                        {
-//                            new TextField(),
-//                            new RaisedButton(child: new Text("发送")),
-//                        }),
-                  
+                        new Padding(
+                            padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                            child: new SizedBox(width: MediaQuery.of(context).size.width,
+                                child: new RaisedButton(child: new Text("确定"), onPressed: null, elevation: 0)
+                            )
+                        ),
                     }
                 )
             );

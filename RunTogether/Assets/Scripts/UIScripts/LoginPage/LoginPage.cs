@@ -22,18 +22,15 @@ namespace UIScripts.LoginPage
     {
         private readonly TextEditingController PasswordEdit = new TextEditingController("");
         private readonly TextEditingController PhoneEdit = new TextEditingController("");
-        private BuildContext BuidlContext;
-
 
         private string Account;
-
+        private BaseUserInfoAction UserInfoAction = new BaseUserInfoAction();
 
         private readonly Animation<Color> CircularProgressIndicatorColor =
             new AlwaysStoppedAnimation<Color>(Colors.white);
 
         public override Widget build(BuildContext context)
         {
-            BuidlContext = context;
             return new Scaffold(
                 appBar: HelperWidgets._buildCloseAppBar(isCenterTitle: true, title: new Text(""),
                     lealding: new IconButton(
@@ -67,20 +64,29 @@ namespace UIScripts.LoginPage
                                 regexCondition: @"^[0-9]*$",
                                 errorText: string.IsNullOrEmpty(model.Account) ? null :
                                 HelperWidgets.IsCellphoneNumber(model?.Account) ? null : string.Empty,
-                                onChanged: (text) => { dispatcher.dispatch(new AccountAction {InputResult = text}); }
+                                onChanged: (text) =>
+                                {
+                                    UserInfoAction.Account = text;
+                                    dispatcher.dispatch(UserInfoAction);
+                                }
                             ),
 
                             new TextFieldExtern("请填写密码(英文字符、数字)",
                                 margin: EdgeInsets.all(20),
                                 obscureText: true, editingController: PasswordEdit, maxLength: 16,
-                                regexCondition: @"^[A-Za-z0-9]*$"
+                                regexCondition: @"^[A-Za-z0-9]*$",
+                                onChanged: (text) =>
+                                {
+                                    UserInfoAction.Password = text;
+                                    dispatcher.dispatch(UserInfoAction);
+                                }
                             ),
 
 
                             new Container(
                                 margin: EdgeInsets.all(20f),
                                 width: MediaQuery.of(context).size.width,
-                                child: new FlatButton(color: Colors.green,
+                                child: new RaisedButton(color: Colors.green,
                                     child: model.HideCircularProgressIndicator
                                         ? (Widget) new Text(model.LoginState,
                                             style: CustomTheme.CustomTheme.DefaultTextThemen.display2)
@@ -96,25 +102,11 @@ namespace UIScripts.LoginPage
                                                         .display2)
                                             }
                                         ),
-                                    onPressed: () =>
-                                    {
-                                        if (!HelperWidgets.IsCellphoneNumber(PhoneEdit.text))
-                                        {
-                                            HelperWidgets.ShowDialog("错误提示", "输入的手机号格式有误，请确认后重试", context);
-                                            return;
-                                        }
-
-
-                                        if (!HelperWidgets.IsValidPassword(PasswordEdit.text))
-                                        {
-                                            HelperWidgets.ShowDialog("错误提示", "请输入密码", context);
-                                            return;
-                                        }
-
-
-                                        //TODO:防止多次点击
-                                        dispatcher.dispatch(RequestLogin(context, dispatcher));
-                                    }
+                                    onPressed: model.IsInteractableOfButton
+                                        ? LoginRaiseButton(dispatcher, context)
+                                        : null,
+                                    elevation: 0,
+                                    disabledColor: Colors.green.withAlpha(125)
                                 )
                             ),
 
@@ -125,6 +117,7 @@ namespace UIScripts.LoginPage
                                     onTap: () =>
                                     {
                                         //TODO:找回密码
+                                        HelperWidgets.PushNewRoute(context, new ForgetPasswordPage());
                                     },
                                     child: new Text("登陆遇到问题？")
                                 )
@@ -133,6 +126,30 @@ namespace UIScripts.LoginPage
                     )
                 ))
             );
+        }
+
+
+        private VoidCallback LoginRaiseButton(Dispatcher dispatcher, BuildContext context)
+        {
+            return () =>
+            {
+                if (!HelperWidgets.IsCellphoneNumber(PhoneEdit.text))
+                {
+                    HelperWidgets.ShowDialog("错误提示", "输入的手机号格式有误，请确认后重试", context);
+                    return;
+                }
+
+
+                if (!HelperWidgets.IsValidPassword(PasswordEdit.text))
+                {
+                    HelperWidgets.ShowDialog("错误提示", "请输入密码", context);
+                    return;
+                }
+
+
+                //TODO:防止多次点击
+                dispatcher.dispatch(RequestLogin(context, dispatcher));
+            };
         }
 
 
@@ -158,7 +175,21 @@ namespace UIScripts.LoginPage
                         PlayerPrefs.SetString("account", PhoneEdit.text);
                         PlayerPrefs.SetString("password", PasswordEdit.text);
                         PlayerPrefs.SetString("logined", "Yes");
-                        HelperWidgets.PopRoute(BuidlContext);
+                        HelperWidgets.PopRoute(context);
+                    },
+                    failedResult: (msg) =>
+                    {
+                        using (WindowProvider.of(context).getScope())
+                        {
+                            HelperWidgets.ShowDialog("登陆错误", "发生未知错误，无法登陆请稍后重试", context);
+                            dispatcher.dispatch(new LoginAction
+                            {
+                                webServerApiRequest = new WebServerApiRequest
+                                {
+                                    RequestResult = RequestResultEnum.LoginFailed
+                                }
+                            });
+                        }
                     }
                 );
 

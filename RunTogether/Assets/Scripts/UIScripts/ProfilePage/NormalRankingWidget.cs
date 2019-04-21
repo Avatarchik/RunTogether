@@ -35,14 +35,14 @@ namespace UIScripts.ProfilePage
                             {
                                 new Text(RankingId),
                                 new Padding(padding: EdgeInsets.only(left: 30)),
-                                new AvatarWidget(HelperWidgets._createImageProvider(AvatarImageType.NetWork, AvatarUrl),
+                                new AvatarWidget(Image.network(AvatarUrl),
                                     40,
                                     40),
                                 new Padding(padding: EdgeInsets.only(left: 20)),
-                                new Text(NickName),                              
+                                new Text(NickName),
                             }
                         ),
-                        title:  new Text(RunDistance + " KM"),
+                        title: new Text(RunDistance + " KM"),
                         trailing: new Icon(icon: Icons.dock)),
                     new Divider(indent: 18, height: 5),
                 }

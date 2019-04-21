@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using Datas;
+using JetBrains.Annotations;
 using Unit;
 using Unity.UIWidgets.foundation;
 using Unity.UIWidgets.material;
@@ -95,18 +96,21 @@ namespace UIScripts
         public static void ShowDialog(string title, string content, BuildContext context)
         {
             DialogUtils.showDialog(context: context, builder: (buildContext => new AlertDialog(
-                title: new Text(title),
-                content: new Text(content),
-                actions: new List<Widget>
-                {
-                    new FlatButton(child: new Text("Ok"), onPressed: () => { Navigator.pop(context); })
-                }
-            )));
+                        title: new Text(title),
+                        content: new Text(content),
+                        actions: new List<Widget>
+                        {
+                            new FlatButton(child: new Text("Ok"), onPressed: () => { Navigator.pop(context); })
+                        }                        
+                    )
+                )
+            );
         }
 
 
         public static WebServerApiRequest Login(BuildContext context, bool autoRequest = true,
-            string account = null, string password = null, Action<RequestUserRespon> successedResult = null)
+            string account = null, string password = null, [CanBeNull] Action<RequestUserRespon> successedResult = null,
+            [CanBeNull] Action<string> failedResult = null)
         {
             Dictionary<string, string> tmpRequestParamaters = new Dictionary<string, string>
             {
@@ -119,7 +123,6 @@ namespace UIScripts
             (tmpRequestParamaters, (result) =>
                 {
                     RequestUserRespon tmpRequestUserRespon = JsonUtility.FromJson<RequestUserRespon>(result);
-                    Debug.Log(result);
                     using (WindowProvider.of(context).getScope())
                     {
                         switch (tmpRequestUserRespon.code)
@@ -143,7 +146,8 @@ namespace UIScripts
                         }
                     }
                 },
-                (msg) => { Debug.Log(msg); });
+                failedCallback: failedResult
+            );
             if (autoRequest)
             {
                 tmpRequest.Request();

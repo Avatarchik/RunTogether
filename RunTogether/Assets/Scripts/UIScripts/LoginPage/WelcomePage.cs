@@ -11,6 +11,14 @@ namespace UIScripts.LoginPage
 {
     public class WelcomePage : StatelessWidget
     {
+        private Widget WelcomeView;
+
+
+        public WelcomePage()
+        {
+            WelcomeView = Image.asset("WelcomePage", fit: BoxFit.fitWidth);
+        }
+
         public override Widget build(BuildContext buildContext)
         {
             return new Stack(
@@ -18,7 +26,7 @@ namespace UIScripts.LoginPage
                 children: new List<Widget>
                 {
                     new Container(
-                        child: Image.asset("splashscreen", fit: BoxFit.fitWidth)
+                        child: WelcomeView ?? new Text("None content")
                     ),
                     new Container(
                         margin: EdgeInsets.only(bottom: 35),

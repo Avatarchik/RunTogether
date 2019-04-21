@@ -5,17 +5,20 @@ using Unity.UIWidgets.painting;
 using Unity.UIWidgets.rendering;
 using Unity.UIWidgets.ui;
 using Unity.UIWidgets.widgets;
+using Image = Unity.UIWidgets.ui.Image;
 
 namespace UIScripts.MomentPage
 {
-    public class MomentPostedWidget:StatelessWidget
+    public class MomentPostedWidget : StatelessWidget
     {
         private readonly string AvatarURL;
         private readonly string Name;
         private readonly string PostedImageUrl;
         private readonly string LikeCount;
         private readonly string PostedContent;
-        public MomentPostedWidget(string avatarUrl,string name,string postedImageUrl,string postedContent,string likeCount)
+
+        public MomentPostedWidget(string avatarUrl, string name, string postedImageUrl, string postedContent,
+            string likeCount)
         {
             AvatarURL = avatarUrl;
             Name = name;
@@ -23,56 +26,59 @@ namespace UIScripts.MomentPage
             LikeCount = likeCount;
             PostedContent = postedContent;
         }
-         public override Widget build(BuildContext context)
-         {
-               return new Column(
-                children:new List<Widget>
+
+        public override Widget build(BuildContext context)
+        {
+            return new Column(
+                children: new List<Widget>
                 {
                     new Padding(
-                        padding:EdgeInsets.only(left:20,right:20),
-                        child:new Column(
-                            children:new List<Widget>
+                        padding: EdgeInsets.only(left: 20, right: 20),
+                        child: new Column(
+                            children: new List<Widget>
                             {
-                                new ListTile(leading:new AvatarWidget(HelperWidgets._createImageProvider(AvatarImageType.NetWork,AvatarURL),
-                                    40,40),title:new Text(Name)),
+                                new ListTile(leading: new AvatarWidget(Unity.UIWidgets.widgets.Image.network(AvatarURL),
+                                    40, 40), title: new Text(Name)),
                                 new Container(
-                                    alignment:Alignment.centerLeft,
-                                    margin:EdgeInsets.only(left:70),
-                                    padding:EdgeInsets.only(bottom:10,top:10),
-                                    child: new Text(textAlign:TextAlign.left,data:PostedContent)
+                                    alignment: Alignment.centerLeft,
+                                    margin: EdgeInsets.only(left: 70),
+                                    padding: EdgeInsets.only(bottom: 10, top: 10),
+                                    child: new Text(textAlign: TextAlign.left, data: PostedContent)
                                 ),
-                                Unity.UIWidgets.widgets.Image.network(src:PostedImageUrl,fit:BoxFit.cover,width:200,height:200),
+                                Unity.UIWidgets.widgets.Image.network(src: PostedImageUrl, fit: BoxFit.cover,
+                                    width: 200, height: 200),
                                 new Row(
-                                    mainAxisAlignment:MainAxisAlignment.start,
-                                    children:new List<Widget>
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: new List<Widget>
                                     {
                                         new Container(
-                                            margin:EdgeInsets.only(left:70),
-                                            padding:EdgeInsets.only(bottom:10,top:10),
-                                            alignment:Alignment.centerLeft,
-                                            child: new Text(textAlign:TextAlign.left,data:System.DateTime.Now.ToString("u"),style:new TextStyle(fontSize:10))
-
+                                            margin: EdgeInsets.only(left: 70),
+                                            padding: EdgeInsets.only(bottom: 10, top: 10),
+                                            alignment: Alignment.centerLeft,
+                                            child: new Text(textAlign: TextAlign.left,
+                                                data: System.DateTime.Now.ToString("u"),
+                                                style: new TextStyle(fontSize: 10))
                                         ),
                                         new Container(
-                                            width:15,
-                                            color:Colors.transparent,
-                                            margin:EdgeInsets.only(left:90,bottom:2.5f),
-                                            alignment:Alignment.centerRight,
-                                            child: new IconButton(icon:new Icon(icon:Icons.thumb_up,size:15f))
+                                            width: 15,
+                                            color: Colors.transparent,
+                                            margin: EdgeInsets.only(left: 90, bottom: 2.5f),
+                                            alignment: Alignment.centerRight,
+                                            child: new IconButton(icon: new Icon(icon: Icons.thumb_up, size: 15f))
                                         ),
                                         new Container(
-                                            margin:EdgeInsets.only(left:15,bottom:2.5f),
-                                            alignment:Alignment.centerRight,
+                                            margin: EdgeInsets.only(left: 15, bottom: 2.5f),
+                                            alignment: Alignment.centerRight,
                                             child: new Text(LikeCount)
                                         )
                                     }
                                 )
-                            }    
+                            }
                         )
                     ),
                     new Divider()
                 }
             );
-         }
+        }
     }
 }

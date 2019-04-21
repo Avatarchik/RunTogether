@@ -23,8 +23,7 @@ namespace UIScripts.FriendPage
         }
 
         public override Widget build(BuildContext context)
-        {
-            ImageProvider tmpImageProvider = new NetworkImage(AvatarURL);
+        {           
             return new Container(
                 color: Colors.white,
                 child: new Column(
@@ -33,7 +32,7 @@ namespace UIScripts.FriendPage
                     children: new List<Widget>
                     {
                         new ListTile(
-                            leading: new AvatarWidget(tmpImageProvider, 50, 50),
+                            leading: new AvatarWidget(Image.network(AvatarURL), 50, 50),
                             title: new Text(Name), onTap: () => { }, contentPadding: EdgeInsets.only(left: 20)),
                         new Divider(height: DividerHeight, indent: DividerIndent)
                     }

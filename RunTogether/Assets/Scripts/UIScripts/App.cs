@@ -22,8 +22,7 @@ namespace UIScripts
             var tmpStore = new Store<AppState>(Reducer, new AppState());
             return new StoreProvider<AppState>(tmpStore, child: new MaterialApp(
                     showPerformanceOverlay: false,
-//                    home: new Home()
-                    home:new ForgetPasswordPage()
+                    home: new Home()
                 )
             );
         }
@@ -56,20 +55,45 @@ namespace UIScripts
             else if (tmpBaseAction.GetType() == typeof(LoginAction))
             {
                 LoginAction tmpLoginAction = (tmpBaseAction as LoginAction);
-                if (tmpLoginAction?.webServerApiRequest.RequestResult == RequestResultEnum.LoginSuccessed)
-                    tmpAppState.Logined = true;
-                else
-                    tmpLoginAction?.webServerApiRequest.Request();
+                switch (tmpLoginAction?.webServerApiRequest.RequestResult)
+                {
+                    case RequestResultEnum.LoginSuccessed:
+                        tmpAppState.Logined = true;
+                        tmpAppState.HideCircularProgressIndicator = true;
+                        break;
+                    case RequestResultEnum.LoginFailed:
+                        tmpAppState.HideCircularProgressIndicator = true;
+                        tmpAppState.IsInteractableOfButton = true;
+                        break;
+                    default:
+                        tmpLoginAction?.webServerApiRequest.Request();
+                        tmpAppState.HideCircularProgressIndicator = false;
+                        tmpAppState.IsInteractableOfButton = false;
+                        break;
+                }
             }
-            else if (tmpBaseAction.GetType() == typeof(AccountAction))
+            else if (tmpBaseAction.GetType() == typeof(BaseUserInfoAction))
             {
-                AccountAction tmpAccountAction = (tmpBaseAction as AccountAction);
-                tmpAppState.Account = tmpAccountAction.InputResult;
+                BaseUserInfoAction tmpAccountAction = (tmpBaseAction as BaseUserInfoAction);
+                tmpAppState.Account = tmpAccountAction.Account;
+                tmpAppState.IsInteractableOfButton = HelperWidgets.IsCellphoneNumber(tmpAccountAction.Account);
             }
-            else if (tmpBaseAction.GetType() == typeof(PasswordAction))
+
+            else if (tmpBaseAction.GetType() == typeof(RegisterUserInfoAction))
             {
-                PasswordAction tmpPasswordAction = (tmpBaseAction as PasswordAction);
-                tmpAppState.Password = tmpPasswordAction.InputResult;
+                RegisterUserInfoAction tmpRegisterUserInfoAction = (tmpBaseAction as RegisterUserInfoAction);
+                tmpAppState.Account = tmpRegisterUserInfoAction?.Account;
+                tmpAppState.Password = tmpRegisterUserInfoAction?.Password;
+                tmpAppState.VerfyCode = tmpRegisterUserInfoAction?.VerfyCode;
+                tmpAppState.NickName = tmpRegisterUserInfoAction?.NickName;
+                if (!string.IsNullOrEmpty(tmpRegisterUserInfoAction.Account))
+                    tmpAppState.IsInteractableOfButton =
+                        HelperWidgets.IsCellphoneNumber(tmpRegisterUserInfoAction?.Account);
+                tmpAppState.PasswordTextFieldErrorText =
+                    String.Compare(tmpRegisterUserInfoAction?.Password,
+                        tmpRegisterUserInfoAction?.PasswordAgain, StringComparison.Ordinal) != 0
+                        ? "两次输入密码不一致"
+                        : null;
             }
 
             return tmpAppState;

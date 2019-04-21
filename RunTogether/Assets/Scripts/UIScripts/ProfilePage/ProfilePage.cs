@@ -8,6 +8,7 @@ using Unity.UIWidgets.rendering;
 using Unity.UIWidgets.ui;
 using Unity.UIWidgets.widgets;
 using Color = Unity.UIWidgets.ui.Color;
+using Image = Unity.UIWidgets.widgets.Image;
 
 namespace UIScripts.ProfilePage
 {
@@ -44,8 +45,7 @@ namespace UIScripts.ProfilePage
                             decoration: new BoxDecoration(color: Color.white, shape: BoxShape.rectangle,
                                 borderRadius: BorderRadius.all(5)),
                             child: new ListTile(
-                                leading: new AvatarWidget(HelperWidgets._createImageProvider(AvatarImageType.NetWork,
-                                    AppManager.Instance.GetUserData.AvatarUrl)),
+                                leading: new AvatarWidget(Image.network(AppManager.Instance.GetUserData.AvatarUrl)),
                                 title: _buildNickName(), subtitle: _buildMotto(), trailing: _buildTrailing())
                         ),
                         new Container(padding: EdgeInsets.only(top: 20)),

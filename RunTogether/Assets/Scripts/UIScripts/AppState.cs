@@ -9,11 +9,11 @@ namespace UIScripts
     public class AppState
     {
         public RequestResultEnum RequestResult;
-        
+
         #region Register State
 
         //用户设置的头像
-        public string RegisterAvatar;      
+        public string RegisterAvatar;
 
         //验证码
         public string VerfyCode;
@@ -38,11 +38,11 @@ namespace UIScripts
         public string Account;
         public string LoginState = "登陆";
         public bool Logined;
-
         #endregion
 
 
         public bool HideCircularProgressIndicator = true;
+        public bool IsInteractableOfButton=false;
         public string AccountTextFieldErrorText;
         public string PasswordTextFieldErrorText;
 

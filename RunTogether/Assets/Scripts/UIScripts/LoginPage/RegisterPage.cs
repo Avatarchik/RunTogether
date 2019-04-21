@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Datas;
 using UIScripts.Externs;
 using Unit;
+using Unity.UIWidgets;
 using Unity.UIWidgets.material;
 using Unity.UIWidgets.painting;
 using Unity.UIWidgets.Redux;
@@ -10,6 +11,7 @@ using Unity.UIWidgets.ui;
 using Unity.UIWidgets.widgets;
 using UnityEngine;
 using DialogUtils = Unity.UIWidgets.material.DialogUtils;
+using Image = Unity.UIWidgets.widgets.Image;
 
 namespace UIScripts.LoginPage
 {
@@ -25,9 +27,12 @@ namespace UIScripts.LoginPage
     {
         private readonly TextEditingController NameEdit = new TextEditingController("");
         private readonly TextEditingController PasswordEdit = new TextEditingController("");
+        private readonly TextEditingController PasswordEditAgain = new TextEditingController("");
+
         private readonly TextEditingController PhoneEdit = new TextEditingController("");
         private readonly TextEditingController VerfyCodeEdit = new TextEditingController("");
         private string AvatarBase64 = null;
+        private RegisterUserInfoAction RegisterUserInfoAction = new RegisterUserInfoAction();
 
         public override void initState()
         {
@@ -74,7 +79,7 @@ namespace UIScripts.LoginPage
 
                         new GestureDetector(
                             child: new AvatarWidget(
-                                HelperWidgets._createImageProvider(AvatarImageType.Memory, model.RegisterAvatar)),
+                               Image.file(file:model.RegisterAvatar)),
                             onTap: () =>
                             {
 #if !UNITY_EDITOR && UNITY_IOS
@@ -102,34 +107,41 @@ namespace UIScripts.LoginPage
                             focusNode: new FocusNode(),
                             onChanged: (text) =>
                             {
-                                dispatcher.dispatch(new SetNickNameAction()
-                                {
-                                    InputResult = text,
-                                });
+                                RegisterUserInfoAction.NickName = text;
+                                dispatcher.dispatch(RegisterUserInfoAction);
                             }),
                         new TextFieldExtern("请填写手机号码",
                             margin: EdgeInsets.only(left: 20, right: 20, top: 20),
                             editingController: PhoneEdit, maxLength: 11,
-                            focusNode: new FocusNode(),
                             regexCondition: @"^[0-9]*$",
                             errorText: string.IsNullOrEmpty(model.Account) ? null :
                             HelperWidgets.IsCellphoneNumber(model?.Account) ? null : string.Empty,
                             onChanged: (text) =>
                             {
-                                dispatcher.dispatch(new AccountAction() {InputResult = text.Trim()});
+                                RegisterUserInfoAction.Account = text;
+                                dispatcher.dispatch(RegisterUserInfoAction);
                             }
                         ),
                         new TextFieldExtern("请填写密码(字母、数字至少8位)",
                             margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-                            focusNode: new FocusNode(),
                             obscureText: true, editingController: PasswordEdit, maxLength: 16,
                             regexCondition: @"^[A-Za-z0-9]*$",
                             onChanged: (text) =>
                             {
-                                dispatcher.dispatch(new PasswordAction()
-                                {
-                                    InputResult = text.Trim(),
-                                });
+                                RegisterUserInfoAction.Password = text;
+                                dispatcher.dispatch(RegisterUserInfoAction);
+                            }
+                        ),
+                        new TextFieldExtern("重新输入密码",
+                            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+                            focusNode: new FocusNode(),
+                            errorText: model.PasswordTextFieldErrorText,
+                            obscureText: true, editingController: PasswordEditAgain, maxLength: 16,
+                            regexCondition: @"^[A-Za-z0-9]*$",
+                            onChanged: (text) =>
+                            {
+                                RegisterUserInfoAction.PasswordAgain = text;
+                                dispatcher.dispatch(RegisterUserInfoAction);
                             }
                         ),
                         new Stack(
@@ -138,15 +150,13 @@ namespace UIScripts.LoginPage
                                 new TextFieldExtern("请填写验证码",
                                     margin: EdgeInsets.only(left: 20, right: 20, top: 20),
                                     maxLength: 6, editingController: VerfyCodeEdit,
-                                    focusNode: new FocusNode(),
                                     regexCondition: @"^[0-9]*$",
                                     onChanged: (text) =>
                                     {
-                                        dispatcher.dispatch(new SetVerfyCodeAction()
-                                        {
-                                            InputResult = text.Trim()
-                                        });
-                                    }),
+                                        RegisterUserInfoAction.VerfyCode = text;
+                                        dispatcher.dispatch(RegisterUserInfoAction);
+                                    }
+                                ),
 
                                 model.VerfyCodeWasSent
                                     ? new Container(
@@ -181,22 +191,12 @@ namespace UIScripts.LoginPage
                         new Container(
                             margin: EdgeInsets.all(20f),
                             width: MediaQuery.of(context).size.width,
-                            child: new FlatButton(color: Colors.green,
+                            child: new RaisedButton(color: Colors.green,
                                 child: new Text("注册",
                                     style: CustomTheme.CustomTheme.DefaultTextThemen.display2),
-                                onPressed: () =>
-                                {
-                                    //防止用户漏空提交
-
-                                    if (!HelperWidgets.IsValidPassword(PasswordEdit.text)
-                                        || string.IsNullOrEmpty(NameEdit.text)
-                                        || !HelperWidgets.IsCellphoneNumber(PhoneEdit.text)) return;
-
-                                    if (string.IsNullOrEmpty(VerfyCodeEdit.text) || VerfyCodeEdit.text.Length < 6)
-                                        return;
-
-                                    dispatcher.dispatch(Register(context));
-                                }
+                                onPressed: model.IsInteractableOfButton ? OnPressRegister(dispatcher, context) : null,
+                                elevation: 0,
+                                disabledColor: Colors.green.withAlpha(125)
                             )
                         ),
                     }
@@ -205,18 +205,40 @@ namespace UIScripts.LoginPage
         }
 
 
-        private void ShowDialog(string title, string content, BuildContext context)
+        /// <summary>
+        /// 响应注册按钮
+        /// </summary>
+        /// <param name="dispatcher"></param>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        private VoidCallback OnPressRegister(Dispatcher dispatcher, BuildContext context)
         {
-            DialogUtils.showDialog(context: context, builder: (buildContext => new AlertDialog(
-                title: new Text(title),
-                content: new Text(content),
-                actions: new List<Widget>
+            return () =>
+            {
+                if (!HelperWidgets.IsValidPassword(PasswordEdit.text)
+                    || string.IsNullOrEmpty(NameEdit.text)
+                    || !HelperWidgets.IsCellphoneNumber(PhoneEdit.text))
                 {
-                    new FlatButton(child: new Text("Ok"), onPressed: () => { Navigator.pop(context); })
+                    HelperWidgets.ShowDialog("注册错误", "请完善注册信息", context);
+                    return;
                 }
-            )));
+
+                if (string.IsNullOrEmpty(VerfyCodeEdit.text) || VerfyCodeEdit.text.Length < 6)
+                {
+                    HelperWidgets.ShowDialog("注册错误", "验证码格式错误", context);
+                    return;
+                }
+
+                dispatcher.dispatch(Register(context));
+            };
         }
 
+
+        /// <summary>
+        /// 发起注册请求
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         private RegisterAction Register(BuildContext context)
         {
             Dictionary<string, string> tmpParamaters = new Dictionary<string, string>
@@ -241,11 +263,11 @@ namespace UIScripts.LoginPage
                                 case 105:
                                 case 106:
                                 case 400:
-                                    ShowDialog("注册", "注册账户失败，请更换账户重试", context);
+                                    HelperWidgets.ShowDialog("注册", "注册账户失败，请更换账户重试", context);
                                     break;
                                 case 200:
                                 case 1:
-                                    ShowDialog("注册", "注册成功", context);
+                                    HelperWidgets.ShowDialog("注册", "注册成功", context);
                                     break;
                             }
                         }

@@ -25,8 +25,7 @@ namespace UIScripts.ProfilePage
                     child: new Column(
                         children: new List<Widget>
                         {
-                            new AvatarWidget(
-                                HelperWidgets._createImageProvider(AvatarImageType.NetWork, AvatarUrl), 80, 80),
+                            new AvatarWidget(Image.network(AvatarUrl), 80, 80),
                             new Text(NickName),
                             new Text(Mottor),
                         }
