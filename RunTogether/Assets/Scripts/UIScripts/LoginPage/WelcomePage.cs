@@ -47,7 +47,7 @@ namespace UIScripts.LoginPage
                                             style: CustomTheme.CustomTheme.DefaultTextThemen.display2),
                                         onPressed: () =>
                                         {
-                                            HelperWidgets.PushNewRoute(buildContext, new RegisterPage());
+                                            HelperWidgets.PushNewRoute(buildContext, new RegisterPage.RegisterPage());
                                         }
                                     )
                                 )

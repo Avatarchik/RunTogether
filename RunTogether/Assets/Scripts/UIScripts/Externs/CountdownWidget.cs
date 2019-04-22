@@ -6,9 +6,8 @@ using Unity.UIWidgets.painting;
 using Unity.UIWidgets.Redux;
 using Unity.UIWidgets.ui;
 using Unity.UIWidgets.widgets;
-using UnityEngine;
 
-namespace UIScripts.LoginPage
+namespace UIScripts.Externs
 {
     public class CountdownWidget : StatefulWidget
     {

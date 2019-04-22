@@ -87,7 +87,7 @@ namespace UIScripts.LoginPage
                                 margin: EdgeInsets.all(20f),
                                 width: MediaQuery.of(context).size.width,
                                 child: new RaisedButton(color: Colors.green,
-                                    child: model.HideCircularProgressIndicator
+                                    child: model.HideSmallLoadingIndicator
                                         ? (Widget) new Text(model.LoginState,
                                             style: CustomTheme.CustomTheme.DefaultTextThemen.display2)
                                         : new Row(
@@ -102,7 +102,7 @@ namespace UIScripts.LoginPage
                                                         .display2)
                                             }
                                         ),
-                                    onPressed: model.IsInteractableOfButton
+                                    onPressed: model.CanGoToVerfyCodePage
                                         ? LoginRaiseButton(dispatcher, context)
                                         : null,
                                     elevation: 0,

@@ -36,11 +36,9 @@ namespace UIScripts
             ValueChanged<string> onSubmitted = null,
             int maxLength = 32,
             string regexCondition = null,
-            string errorText = null,
-            FocusNode focusNode = null
+            string errorText = null            
         )
-        {
-            FocusNode = focusNode ?? new FocusNode();
+        {           
             ErrorText = errorText;
             HintText = hintText;
             EditingController = editingController;
@@ -77,8 +75,8 @@ namespace UIScripts
                     obscureText: widget.ObscureText,
                     decoration: new InputDecoration(
                         errorText: widget.ErrorText,
-                        labelText: widget.HintText,
-                        contentPadding: EdgeInsets.all(5.0f),
+                        labelText: widget.HintText,                       
+                        contentPadding: EdgeInsets.only(2.0f),
                         fillColor: Colors.transparent,
                         filled: false,
                         focusedBorder: new UnderlineInputBorder(

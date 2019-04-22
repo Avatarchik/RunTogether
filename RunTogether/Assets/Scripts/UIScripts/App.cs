@@ -22,7 +22,8 @@ namespace UIScripts
             var tmpStore = new Store<AppState>(Reducer, new AppState());
             return new StoreProvider<AppState>(tmpStore, child: new MaterialApp(
                     showPerformanceOverlay: false,
-                    home: new Home()
+//                    home: new Home()
+                    home: new RegisterPage.RegisterPage()
                 )
             );
         }
@@ -50,7 +51,25 @@ namespace UIScripts
             if (tmpBaseAction.GetType() == typeof(RegisterAction))
             {
                 RegisterAction tmpRegisterAction = (tmpBaseAction as RegisterAction);
-                tmpRegisterAction?.webServerApiRequest.Request();
+                switch (tmpRegisterAction?.webServerApiRequest.RequestResult)
+                {
+                    case RequestResultEnum.VerfyCodeSuccessed:
+                        break;
+                    case RequestResultEnum.VerfyCodeFailed:
+                        break;
+                    case RequestResultEnum.RegisterSuccessed:
+                        tmpAppState.HideSmallLoadingIndicator = true;
+                        break;
+                    case RequestResultEnum.RegisterFailed:
+                        tmpAppState.CanRegister = true;
+                        tmpAppState.HideSmallLoadingIndicator = true;
+                        break;
+                    default:
+                        tmpRegisterAction?.webServerApiRequest?.Request();
+                        tmpAppState.CanRegister = false;
+                        tmpAppState.HideSmallLoadingIndicator = false;
+                        break;
+                }
             }
             else if (tmpBaseAction.GetType() == typeof(LoginAction))
             {
@@ -59,16 +78,16 @@ namespace UIScripts
                 {
                     case RequestResultEnum.LoginSuccessed:
                         tmpAppState.Logined = true;
-                        tmpAppState.HideCircularProgressIndicator = true;
+                        tmpAppState.HideSmallLoadingIndicator = true;
                         break;
                     case RequestResultEnum.LoginFailed:
-                        tmpAppState.HideCircularProgressIndicator = true;
-                        tmpAppState.IsInteractableOfButton = true;
+                        tmpAppState.HideSmallLoadingIndicator = true;
+                        tmpAppState.CanGoToVerfyCodePage = true;
                         break;
                     default:
                         tmpLoginAction?.webServerApiRequest.Request();
-                        tmpAppState.HideCircularProgressIndicator = false;
-                        tmpAppState.IsInteractableOfButton = false;
+                        tmpAppState.HideSmallLoadingIndicator = false;
+                        tmpAppState.CanGoToVerfyCodePage = false;
                         break;
                 }
             }
@@ -76,7 +95,7 @@ namespace UIScripts
             {
                 BaseUserInfoAction tmpAccountAction = (tmpBaseAction as BaseUserInfoAction);
                 tmpAppState.Account = tmpAccountAction.Account;
-                tmpAppState.IsInteractableOfButton = HelperWidgets.IsCellphoneNumber(tmpAccountAction.Account);
+                tmpAppState.CanGoToVerfyCodePage = HelperWidgets.IsCellphoneNumber(tmpAccountAction.Account);
             }
 
             else if (tmpBaseAction.GetType() == typeof(RegisterUserInfoAction))
@@ -86,14 +105,28 @@ namespace UIScripts
                 tmpAppState.Password = tmpRegisterUserInfoAction?.Password;
                 tmpAppState.VerfyCode = tmpRegisterUserInfoAction?.VerfyCode;
                 tmpAppState.NickName = tmpRegisterUserInfoAction?.NickName;
-                if (!string.IsNullOrEmpty(tmpRegisterUserInfoAction.Account))
-                    tmpAppState.IsInteractableOfButton =
-                        HelperWidgets.IsCellphoneNumber(tmpRegisterUserInfoAction?.Account);
+
+                tmpAppState.CanGoToUserPage = !string.IsNullOrEmpty(tmpRegisterUserInfoAction.VerfyCode);
+
                 tmpAppState.PasswordTextFieldErrorText =
                     String.Compare(tmpRegisterUserInfoAction?.Password,
                         tmpRegisterUserInfoAction?.PasswordAgain, StringComparison.Ordinal) != 0
                         ? "两次输入密码不一致"
                         : null;
+
+                if (!string.IsNullOrEmpty(tmpRegisterUserInfoAction.Account)
+                    && !string.IsNullOrEmpty(tmpRegisterUserInfoAction.Password)
+                    && string.IsNullOrEmpty(tmpAppState.PasswordTextFieldErrorText))
+                    tmpAppState.CanGoToVerfyCodePage =
+                        HelperWidgets.IsCellphoneNumber(tmpRegisterUserInfoAction?.Account);
+
+
+                if (!string.IsNullOrEmpty(tmpAppState.NickName)
+                    && tmpAppState.CanGoToUserPage
+                    && tmpAppState.CanGoToVerfyCodePage)
+                {
+                    tmpAppState.CanRegister = true;
+                }
             }
 
             return tmpAppState;

@@ -38,11 +38,14 @@ namespace UIScripts
         public string Account;
         public string LoginState = "登陆";
         public bool Logined;
+
         #endregion
 
 
-        public bool HideCircularProgressIndicator = true;
-        public bool IsInteractableOfButton=false;
+        public bool HideSmallLoadingIndicator = true;
+        public bool CanGoToVerfyCodePage = false;
+        public bool CanGoToUserPage = false;
+        public bool CanRegister = false;
         public string AccountTextFieldErrorText;
         public string PasswordTextFieldErrorText;
 
