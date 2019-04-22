@@ -35,13 +35,12 @@ namespace Unit
         {
             Debug.Assert(RequestParamaters.ContainsKey("url"), "Paramaters is no contain url key");
             HTTPRequest tmpRequest = new HTTPRequest(new Uri(RequestParamaters["url"]), httpMethods, OnFinished);
-
             if (httpMethods == HTTPMethods.Post)
             {
                 string tmpSign = string.Empty;
                 //建立post 表单
                 foreach (KeyValuePair<string, string> filed in RequestParamaters)
-                {
+                {                 
                     if (filed.Key == "url") continue;
                     tmpRequest.AddField(filed.Key, filed.Value);
                     //将字符串转为url code
@@ -50,7 +49,6 @@ namespace Unit
 
                 //设置签名
                 tmpSign = tmpSign.Remove(tmpSign.LastIndexOf('&'));
-                Debug.Log(tmpSign);
                 tmpSign = EncryptString(tmpSign + "Runtogether2018");
                 tmpRequest.AddField("sign", tmpSign);
             }

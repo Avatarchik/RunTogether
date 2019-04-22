@@ -10,7 +10,7 @@ using Unity.UIWidgets.widgets;
 namespace UIScripts.RegisterPage
 {
     public class SetupAccountPage : RegisterPageBase
-    {      
+    {
         private readonly TextEditingController PasswordEdit = new TextEditingController("");
         private readonly TextEditingController PasswordEditAgain = new TextEditingController("");
         private readonly TextEditingController PhoneEdit = new TextEditingController("");
@@ -18,17 +18,27 @@ namespace UIScripts.RegisterPage
 
         public override Widget build(BuildContext context)
         {
-            return new Scaffold(
-                appBar: HelperWidgets._buildCloseAppBar(isCenterTitle: true, title: new Text("注册账户"),
-                    lealding: new IconButton(
-                        icon: new Icon(icon: Icons.arrow_back_ios),
-                        onPressed: () => { HelperWidgets.PopRoute(context); })
-                ),
-                backgroundColor: CustomTheme.CustomTheme.EDColor,
-                body: new StoreConnector<AppState, AppState>(
-                    converter: (state) => state,
-                    builder: ((buildContext, model, dispatcher) =>
-                        new Column(
+            return new StoreConnector<AppState, AppState>(
+                converter: (state) => state,
+                builder: ((buildContext, model, dispatcher) =>
+                    new Scaffold(
+                        appBar: HelperWidgets._buildCloseAppBar(isCenterTitle: true, title: new Text("注册账户"),
+                            lealding: new IconButton(
+                                icon: new Icon(icon: Icons.arrow_back_ios),
+                                onPressed: () =>
+                                {
+                                    HelperWidgets.PopRoute(context);
+                                    dispatcher.dispatch(new RegisterUserInfoAction
+                                    {
+                                        CanRegister = false,
+                                        CanGoToUserPage = false,
+                                        CanGoToVerfyCodePage = false,
+                                        IsPop = true
+                                    });
+                                })
+                        ),
+                        backgroundColor: CustomTheme.CustomTheme.EDColor,
+                        body: new Column(
                             children: new List<Widget>
                             {
                                 new Container(
@@ -61,7 +71,6 @@ namespace UIScripts.RegisterPage
                                 ),
                                 new TextFieldExtern("重新输入密码",
                                     margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-                                    
                                     errorText: model.PasswordTextFieldErrorText,
                                     obscureText: true, editingController: PasswordEditAgain, maxLength: 16,
                                     regexCondition: @"^[A-Za-z0-9]*$",
@@ -88,8 +97,8 @@ namespace UIScripts.RegisterPage
                 )
             );
         }
-        
-        
+
+
         private VoidCallback GoToNextStep(BuildContext context)
         {
             return () => { HelperWidgets.PushNewRoute(context, new SetupVerfyCode(RegisterUserInfoAction)); };

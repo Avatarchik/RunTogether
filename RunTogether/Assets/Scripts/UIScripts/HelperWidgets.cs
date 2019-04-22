@@ -101,7 +101,7 @@ namespace UIScripts
                         actions: new List<Widget>
                         {
                             new FlatButton(child: new Text("Ok"), onPressed: () => { Navigator.pop(context); })
-                        }                        
+                        }
                     )
                 )
             );
@@ -122,28 +122,35 @@ namespace UIScripts
             WebServerApiRequest tmpRequest = new WebServerApiRequest
             (tmpRequestParamaters, (result) =>
                 {
-                    RequestUserRespon tmpRequestUserRespon = JsonUtility.FromJson<RequestUserRespon>(result);
-                    using (WindowProvider.of(context).getScope())
+                    try
                     {
-                        switch (tmpRequestUserRespon.code)
+                        RequestUserRespon tmpRequestUserRespon = JsonUtility.FromJson<RequestUserRespon>(result);
+                        using (WindowProvider.of(context).getScope())
                         {
-                            case 103:
-                                ShowDialog("密码错误", "输入的密码错误，请重新输入密码", context);
-                                break;
-                            case 104:
-                            case 105:
-                            case 106:
-                                ShowDialog("账户不存在", "该账户不存在，请确认账户后重试", context);
-                                break;
-                            case 200:
-                                AppManager.Instance.InitUserData(new UserDatas(tmpRequestUserRespon.data.headimages,
-                                    tmpRequestUserRespon.data.address, tmpRequestUserRespon.data.nickname));
-                                successedResult?.Invoke(tmpRequestUserRespon);
-                                break;
-                            case 400:
-                                Debug.LogError("404 not found");
-                                break;
+                            switch (tmpRequestUserRespon.code)
+                            {
+                                case 103:
+                                    ShowDialog("密码错误", "输入的密码错误，请重新输入密码", context);
+                                    break;
+                                case 104:
+                                case 105:
+                                case 106:
+                                    ShowDialog("账户不存在", "该账户不存在，请确认账户后重试", context);
+                                    break;
+                                case 200:
+                                    AppManager.Instance.InitUserData(new UserDatas(tmpRequestUserRespon.data.headimages,
+                                        tmpRequestUserRespon.data.address, tmpRequestUserRespon.data.nickname));
+                                    successedResult?.Invoke(tmpRequestUserRespon);
+                                    break;
+                                case 400:
+                                    Debug.LogError("404 not found");
+                                    break;
+                            }
                         }
+                    }
+                    catch (Exception e)
+                    {
+                        failedResult?.Invoke(e.Message);
                     }
                 },
                 failedCallback: failedResult

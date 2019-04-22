@@ -87,7 +87,7 @@ namespace Unity.UIWidgets.gestures {
             this._client = client;
             DragUpdateDetails details = new DragUpdateDetails(
                 sourceTimeStamp: this._lastPendingEventTimestamp ?? TimeSpan.Zero,
-                this.pendingDelta,
+                delta: this.pendingDelta,
                 globalPosition: this.initialPosition
             );
 

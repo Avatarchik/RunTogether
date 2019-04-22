@@ -20,22 +20,33 @@ namespace UIScripts.RegisterPage
     public class SetupUserPage : RegisterPageBase
     {
         private readonly TextEditingController NameEdit = new TextEditingController("");
+
         private readonly Animation<Color> CircularProgressIndicatorColor =
             new AlwaysStoppedAnimation<Color>(Colors.white);
 
         public override Widget build(BuildContext context)
         {
-            return new Scaffold(
-                appBar: HelperWidgets._buildCloseAppBar(isCenterTitle: true, title: new Text("注册新账户"),
-                    lealding: new IconButton(
-                        icon: new Icon(icon: Icons.arrow_back_ios, size: 18),
-                        onPressed: () => { HelperWidgets.PopRoute(context); })
-                ),
-                backgroundColor: CustomTheme.CustomTheme.EDColor,
-                body: new StoreConnector<AppState, AppState>(
-                    converter: (state) => state,
-                    builder: ((buildContext, model, dispatcher) =>
-                        new Column(
+            return new StoreConnector<AppState, AppState>(
+                converter: (state) => state,
+                builder: ((buildContext, model, dispatcher) =>
+                    new Scaffold(
+                        appBar: HelperWidgets._buildCloseAppBar(isCenterTitle: true, title: new Text("注册新账户"),
+                            lealding: new IconButton(
+                                icon: new Icon(icon: Icons.arrow_back_ios, size: 18),
+                                onPressed: () =>
+                                {
+                                    HelperWidgets.PopRoute(context);
+                                    dispatcher.dispatch(new RegisterUserInfoAction
+                                    {
+                                        CanRegister = false,
+                                        CanGoToUserPage = false,
+                                        CanGoToVerfyCodePage = true,
+                                        IsPop = true
+                                    });
+                                })
+                        ),
+                        backgroundColor: CustomTheme.CustomTheme.EDColor,
+                        body: new Column(
                             children: new List<Widget>
                             {
                                 new Container(
@@ -48,26 +59,20 @@ namespace UIScripts.RegisterPage
                                 new Padding(
                                     padding: EdgeInsets.only(right: 20),
                                     child: new GestureDetector(
-                                        child: new AvatarWidget(
-                                            Image.network(
-                                                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1555910735058&di=4bb68aece7cdbb41e3119001852bb670&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201706%2F22%2F20170622131955_h4eZS.thumb.700_0.jpeg"),
-                                            50, 50),
+                                        child: new AvatarWidget(Image.file(file: model.Avatar), 50, 50),
                                         onTap: () =>
                                         {
-#if !UNITY_EDITOR && UNITY_IOS
-                                NativeGallery.GetImageFromGallery((path) =>
-                                {
-                                    if (string.IsNullOrEmpty(path)) return;
-                                    ;
-                                    using (WindowProvider.of(context).getScope())
-                                    {
-                                        AvatarBase64 =
-                                            "data:image/jpeg;base64," +
-                                            Convert.ToBase64String(System.IO.File.ReadAllBytes(path));
-                                        dispatcher.dispatch(new SetRegisterAvatarAction {InputResult = path});
-                                    }
-                                });
-#endif
+//#if !UNITY_EDITOR && UNITY_IOS
+                                            NativeGallery.GetImageFromGallery((path) =>
+                                            {
+                                                if (string.IsNullOrEmpty(path)) return;
+                                                using (WindowProvider.of(context).getScope())
+                                                {
+                                                    dispatcher.dispatch(
+                                                        new RegisterUserInfoAction() {Avatart = path});
+                                                }
+                                            });
+//#endif
                                         }
                                     )
                                 ),
@@ -105,7 +110,7 @@ namespace UIScripts.RegisterPage
                                                 }
                                             ),
                                         onPressed: model.CanRegister
-                                            ? GoToRegister(model, context, dispatcher)
+                                            ? GoToRegister(context, dispatcher)
                                             : null,
                                         elevation: 0,
                                         disabledColor: Colors.green.withAlpha(125)
@@ -124,27 +129,26 @@ namespace UIScripts.RegisterPage
         /// <param name="context"></param>
         /// <param name="dispatcher"></param>
         /// <returns></returns>
-        private VoidCallback GoToRegister(AppState state, BuildContext context, Dispatcher dispatcher)
+        private VoidCallback GoToRegister(BuildContext context, Dispatcher dispatcher)
         {
             return () =>
             {
-                Debug.Log(state.Account + " " + state.NickName + " " + state.Account+" "+state.VerfyCode);
-
-                if (!HelperWidgets.IsValidPassword(state.Password)
-                    || string.IsNullOrEmpty(state.NickName)
-                    || !HelperWidgets.IsCellphoneNumber(state.Account))
+                if (!HelperWidgets.IsValidPassword(RegisterUserInfoAction.Password)
+                    || string.IsNullOrEmpty(RegisterUserInfoAction.NickName)
+                    || !HelperWidgets.IsCellphoneNumber(RegisterUserInfoAction.Account))
                 {
                     HelperWidgets.ShowDialog("注册错误", "请完善注册信息", context);
                     return;
                 }
 
-                if (string.IsNullOrEmpty(state.VerfyCode) || state.VerfyCode.Length < 6)
+                if (string.IsNullOrEmpty(RegisterUserInfoAction.VerfyCode)
+                    || RegisterUserInfoAction.VerfyCode.Length < 6)
                 {
                     HelperWidgets.ShowDialog("注册错误", "验证码格式错误", context);
                     return;
                 }
 
-                dispatcher.dispatch(Register(context, state, dispatcher));
+                dispatcher.dispatch(Register(context, dispatcher));
             };
         }
 
@@ -154,55 +158,67 @@ namespace UIScripts.RegisterPage
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        private RegisterAction Register(BuildContext context, AppState appState, Dispatcher dispatcher)
+        private RegisterAction Register(BuildContext context, Dispatcher dispatcher)
         {
             Dictionary<string, string> tmpParamaters = new Dictionary<string, string>
             {
                 {"url", new Uri(new Uri(APIsInfo.APIGetWay), APIsInfo.User_Register).ToString()},
-                {"headimages", appState.RegisterAvatar},
-                {"nickname", appState.NickName},
-                {"password", appState.Password},
-                {"phone", appState.Account},
+                {"headimages", RegisterUserInfoAction.Avatart},
+                {"nickname", RegisterUserInfoAction.NickName},
+                {"password", RegisterUserInfoAction.Password},
+                {"phone", RegisterUserInfoAction.Account},
             };
             WebServerApiRequest tmpWebServerApiRequest =
                 new WebServerApiRequest(tmpParamaters, (result) =>
                     {
-                        RequestUserRespon tmpRequestUserRespon = JsonUtility.FromJson<RequestUserRespon>(result);
-                        using (WindowProvider.of(context).getScope())
+                        try
                         {
-                            switch (tmpRequestUserRespon.code)
+                            RequestUserRespon tmpRequestUserRespon = JsonUtility.FromJson<RequestUserRespon>(result);
+                            using (WindowProvider.of(context).getScope())
                             {
-                                case 103:
-                                case 104:
-                                case 105:
-                                case 106:
-                                case 400:
-                                    HelperWidgets.ShowDialog("注册", "注册账户失败，请更换账户重试", context);
-                                    break;
-                                case 200:
-                                case 1:
-                                    HelperWidgets.ShowDialog("注册", "注册成功", context);
-                                    break;
+                                switch (tmpRequestUserRespon.code)
+                                {
+                                    case 103:
+                                    case 104:
+                                    case 105:
+                                    case 106:
+                                    case 400:
+                                        HelperWidgets.ShowDialog("注册", "注册账户失败，请更换账户重试", context);
+                                        break;
+                                    case 200:
+                                    case 1:
+                                        HelperWidgets.ShowDialog("注册", "注册成功", context);
+                                        break;
+                                    default:
+                                        ErrorDialog(context, dispatcher, result);
+                                        break;
+                                }
                             }
                         }
-                    },
-                    failedCallback: (msg) =>
-                    {
-                        using (WindowProvider.of(context).getScope())
+                        catch (Exception e)
                         {
-                            HelperWidgets.ShowDialog("登陆错误", "发生未知错误，无法登陆请稍后重试", context);
-
-                            dispatcher.dispatch(new RegisterAction
-                            {
-                                webServerApiRequest = new WebServerApiRequest
-                                {
-                                    RequestResult = RequestResultEnum.RegisterFailed
-                                }
-                            });
+                            ErrorDialog(context, dispatcher, e.Message);
                         }
-                    }
+                    },
+                    failedCallback: (msg) => { ErrorDialog(context, dispatcher, "发生未知错误，无法登陆请稍后重试"); }
                 );
             return new RegisterAction {webServerApiRequest = tmpWebServerApiRequest};
+        }
+
+        private void ErrorDialog(BuildContext context, Dispatcher dispatcher, string result)
+        {
+            using (WindowProvider.of(context).getScope())
+            {
+                HelperWidgets.ShowDialog("登陆错误", result, context);
+
+                dispatcher.dispatch(new RegisterAction
+                {
+                    webServerApiRequest = new WebServerApiRequest
+                    {
+                        RequestResult = RequestResultEnum.RegisterFailed
+                    }
+                });
+            }
         }
 
         public SetupUserPage(RegisterUserInfoAction registerUserInfoAction) : base(registerUserInfoAction)

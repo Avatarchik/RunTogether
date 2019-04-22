@@ -22,8 +22,7 @@ namespace UIScripts
             var tmpStore = new Store<AppState>(Reducer, new AppState());
             return new StoreProvider<AppState>(tmpStore, child: new MaterialApp(
                     showPerformanceOverlay: false,
-//                    home: new Home()
-                    home: new RegisterPage.RegisterPage()
+                    home: new Home()
                 )
             );
         }
@@ -65,9 +64,9 @@ namespace UIScripts
                         tmpAppState.HideSmallLoadingIndicator = true;
                         break;
                     default:
-                        tmpRegisterAction?.webServerApiRequest?.Request();
                         tmpAppState.CanRegister = false;
                         tmpAppState.HideSmallLoadingIndicator = false;
+                        tmpRegisterAction?.webServerApiRequest?.Request();
                         break;
                 }
             }
@@ -100,13 +99,14 @@ namespace UIScripts
 
             else if (tmpBaseAction.GetType() == typeof(RegisterUserInfoAction))
             {
-                RegisterUserInfoAction tmpRegisterUserInfoAction = (tmpBaseAction as RegisterUserInfoAction);
+                RegisterUserInfoAction tmpRegisterUserInfoAction = (tmpBaseAction as RegisterUserInfoAction);                            
+                
                 tmpAppState.Account = tmpRegisterUserInfoAction?.Account;
                 tmpAppState.Password = tmpRegisterUserInfoAction?.Password;
                 tmpAppState.VerfyCode = tmpRegisterUserInfoAction?.VerfyCode;
                 tmpAppState.NickName = tmpRegisterUserInfoAction?.NickName;
+                tmpAppState.Avatar = tmpRegisterUserInfoAction?.Avatart;
 
-                tmpAppState.CanGoToUserPage = !string.IsNullOrEmpty(tmpRegisterUserInfoAction.VerfyCode);
 
                 tmpAppState.PasswordTextFieldErrorText =
                     String.Compare(tmpRegisterUserInfoAction?.Password,
@@ -114,18 +114,28 @@ namespace UIScripts
                         ? "两次输入密码不一致"
                         : null;
 
-                if (!string.IsNullOrEmpty(tmpRegisterUserInfoAction.Account)
-                    && !string.IsNullOrEmpty(tmpRegisterUserInfoAction.Password)
-                    && string.IsNullOrEmpty(tmpAppState.PasswordTextFieldErrorText))
-                    tmpAppState.CanGoToVerfyCodePage =
-                        HelperWidgets.IsCellphoneNumber(tmpRegisterUserInfoAction?.Account);
-
-
-                if (!string.IsNullOrEmpty(tmpAppState.NickName)
-                    && tmpAppState.CanGoToUserPage
-                    && tmpAppState.CanGoToVerfyCodePage)
+                if (tmpRegisterUserInfoAction.IsPop)
                 {
-                    tmpAppState.CanRegister = true;
+                    tmpAppState.CanRegister = tmpRegisterUserInfoAction.CanRegister;
+                    tmpAppState.CanGoToUserPage = tmpRegisterUserInfoAction.CanGoToUserPage;
+                    tmpAppState.CanGoToVerfyCodePage = tmpRegisterUserInfoAction.CanGoToVerfyCodePage;
+                }
+                else
+                {
+                    tmpAppState.CanGoToUserPage = !string.IsNullOrEmpty(tmpRegisterUserInfoAction?.VerfyCode);
+                    if (!string.IsNullOrEmpty(tmpRegisterUserInfoAction.Account)
+                        && !string.IsNullOrEmpty(tmpRegisterUserInfoAction.Password)
+                        && string.IsNullOrEmpty(tmpAppState.PasswordTextFieldErrorText))
+                        tmpAppState.CanGoToVerfyCodePage =
+                            HelperWidgets.IsCellphoneNumber(tmpRegisterUserInfoAction?.Account);
+
+
+                    if (!string.IsNullOrEmpty(tmpAppState.NickName)
+                        && tmpAppState.CanGoToUserPage
+                        && tmpAppState.CanGoToVerfyCodePage)
+                    {
+                        tmpAppState.CanRegister = true;
+                    }
                 }
             }
 

@@ -163,19 +163,36 @@ namespace UIScripts.LoginPage
                     password: PasswordEdit.text,
                     successedResult: (result) =>
                     {
-                        dispatcher.dispatch(new LoginAction
+                        try
                         {
-                            webServerApiRequest = new WebServerApiRequest
+                            dispatcher.dispatch(new LoginAction
                             {
-                                RequestResult = RequestResultEnum.LoginSuccessed
+                                webServerApiRequest = new WebServerApiRequest
+                                {
+                                    RequestResult = RequestResultEnum.LoginSuccessed
+                                }
+                            });
+
+
+                            PlayerPrefs.SetString("account", PhoneEdit.text);
+                            PlayerPrefs.SetString("password", PasswordEdit.text);
+                            PlayerPrefs.SetString("logined", "Yes");
+                            HelperWidgets.PopRoute(context);
+                        }
+                        catch (Exception e)
+                        {
+                            using (WindowProvider.of(context).getScope())
+                            {
+                                HelperWidgets.ShowDialog("登陆错误", e.Message, context);
+                                dispatcher.dispatch(new LoginAction
+                                {
+                                    webServerApiRequest = new WebServerApiRequest
+                                    {
+                                        RequestResult = RequestResultEnum.LoginFailed
+                                    }
+                                });
                             }
-                        });
-
-
-                        PlayerPrefs.SetString("account", PhoneEdit.text);
-                        PlayerPrefs.SetString("password", PasswordEdit.text);
-                        PlayerPrefs.SetString("logined", "Yes");
-                        HelperWidgets.PopRoute(context);
+                        }
                     },
                     failedResult: (msg) =>
                     {

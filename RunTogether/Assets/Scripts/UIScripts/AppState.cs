@@ -13,7 +13,7 @@ namespace UIScripts
         #region Register State
 
         //用户设置的头像
-        public string RegisterAvatar;
+        public string Avatar;
 
         //验证码
         public string VerfyCode;
@@ -52,7 +52,7 @@ namespace UIScripts
 
         public AppState()
         {
-            RegisterAvatar = Application.streamingAssetsPath + "/avatar.png";
+            Avatar = Application.streamingAssetsPath + "/avatar.png";
         }
     }
 }

@@ -22,6 +22,7 @@ namespace UIScripts
     public class LoginRegisterAction : BaseAction
     {
         public WebServerApiRequest webServerApiRequest;
+        public bool IsPopRoute;
     }
 
 
@@ -69,19 +70,29 @@ namespace UIScripts
         public string AvatarBase64;
     }
 
-
+    [System.Serializable]
     public class BaseUserInfoAction : BaseAction
     {
         public string Account;
         public string Password;
+        public bool IsPop;
     }
 
-
+    [System.Serializable]
     public class RegisterUserInfoAction : BaseUserInfoAction
     {
         public string PasswordAgain;
         public string VerfyCode;
         public string NickName;
-        public string Avatart;
+        public string Avatart = string.Empty;
+
+        public bool CanGoToVerfyCodePage = false;
+        public bool CanGoToUserPage = false;
+        public bool CanRegister = false;        
+        
+        public RegisterUserInfoAction()
+        {
+            Avatart = Application.streamingAssetsPath + "/avatar.png";
+        }
     }
 }
